@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* input[type="text"],
+input[type="password"] {
+  @apply rounded border border-black px-2 py-1 shadow-lg;
+} */
+input:focus-within ~ label,
+input:not(:placeholder-shown) ~ label {
+  @apply transform scale-75 -translate-y-6;
+}
+
+input:focus-within ~ label {
+  @apply text-blue-500;
+}
+
+button {
+  @apply disabled:opacity-50 px-4 py-2 sm:text-sm focus:outline-none sm:w-auto font-medium text-base;
+}
+
+button.primary {
+  @apply bg-gray-400 border border-gray-400 text-black;
+}
+
+button.secondary {
+  @apply bg-white border border-gray-600 text-black;
+}
+
+button.error {
+  @apply bg-red-500 text-white;
+}
