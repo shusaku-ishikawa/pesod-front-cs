@@ -1,7 +1,8 @@
 <template>
   <base-layout>
-    <template v-slot:title>
+    <template v-if="route.name !== 'DiagnosticTop'" v-slot:title>
       <div
+        
         class="bg-gray-400 py-2 w-full"
       >
         診察 ROOM
@@ -12,12 +13,17 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
   components: {
   },
   setup() {
-    return null;
+    const route = useRoute();
+
+    return {
+      route
+    };
   }
 })
 </script>

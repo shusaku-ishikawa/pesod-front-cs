@@ -45,7 +45,7 @@
               @click="onClickPrevious()"
               class="secondary w-full"
             >
-              <div class="inline-block">前にもどる</div>
+              <div class="inline-block">前に戻る</div>
               <svg 
                 class="w-6 h-6 float-left"
                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
