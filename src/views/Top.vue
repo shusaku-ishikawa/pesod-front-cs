@@ -1,8 +1,8 @@
 <template>
   <base-layout>
-    <div class="flex-grow flex flex-col justify-around">
+    <div class="flex-grow flex flex-col pt-10">
           
-      <div>
+      <div class="mb-10">
         <router-link
           :to="{ name: 'DiagnosticTop' }"
           v-slot="{ href, navigate }"
@@ -17,7 +17,7 @@
           
         </router-link>
       </div>
-      <div>
+      <div class="mb-10">
         <router-link
           :to="{ name: 'HairConsultant' }"
           v-slot="{ href, navigate }"
@@ -32,7 +32,7 @@
           
         </router-link>
       </div>
-      <div>
+      <div class="">
         <router-link
           :to="{ name: 'LogsList' }"
           v-slot="{ href, navigate }"

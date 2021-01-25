@@ -7,15 +7,15 @@
     </template>
     <div class="flex flex-col h-full">
       <div class="grid grid-cols-12 flex-grow flex flex-col">
-        <div class="col-span-8 col-start-3">
+        <div class="col-span-10 col-start-2">
           <div>
             <svg
-              class="w-48 h-48 inline-block"
+              class="w-36 h-36 inline-block"
               xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <div class="text-4xl mb-2">
+          <div class="text-3xl mb-2">
             {{ doctor.name }}
           </div>
           <div class="mb-2">

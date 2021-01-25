@@ -1,6 +1,6 @@
 <template>
   <div
-    class="px-12 pt-5"
+    class="px-6 pt-5"
   >
     <div class="text-left flex flex-col h-full">
       <div class="mb-10">

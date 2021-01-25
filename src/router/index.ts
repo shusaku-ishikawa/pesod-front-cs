@@ -26,6 +26,10 @@ import LogsDetail from '../views/Logs/Detail.vue';
 
 import HairConsultant from '../views/HairConsultant.vue';
 
+import Store from '@/views/Store.vue';
+import StorePrescription from '@/views/Store/Prescription.vue';
+import StoreProduct from '@/views/Store/Product.vue';
+
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -147,6 +151,23 @@ const routes: Array<RouteRecordRaw> = [
     //     component: LogsList,
     //   },
     // ]
+  },
+  {
+    path: '/store',
+    name: 'Store',
+    component: Store,
+    children: [
+      {
+        path: 'prescription',
+        name: 'StorePrescription',
+        component: StorePrescription,
+      },
+      {
+        path: 'product',
+        name: 'StoreProduct',
+        component: StoreProduct,
+      },
+    ]
   },
 ]
 

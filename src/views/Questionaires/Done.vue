@@ -28,7 +28,7 @@
             <button
               :href="href"
               @click="navigate"
-              class="primary w-72 "
+              class="primary w-full"
             >
               医師選択一覧へ
             </button>

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full bg-gray-200 py-3 px-2 items-center flex justify-around">
+  <div class="h-16 w-full bg-gray-200  px-2 items-center flex justify-around">
     <div
       @click="() => { router.push({ name: 'DiagnosticTop' }) }"
       class="flex flex-col cursor-pointer"

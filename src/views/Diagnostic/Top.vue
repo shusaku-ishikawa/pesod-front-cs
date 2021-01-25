@@ -1,6 +1,6 @@
 <template>
-  <div class=" text-center flex-grow flex flex-col justify-around">
-      <div>
+  <div class=" text-center flex-grow flex flex-col pt-10">
+      <div class="mb-10">
         <router-link
           :to="{ name: 'QuestionaireTop' }"
           v-slot="{ href, navigate }"
@@ -15,7 +15,7 @@
           
         </router-link>
       </div>
-      <div>
+      <div class="mb-10">
         <router-link
           :to="{ name: 'DoctorList' }"
           v-slot="{ href, navigate }"
@@ -30,7 +30,7 @@
           
         </router-link>
       </div>
-      <div>
+      <div class="mb-10">
         <router-link
           :to="{ name: 'DiagnosticNotCompleted' }"
           v-slot="{ href, navigate }"

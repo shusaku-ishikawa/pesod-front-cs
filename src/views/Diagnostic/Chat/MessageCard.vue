@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex items-end"
+    class="flex items-end px-1"
     :class="{ 'justify-end': !isMyMessage }"
   >
     <div
@@ -8,7 +8,9 @@
       :class="{ 'items-start': isMyMessage, 'order-1': !isMyMessage, 'items-end': !isMyMessage, 'order-2': isMyMessage }"
     >
         <!-- <div> -->
-          <span class="text-left max-w-xs sm:max-w-sm md:max-w-md break-words text-sm leading-tight px-4 py-4 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600">
+          <span
+            :class="{ 'rounded-bl-none': isMyMessage, 'rounded-br-none': !isMyMessage }"
+            class="text-left w-64 sm:max-w-sm md:max-w-md break-words text-sm leading-tight px-4 py-4 rounded-lg inline-block bg-gray-300 text-gray-600">
             {{ message.message }}
           </span>
         <!-- </div> -->
