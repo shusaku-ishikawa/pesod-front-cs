@@ -29,6 +29,8 @@ import HairConsultant from '../views/HairConsultant.vue';
 import Store from '@/views/Store.vue';
 import StorePrescription from '@/views/Store/Prescription.vue';
 import StoreProduct from '@/views/Store/Product.vue';
+import StorePayment1 from '@/views/Store/Payment1.vue';
+import StorePayment2 from '@/views/Store/Payment2.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -166,6 +168,16 @@ const routes: Array<RouteRecordRaw> = [
         path: 'product',
         name: 'StoreProduct',
         component: StoreProduct,
+      },
+      {
+        path: 'payment1',
+        name: 'StorePayment1',
+        component: StorePayment1,
+      },
+      {
+        path: 'payment2',
+        name: 'StorePayment2',
+        component: StorePayment2,
       },
     ]
   },
