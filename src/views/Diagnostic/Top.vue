@@ -46,11 +46,18 @@
         </router-link>
       </div>
       <div>
-        <button
-          class="primary w-72"
+        <router-link
+          :to="{ name: 'StorePrescription' }"
+          v-slot="{ href, navigate }"
         >
-          ストア
-        </button>
+          <button
+            :href="href"
+            @click="navigate"
+            class="primary w-72"
+          >
+            ストア
+          </button>
+        </router-link>
       </div>  
     <!-- </div> -->
 

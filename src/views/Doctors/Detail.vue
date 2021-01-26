@@ -32,7 +32,7 @@
               <button
                 :href="href"
                 @click="navigate"
-                class="primary block w-full"
+                class="primary block mx-auto w-72"
               >
                 診察を始める
               </button>
@@ -46,7 +46,7 @@
               <button
                 :href="href"
                 @click="navigate"
-                class="secondary block w-full"
+                class="secondary block mx-auto w-72"
               >
                 他の医師を選択
               </button>

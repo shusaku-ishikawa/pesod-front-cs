@@ -1,13 +1,16 @@
 <template>
   <base-layout>
+    <template v-slot:title>
+      <div
+        class="bg-gray-400 py-2"
+      >
+        問診表
+      </div>
+    </template>
     <div class="flex-grow flex flex-col">
       <div class="grid grid-cols-12 flex-grow">
         <div class="col-span-12 sm:col-span-6 sm:col-start-4 flex-grow flex flex-col">
-          <div
-            class="bg-gray-400 py-2"
-          >
-            問診表
-          </div>
+          
           <div class="flex-grow">
             <router-view
               v-if="questions.length > 0"

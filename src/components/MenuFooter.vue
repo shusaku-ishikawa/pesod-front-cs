@@ -58,7 +58,10 @@
         診断履歴
       </div>
     </div>
-    <div class="flex flex-col cursor-pointer">
+    <div
+      @click="() => { router.push({ name: 'StorePrescription' }) }"
+      class="flex flex-col cursor-pointer"
+    >
       <div class="text-center">
         <img
           class="w-8 h-8 inline-block"
