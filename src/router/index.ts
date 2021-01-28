@@ -6,6 +6,8 @@ import Signup3 from '../views/Signup3.vue'
 import Register from '../views/Register.vue'
 
 import Top from '../views/Top.vue'
+import MyPage from '../views/MyPage.vue'
+
 import Questionaires from '../views/Questionaires.vue'
 import QuestionaireTop from '../views/Questionaires/Top.vue'
 import QuestionaireDetail from '../views/Questionaires/Detail.vue'
@@ -24,13 +26,15 @@ import Logs from '../views/Logs.vue';
 import LogsList from '../views/Logs/List.vue';
 import LogsDetail from '../views/Logs/Detail.vue';
 
-import HairConsultant from '../views/HairConsultant.vue';
-
 import Store from '@/views/Store.vue';
 import StorePrescription from '@/views/Store/Prescription.vue';
 import StoreProduct from '@/views/Store/Product.vue';
 import StorePayment1 from '@/views/Store/Payment1.vue';
 import StorePayment2 from '@/views/Store/Payment2.vue';
+
+import Support from '@/views/Support.vue';
+import SupportTop from '@/views/Support/Top.vue';
+import SupportHairConsultant from '../views/Support/HairConsultant.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -63,6 +67,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Top',
     component: Top
   },
+  {
+    path: '/mypage',
+    name: 'MyPage',
+    component: MyPage
+  },
+  
   {
     path: '/diagnostic',
     name: 'Diagnostic',
@@ -143,18 +153,6 @@ const routes: Array<RouteRecordRaw> = [
     ]
   },
   {
-    path: '/hair-consultant',
-    name: 'HairConsultant',
-    component: HairConsultant,
-    // children: [
-    //   {
-    //     path: '',
-    //     name: 'LogsList',
-    //     component: LogsList,
-    //   },
-    // ]
-  },
-  {
     path: '/store',
     name: 'Store',
     component: Store,
@@ -181,6 +179,30 @@ const routes: Array<RouteRecordRaw> = [
       },
     ]
   },
+  {
+    path: '/support',
+    name: 'Support',
+    component: Support,
+    children: [
+      {
+        path: '',
+        name: 'SupportTop',
+        component: SupportTop
+      },
+      {
+        path: 'hair-consultant',
+        name: 'SupportHairConsultant',
+        component: SupportHairConsultant,
+        // children: [
+        //   {
+        //     path: '',
+        //     name: 'LogsList',
+        //     component: LogsList,
+        //   },
+        // ]
+      },
+    ]
+  }
 ]
 
 const router = createRouter({

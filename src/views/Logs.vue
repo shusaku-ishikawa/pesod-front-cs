@@ -1,15 +1,8 @@
 <template>
-  <base-layout>
-    <template v-slot:title>
-      <div class="bg-gray-400 py-2">
-        自分の記録
-      </div>
-    </template>
-    <div class="flex-grow">
-      <router-view
-        :key="$route.fullPath"
-      ></router-view>
-    </div>
+  <base-layout> 
+    <router-view
+      :key="$route.fullPath"
+    ></router-view>
   </base-layout>
 </template>
 <script lang="ts">

@@ -12,7 +12,7 @@
       <div class="flex-auto ml-1 h-full bg-gray-200 rounded border-2 border-black">
         <img :src="log.imgTop" alt=""> 
       </div>
-      <div class="self-stretch ml-1">
+      <!-- <div class="self-stretch ml-1">
         <table class="border-separate h-full">
           <tbody>
             <tr>
@@ -28,7 +28,7 @@
             </tr>
           </tbody>
         </table>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

@@ -1,56 +1,68 @@
 <template>
-  <div class="h-16 w-full bg-gray-200  px-2 items-center flex justify-around">
+  <div class="h-16 w-full bg-gray-200 items-center flex ">
     <div
-      @click="() => { router.push({ name: 'DiagnosticTop' }) }"
-      class="flex flex-col cursor-pointer"
+      @click="() => { router.push({ name: 'MyPage' }) }"
+      class="h-full flex-grow flex flex-col cursor-pointer pt-2"
+      :class="{ 'bg-gray-600 text-white': route.name === 'MyPage' }"
     >
       <div class="text-center">
         <img
+          v-if="route.name === 'MyPage'"
           class="w-8 h-8 inline-block"
-          src="@/assets/icons/icon_stethoscope.png"
+          src="@/assets/icons/icon_myPage_on.png"
+          alt=""
+        >
+        <img
+          v-else
+          class="w-8 h-8 inline-block"
+          src="@/assets/icons/icon_myPage_off.png"
           alt=""
         >
       </div>
       <div class="text-xs">
-        対策ROOM
+        マイページ
       </div>
     </div>
     <div
-      @click="() => { router.push({ name: 'HairConsultant' }) }"
-      class="flex flex-col cursor-pointer"
+      @click="() => { router.push({ name: 'SupportTop' }) }"
+      class="h-full flex-grow flex flex-col cursor-pointer  pt-2"
+      :class="{ 'bg-gray-600 text-white': route.name.includes('Support') }"
     >
       <div class="text-center ">
-        
         <img
+          v-if="route.name.includes('Support')"
           class="w-8 h-8 inline-block"
-          src="@/assets/icons/icon_hairDiagnostician.png"
+          src="@/assets/icons/icon_consultation_on.png"
+          alt=""
+        >
+        <img
+          v-else
+          class="w-8 h-8 inline-block"
+          src="@/assets/icons/icon_consultation_off.png"
           alt=""
         >
       </div>
       <div class="text-xs">
-        毛髪診断士
+        相談窓口
       </div>
     </div>
     <div
-      @click="() => { router.push({ name: 'LogsList' }) }"
-      class="flex flex-col cursor-pointer"
+      @click="() => {}"
+      class="h-full flex-grow flex flex-col cursor-pointer pt-2"
+      :class="{ 'bg-gray-600 text-white': route.name.includes('Diagnostic') }"
+    
     >
       <div class="text-center">
         <img
+          v-if="route.name.includes('Diagnostic')"
           class="w-8 h-8 inline-block"
-          src="@/assets/icons/icon_myRecord.png"
+          src="@/assets/icons/icon_medicalHistory_on.png"
           alt=""
         >
-      </div>
-      <div class="text-xs">
-        自分の記録
-      </div>
-    </div>
-    <div class="flex flex-col cursor-pointer">
-      <div class="text-center">
         <img
+          v-else
           class="w-8 h-8 inline-block"
-          src="@/assets/icons/icon_medicalHistory.png"
+          src="@/assets/icons/icon_medicalHistory_off.png"
           alt=""
         >
       </div>
@@ -59,18 +71,27 @@
       </div>
     </div>
     <div
-      @click="() => { router.push({ name: 'StorePrescription' }) }"
-      class="flex flex-col cursor-pointer"
+      @click="() => { router.push({ name: 'LogsList' })}"
+      class=" h-full flex-grow flex flex-col cursor-pointer pt-2"
+      :class="{ 'bg-gray-600 text-white': route.name.includes('Logs') }"
+    
     >
       <div class="text-center">
         <img
+          v-if="route.name.includes('Logs')"
           class="w-8 h-8 inline-block"
-          src="@/assets/icons/icon_store.png"
+          src="@/assets/icons/icon_myRecord_on.png"
+          alt=""
+        >
+        <img
+          v-else
+          class="w-8 h-8 inline-block"
+          src="@/assets/icons/icon_myRecord_off.png"
           alt=""
         >
       </div>
       <div class="text-xs">
-        ストア
+        毛髪記録
       </div>
     </div>
   </div>
@@ -85,9 +106,10 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter();
-    
+    const route = useRoute();
     return {
-      router
+      router,
+      route
     }
   }
 })

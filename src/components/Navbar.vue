@@ -19,10 +19,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </div>
-        <nav-drawer
-          v-if="showDrawer"
-          class="absolute left-0 top-10 duration-300"
-        ></nav-drawer>
+        
         <div class="font-medium text-3xl">
           Persona
           <!-- <pix-cardio-logo /> -->
@@ -41,11 +38,9 @@
 import { defineComponent, ref } from 'vue';
 
 import useAuth from '@/types/Auth';
-import NavDrawer from './NavDrawer.vue';
 
 export default defineComponent({
   components: {
-    NavDrawer 
   },
   setup() {
     const {
