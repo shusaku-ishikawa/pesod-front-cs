@@ -22,7 +22,7 @@
           class=""
         >
           <router-link
-            :to="{ name: 'DoctorList' }"
+            :to="{ name: 'DiagnosticDoctorList' }"
             v-slot="{ href, navigate }"
           >
             <button

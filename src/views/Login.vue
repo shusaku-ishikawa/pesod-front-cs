@@ -69,7 +69,7 @@ export default defineComponent({
     const router = useRouter();
     
     const onSubmit = () => {
-      router.push({ name: 'Top' })  
+      router.push({ name: 'DiagnosticTop' })  
     };
     return {
       onSubmit

@@ -39,7 +39,7 @@
         </div>
         <div class="flex-grow text-right">
           <router-link
-            :to="{ name: 'QuestionaireTop' }"
+            :to="{ name: 'SupportCS' }"
             v-slot="{ navigate, href }"
           >
             <svg

@@ -1,13 +1,13 @@
 <template>
   <div class="h-16 w-full bg-gray-200 items-center flex ">
     <div
-      @click="() => { router.push({ name: 'MyPage' }) }"
+      @click="() => { router.push({ name: 'MyPageTop' }) }"
       class="h-full flex-grow flex flex-col cursor-pointer pt-2"
-      :class="{ 'bg-gray-600 text-white': route.name === 'MyPage' }"
+      :class="{ 'bg-gray-600 text-white': route.name.includes('MyPage') }"
     >
       <div class="text-center">
         <img
-          v-if="route.name === 'MyPage'"
+          v-if="route.name.includes('MyPage')"
           class="w-8 h-8 inline-block"
           src="@/assets/icons/icon_myPage_on.png"
           alt=""
@@ -47,7 +47,7 @@
       </div>
     </div>
     <div
-      @click="() => {}"
+      @click="() => { router.push({ name: 'DiagnosticTop' })  }"
       class="h-full flex-grow flex flex-col cursor-pointer pt-2"
       :class="{ 'bg-gray-600 text-white': route.name.includes('Diagnostic') }"
     

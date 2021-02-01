@@ -6,6 +6,9 @@
 input[type="password"] {
   @apply rounded border border-black px-2 py-1 shadow-lg;
 } */
+body{
+  @apply bg-gray-100;
+}
 input:focus-within ~ label,
 input:not(:placeholder-shown) ~ label {
   @apply transform scale-75 -translate-y-6;
@@ -27,6 +30,9 @@ button.secondary {
   @apply bg-white border border-gray-600 text-black;
 }
 
+button.hilight {
+  @apply bg-yellow-200 border border-yellow-600 text-black;
+}
 button.error {
   @apply bg-red-500 text-white;
 }

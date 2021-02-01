@@ -1,6 +1,8 @@
 <template>
-  <div class="h-16 fixed top-0 left-0 z-50 w-full bg-white shadow-lg text-black py-3">
-    <div class="mx-auto px-2">
+  <div class="h-16 fixed top-0 left-0 z-50 shadow w-full bg-white text-black">
+    <div class="h-2 bg-black">
+    </div>
+    <div class="mx-auto px-2 py-2">
       <div class="relative flex justify-center py-0">
         <div
           @click="showDrawer = !showDrawer"

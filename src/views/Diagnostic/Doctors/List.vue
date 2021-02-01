@@ -24,8 +24,8 @@
 import { defineComponent, onMounted } from 'vue';
 
 import useDoctors from '@/types/Doctor';
-import DoctorListCard from '@/views/Doctors/ListCard.vue';
-import DoctorListFilter from '@/views/Doctors/ListFilter.vue';
+import DoctorListCard from './ListCard.vue';
+import DoctorListFilter from './ListFilter.vue';
 
 export default defineComponent({
   components: {

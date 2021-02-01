@@ -1,8 +1,8 @@
 <template>
-  <div class=" fflex fflex-col">
+  <div class="w-full sm:max-w-sm md:max-w-md mx-auto shadow bg-white">
     <navbar />
     
-    <div class="min-h-screen w-full py-16 flex flex-col">
+    <div class=" min-h-screen w-full py-16 flex flex-col">
       <slot name="title">
       </slot>
       <slot name="default">

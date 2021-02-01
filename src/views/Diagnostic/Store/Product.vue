@@ -31,7 +31,7 @@
 import { defineComponent } from 'vue';
 import { useRoute } from 'vue-router';
 
-import StoreProductListCard from '@/views/Store/Product/ListCard.vue'
+import StoreProductListCard from './Product/ListCard.vue'
 
 export default defineComponent({
   components: {

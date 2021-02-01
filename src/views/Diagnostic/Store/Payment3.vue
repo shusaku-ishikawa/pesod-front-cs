@@ -44,7 +44,7 @@
 import { defineComponent, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
-import StoreStepper from '@/views/Store/Stepper.vue'
+import StoreStepper from './Stepper.vue'
 
 export default defineComponent({
   components: {

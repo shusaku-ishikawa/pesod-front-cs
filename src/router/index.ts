@@ -1,206 +1,192 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import Login from '../views/Login.vue'
-import Signup1 from '../views/Signup1.vue'
-import Signup2 from '../views/Signup2.vue'
-import Signup3 from '../views/Signup3.vue'
-import Register from '../views/Register.vue'
-
-import Top from '../views/Top.vue'
-import MyPage from '../views/MyPage.vue'
-
-import Questionaires from '../views/Questionaires.vue'
-import QuestionaireTop from '../views/Questionaires/Top.vue'
-import QuestionaireDetail from '../views/Questionaires/Detail.vue'
-import QuestionaireDone from '../views/Questionaires/Done.vue'
-
-import Doctors from '../views/Doctors.vue';
-import DoctorList from '../views/Doctors/List.vue';
-import DoctorDetail from '../views/Doctors/Detail.vue';
-
-import Diagnostic from '../views/Diagnostic.vue'
-import DiagnosticTop from '../views/Diagnostic/Top.vue'
-import DiagnosticNotCompleted from '../views/Diagnostic/NotCompleted.vue';
-import DiagnosticChat from '../views/Diagnostic/Chat.vue';
-
-import Logs from '../views/Logs.vue';
-import LogsList from '../views/Logs/List.vue';
-import LogsDetail from '../views/Logs/Detail.vue';
-
-import Store from '@/views/Store.vue';
-import StorePrescription from '@/views/Store/Prescription.vue';
-import StoreProduct from '@/views/Store/Product.vue';
-import StorePayment1 from '@/views/Store/Payment1.vue';
-import StorePayment2 from '@/views/Store/Payment2.vue';
-
-import Support from '@/views/Support.vue';
-import SupportTop from '@/views/Support/Top.vue';
-import SupportHairConsultant from '../views/Support/HairConsultant.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Login',
-    component: Login
-  },
-  {
-    path: '/signup1',
-    name: 'Signup1',
-    component: Signup1
-  },
-  {
-    path: '/signup2',
-    name: 'Signup2',
-    component: Signup2
-  },
-  {
-    path: '/signup3',
-    name: 'Signup3',
-    component: Signup3
-  },
-  {
-    path: '/register',
-    name: 'Register',
-    component: Register
+    component: () => import(/* webpackChunkName: "Login" */ '@/views/Login.vue')
   },
   {
     path: '/top',
     name: 'Top',
-    component: Top
+    component: () => import(/* webpackChunkName: "Top" */ '@/views/Top.vue')
+  },
+  
+  {
+    path: '/signup1',
+    name: 'Signup1',
+    component: () => import(/* webpackChunkName: "Signup1" */ '@/views/Signup1.vue')
+  },
+  {
+    path: '/signup2',
+    name: 'Signup2',
+    component: () => import(/* webpackChunkName: "Signup2" */ '@/views/Signup2.vue')
+  },
+  {
+    path: '/signup3',
+    name: 'Signup3',
+    component:  () => import(/* webpackChunkName: "Signup3" */ '@/views/Signup3.vue')
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: () => import(/* webpackChunkName: "Register" */ '@/views/Register.vue')
   },
   {
     path: '/mypage',
     name: 'MyPage',
-    component: MyPage
+    component: () => import(/* webpackChunkName: "MyPage" */ '@/views/MyPage.vue'),
+    children: [
+      {
+        path: '',
+        name: 'MyPageTop',
+        component: () => import(/* webpackChunkName: "MyPageTop" */ '@/views/MyPage/Top.vue'),
+      },
+      {
+        path: 'genetics',
+        name: 'MyPageGenetics',
+        component: () => import(/* webpackChunkName: "MyPageGenetics" */ '@/views/MyPage/Genetics.vue'),
+      },
+      
+    ]
   },
   
   {
     path: '/diagnostic',
     name: 'Diagnostic',
-    component: Diagnostic,
+    component: () => import(/* webpackChunkName: "Diagnostic" */ '@/views/Diagnostic.vue'),
     redirect: { name: 'DiagnosticTop' },
     children: [
       {
         path: 'top',
         name: 'DiagnosticTop',
-        component: DiagnosticTop,
+        component: () => import(/* webpackChunkName: "DiagnosticTop" */ '@/views/Diagnostic/Top.vue'),
+      },
+      // {
+      //   path: 'not-completed',
+      //   name: 'DiagnosticNotCompleted',
+      //   component: () => import(/* webpackChunkName: "DiagnosticNotCompleted" */ '@/views/Diagnostic/NotCompleted.vue'),
+      // },
+      
+      {
+        path: 'doctors',
+        name: 'DiagnosticDoctors',
+        component: () => import(/* webpackChunkName: "Doctors" */ '@/views/Diagnostic/Doctors.vue'),
+        children: [
+          {
+            path: '',
+            name: 'DiagnosticDoctorList',
+            component: () => import(/* webpackChunkName: "DoctorTop" */ '@/views/Diagnostic/Doctors/List.vue'),
+          },
+          {
+            path: ':id',
+            name: 'DiagnosticDoctorDetail',
+            component: () => import(/* webpackChunkName: "DoctorDetail" */ '@/views/Diagnostic/Doctors/Detail.vue'),
+            children: [
+              {
+                path: '',
+                name: 'DiagnosticDoctorDetailTop',
+                component: () => import(/* webpackChukName: "DoctorDetailTop" */ '@/views/Diagnostic/Doctors/Detail/Top.vue')
+              },
+              {
+                path: 'chat',
+                name: 'DiagnosticDoctorDetailChat',
+                component: () => import(/* webpackChunkName: "DoctorDetailChat" */ '@/views/Diagnostic/Doctors/Detail/Chat.vue'),
+              },
+            ]
+          }
+        ]
       },
       {
-        path: 'not-completed',
-        name: 'DiagnosticNotCompleted',
-        component: DiagnosticNotCompleted
+        path: 'questionaires',
+        name: 'DiagnosticQuestionaires',
+        component: () => import(/* webpackChunkName: "Questionaires" */ '@/views/Diagnostic/Questionaires.vue'),
+        children: [
+          {
+            path: '',
+            name: 'DiagnosticQuestionaireTop',
+            component: () => import(/* webpackChunkName: "QuestionairesTop" */ '@/views/Diagnostic/Questionaires/Top.vue'),
+          },
+          {
+            path: 'done',
+            name: 'DiagnosticQuestionaireDone',
+            component: () => import(/* webpackChunkName: "QuestionairesDone" */ '@/views/Diagnostic/Questionaires/Done.vue'),
+          },
+          {
+            path: ':id',
+            name: 'DiagnosticQuestionaireDetail',
+            component: () => import(/* webpackChunkName: "QuestionairesDetail" */ '@/views/Diagnostic/Questionaires/Detail.vue'),
+          }
+        ]
       },
-      {
-        path: 'chat/:doctorId',
-        name: 'DiagnosticChat',
-        component: DiagnosticChat
-      },
-    ]
-  },
-  {
-    path: '/questionaires',
-    name: 'Questionaires',
-    component: Questionaires,
-    children: [
-      {
-        path: '',
-        name: 'QuestionaireTop',
-        component: QuestionaireTop,
-      },
-      {
-        path: 'done',
-        name: 'QuestionaireDone',
-        component: QuestionaireDone,
-      },
-      {
-        path: ':id',
-        name: 'QuestionaireDetail',
-        component: QuestionaireDetail
-      }
-    ]
-  },
-  {
-    path: '/doctors',
-    name: 'Doctors',
-    component: Doctors,
-    children: [
-      {
-        path: '',
-        name: 'DoctorList',
-        component: DoctorList
-      },
-      {
-        path: ':id',
-        name: 'DoctorDetail',
-        component: DoctorDetail
-      }
+      
     ]
   },
   {
     path: '/logs',
     name: 'Logs',
-    component: Logs,
+    component: () => import(/* webpackChunkName: "Logs" */ '@/views/Logs.vue'),
     children: [
       {
         path: '',
         name: 'LogsList',
-        component: LogsList,
+        component: () => import(/* webpackChunkName: "LogsList" */ '@/views/Logs/List.vue'),
       },
       {
         path: ':id',
         name: 'LogsDetail',
-        component: LogsDetail,
+        component: () => import(/* webpackChunkName: "LogsDetail" */ '@/views/Logs/Detail.vue'),
       },
     ]
   },
   {
     path: '/store',
     name: 'Store',
-    component: Store,
+    component: () => import(/* webpackChunkName: "Store" */ '@/views/Diagnostic/Store.vue'),
     children: [
       {
         path: 'prescription',
         name: 'StorePrescription',
-        component: StorePrescription,
+        component: () => import(/* webpackChunkName: "StorePrescription" */ '@/views/Diagnostic/Store/Prescription.vue'),
       },
       {
         path: 'product',
         name: 'StoreProduct',
-        component: StoreProduct,
+        component: () => import(/* webpackChunkName: "StoreProduct" */ '@/views/Diagnostic/Store/Product.vue'),
       },
       {
         path: 'payment1',
         name: 'StorePayment1',
-        component: StorePayment1,
+        component: () => import(/* webpackChunkName: "StorePayment1" */ '@/views/Diagnostic/Store/Payment1.vue'),
       },
       {
         path: 'payment2',
         name: 'StorePayment2',
-        component: StorePayment2,
+        component: () => import(/* webpackChunkName: "StorePayment2" */ '@/views/Diagnostic/Store/Payment2.vue'),
       },
     ]
   },
   {
     path: '/support',
     name: 'Support',
-    component: Support,
+    component: () => import(/* webpackChunkName: "Support" */ '@/views/Support.vue'),
     children: [
       {
         path: '',
         name: 'SupportTop',
-        component: SupportTop
+        component:  import(/* webpackChunkName: "SupportTop" */ '@/views/Support/Top.vue')
       },
       {
         path: 'hair-consultant',
         name: 'SupportHairConsultant',
-        component: SupportHairConsultant,
-        // children: [
-        //   {
-        //     path: '',
-        //     name: 'LogsList',
-        //     component: LogsList,
-        //   },
-        // ]
+        component:  import(/* webpackChunkName: "SupportHairConsultant" */ '@/views/Support/HairConsultant.vue'),
       },
+      {
+        path: 'cs',
+        name: 'SupportCS',
+        component:  import(/* webpackChunkName: "SupportCS" */ '@/views/Support/CS.vue'),
+      },
+      
     ]
   }
 ]

@@ -26,7 +26,7 @@
           </div>
           <div class="mb-2">
             <router-link
-              :to="{ name: 'DiagnosticChat', params: { doctorId: doctor.id } }"
+              :to="{ name: 'DiagnosticDoctorDetailChat' }"
               v-slot="{ href, navigate }"
             >
               <button
@@ -40,7 +40,7 @@
           </div>
           <div>
             <router-link
-              :to="{ name: 'DoctorList' }"
+              :to="{ name: 'DiagnosticDoctorList' }"
               v-slot="{ href, navigate }"
             >
               <button

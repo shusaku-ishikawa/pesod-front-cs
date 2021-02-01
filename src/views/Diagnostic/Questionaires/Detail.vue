@@ -32,7 +32,7 @@
           <button
             @click="onSelectAnswer(i)"
             class="w-full "
-            :class="{ 'primary ring ': isAnswerSelected(o), 'secondary': !isAnswerSelected(o) }"
+            :class="{ 'hilight ': isAnswerSelected(o), 'secondary': !isAnswerSelected(o) }"
           >
             {{ o }}
           </button>
@@ -57,7 +57,7 @@
             <button
               @click="onClickNext()"
               :disabled="!question.answer"
-              class="primary w-full relative"
+              class="secondary w-full relative"
             >
               <div class="inline-block">次に進む</div>
               <svg
@@ -137,7 +137,7 @@ export default defineComponent({
         router.push({ params: { id: questions.value[currentIndex + 1].id } })
       } else {
         // done
-        router.push({ name: 'QuestionaireDone' });
+        router.push({ name: 'DiagnosticQuestionaireDone' });
       }
     };
     

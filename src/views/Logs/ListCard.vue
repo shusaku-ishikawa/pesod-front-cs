@@ -2,33 +2,16 @@
   <div
     class="flex pt-2 pb-4 px-2 hover:bg-gray-50 flex flex-col"
   >
-    <div class="text-left font-medium text-2xl">
+    <div class="text-left font-medium text-lg">
       {{ log.date }}
     </div>
     <div class="flex items-center">
-      <div class="flex-auto h-full bg-gray-200 rounded border-2 border-black">
+      <div class="flex-auto h-full bg-gray-200 rounded shadow-lg">
         <img :src="log.imgFront" alt="">  
       </div>
-      <div class="flex-auto ml-1 h-full bg-gray-200 rounded border-2 border-black">
+      <div class="flex-auto ml-1 h-full bg-gray-200 rounded shadow-lg">
         <img :src="log.imgTop" alt=""> 
       </div>
-      <!-- <div class="self-stretch ml-1">
-        <table class="border-separate h-full">
-          <tbody>
-            <tr>
-              <td class="border p-3 bg-gray-100">
-                fute
-              </td>
-              <td class="border p-3">
-                futg</td>
-            </tr>
-            <tr>
-              <td class="border p-3">ga </td>
-              <td class="border p-3"> gg</td>
-            </tr>
-          </tbody>
-        </table>
-      </div> -->
     </div>
   </div>
 </template>

@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { IDoctor } from './Interfaces';
 
 const doctors = ref<IDoctor[]>([
@@ -97,9 +97,13 @@ const fetchDoctors = (): void => {
     },
   ];
 }
+const myDoctor = computed(() => {
+  return doctors.value.find(d => d.id===1);
+})
 export default function useDoctors() {
 
   return {
+    myDoctor,
     doctors,
     fetchDoctors
   }

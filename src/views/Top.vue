@@ -1,142 +1,162 @@
 <template>
   <base-layout>
-    <div class="flex-grow flex flex-col pt-5 w-72 mx-auto">
-      
-      <div class="flex w-full items-center py-1">
-        <div>
-          <img class="h-20" src="@/assets/icons/icon_monshin.png" alt="">
-        </div>
-        <div class="text-left ml-2">
-          <div>問診</div>
-          <div>回答済み</div>
-          <div>有効期限：</div>
+    <div class="w-full bg-white flex-grow px-5 pt-5">
+      <div class="mb-5">
+        説明テキスト説明テキスト説明テキスト説明テキスト説明テキスト説明テキスト説明テキスト説明テキスト説明テキスト説明テキスト説明テキスト説明テキスト説明テキスト
+      </div>
+      <div>
+        <div
+          class="flex items-center mb-3"
+        >
+          <div
+            class="px-5 "
+          >
+            <img
+              class="h-16"
+              style="z-index:999"
+              src="@/assets/icons/icon_myPage_off.png"
+              alt=""
+            >
+          </div>
+          <div class="flex-auto text-left">
+            <div
+              class="text-lg font-semibold"
+            >
+              マイページ
+            </div>
+            <div class="text-sm">
+              アカウント情報や<br>
+              定期便の確認はこちら
+            </div>
+          </div>
           <div>
-            2021/2/2 2:00
+            <svg
+              @click="() => { router.push({ name: 'MyPage' }) }"
+              class="h-10 cursor-pointer"
+              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
           </div>
         </div>
-        <div class="flex-grow text-right">
-          <router-link
-            :to="{ name: 'QuestionaireTop' }"
-            v-slot="{ navigate, href }"
+        <div
+          class="flex items-center mb-3"
+        >
+          <div
+            class="px-5 "
           >
+            <img
+              class="h-16"
+              style="z-index:999"
+              src="@/assets/icons/icon_consultation_off.png"
+              alt=""
+            >
+          </div>
+          <div class="flex-auto text-left">
+            <div
+              class="text-lg font-semibold"
+            >
+              相談窓口
+            </div>
+            <div class="text-sm">
+              毛髪のお悩みや<br>
+              お問い合わせはこちら。
+            </div>
+          </div>
+          <div>
             <svg
-              :href="href"
-              @click="navigate"
-              class="h-10 inline-block cursor-pointer "
+              @click="() => { router.push({ name: 'SupportTop' }) }"
+              class="h-10 cursor-pointer"
               xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
-          </router-link>
-        </div>
-      </div>
-      <div>
-        <svg
-          class="h-5 inline-block"
-          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 13l-7 7-7-7m14-8l-7 7-7-7" />
-        </svg>
-      </div>
-      <div class="flex w-full items-center  py-1">
-        <div>
-          <img class="h-20" src="@/assets/icons/icon_doctor_on.png" alt="">
-        </div>
-        <div class="text-left ml-2">
-          <div>医師選択</div>
-          <div>選択済み</div>
-          <div>担当医師：</div>
-          <div>
-            山田太郎
           </div>
         </div>
-        <div class="flex-grow text-right">
-          <router-link
-            :to="{ name: 'DoctorList' }"
-            v-slot="{ navigate, href }"
+        <div
+          class="flex items-center mb-3"
+        >
+          <div
+            class="px-5 "
           >
+            <img
+              class="h-16"
+              style="z-index:999"
+              src="@/assets/icons/icon_medicalHistory_off.png"
+              alt=""
+            >
+          </div>
+          <div class="flex-auto text-left">
+            <div
+              class="text-lg font-semibold"
+            >
+              診察履歴
+            </div>
+            <div class="text-sm">
+              過去の診察履歴を<br>
+              確認できます。
+            </div>
+          </div>
+          <div>
             <svg
-              :href="href"
-              @click="navigate"
-              class="h-10 inline-block"
+              @click="() => { router.push({ name: 'DiagnosticTop' }) }"
+              class="h-10 cursor-pointer"
               xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
-          </router-link>
+          </div>
         </div>
-      </div>
-      <div>
-        <svg
-          class="h-5 inline-block"
-          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 13l-7 7-7-7m14-8l-7 7-7-7" />
-        </svg>
-      </div>
-      <div class="flex w-full items-center  py-1">
-        <div>
-          <img class="h-20" src="@/assets/icons/icon_medical_on.png" alt="">
-        </div>
-        <div class="text-left ml-2">
-          <div>診察</div>
-          <div>未受診</div>
-          <div>受診する</div>
-        </div>
-        <div class="flex-grow text-right">
-          <router-link
-            :to="{ name: 'DiagnosticChat', params: { doctorId: 1 } }"
-            v-slot="{ href, navigate }"
+        <div
+          class="flex items-center mb-3"
+        >
+          <div
+            class="px-5 "
           >
+            <img
+              class="h-16"
+              style="z-index:999"
+              src="@/assets/icons/icon_myRecord_off.png"
+              alt=""
+            >
+          </div>
+          <div class="flex-auto text-left">
+            <div
+              class="text-lg font-semibold"
+            >
+              毛髪記録
+            </div>
+            <div class="text-sm">
+              日々の記録をつけて<br>
+              変化を確認しましょう。
+            </div>
+          </div>
+          <div>
             <svg
-              :href="href"
-              @click="navigate"
-              class="h-10 inline-block"
+              @click="() => { router.push({ name: 'LogsList' }) }"
+              class="h-10 cursor-pointer"
               xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
-          </router-link>
-        </div>
-      </div>
-      <div>
-        <svg
-          class="h-5 inline-block"
-          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 13l-7 7-7-7m14-8l-7 7-7-7" />
-        </svg>
-      </div>
-      <div class=" flex w-full items-center py-1">
-        <div>
-          <img class="h-20" src="@/assets/icons/icon_buy_on.png" alt="">
-        </div>
-        <div class="text-left ml-2">
-          <div>購入</div>
-          <div>院内処方がありません</div>
-        </div>
-        <div class="flex-grow text-right">
-          <router-link
-            :to="{ name: 'StorePrescription' }"
-            v-slot="{ href, navigate }"
-          >
-            <svg
-              :href="href"
-              @click="navigate"
-              class="h-10 inline-block"
-              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </router-link>
+          </div>
         </div>
       </div>
     </div>
   </base-layout>
 </template>
+<style lang="scss" scoped>
+
+
+</style>
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
-import BaseLayout from '@/layouts/Base.vue';
 export default defineComponent({
   components: {
-    BaseLayout
   },
   setup() {
-    return null;
+    const router = useRouter();
+    return {
+      router  
+    };
   }
 })
 </script>

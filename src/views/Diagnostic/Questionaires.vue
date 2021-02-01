@@ -7,18 +7,11 @@
         問診表
       </div>
     </template>
-    <div class="flex-grow flex flex-col">
-      <div class="grid grid-cols-12 flex-grow">
-        <div class="col-span-12 sm:col-span-6 sm:col-start-4 flex-grow flex flex-col">
-          
-          <div class="flex-grow">
-            <router-view
-              v-if="questions.length > 0"
-              :key="$route.fullPath"
-            ></router-view>
-          </div>
-        </div>
-      </div>
+    <div class="flex-grow flex flex-col">  
+      <router-view
+        v-if="questions.length > 0"
+        :key="$route.fullPath"
+      ></router-view>
     </div>
   </base-layout>
 </template>
