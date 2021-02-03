@@ -3,16 +3,10 @@
     class="px-6 pt-5"
   >
     <div class="text-left flex flex-col h-full">
-      <div class="mb-10">
-        <div class="relative inline-block ">
-          <div class="font-bold text-3xl">Q{{ questionIndex + 1 }}</div>
-          <div class="absolute top-3 right-0 h-10 angled-line border-b-4 border-r-4 border-black ml-3">
-          </div>
-        </div>
-      </div>
-      <div class="mb-10">
-        {{ question.question }}
-      </div>
+      <question
+        :index="questionIndex + 1"
+        :question="question.question"
+      />
       <div class="flex flex-col">
         <div
           v-if="question.options.length === 0"
@@ -73,22 +67,17 @@
    
   </div>
 </template>
-<style lang="scss" scoped>
-  .angled-line {
-    
-    -moz-transform: skew(-70deg);
-    -webkit-transform: skew(-70deg);
-    transform: skew(-70deg);
-  }
-</style>
+
 <script lang="ts">
 import { defineComponent, SetupContext } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import useQuestionaire from '@/types/Questionaire';
 
+import Question from './Question.vue';
+
 export default defineComponent({
   components: {
-    
+    Question
   },
   props: {
   },

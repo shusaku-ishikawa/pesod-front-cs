@@ -12,9 +12,9 @@
             class="px-5 "
           >
             <img
-              class="h-16"
+              class=""
               style="z-index:999"
-              src="@/assets/icons/icon_myPage_off.png"
+              src="@/assets/icons/icon_myPage_off_80x80.png"
               alt=""
             >
           </div>
@@ -31,7 +31,7 @@
           </div>
           <div>
             <svg
-              @click="() => { router.push({ name: 'MyPage' }) }"
+              @click="() => { router.push({ name: 'MyPageTop' }) }"
               class="h-10 cursor-pointer"
               xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -45,9 +45,9 @@
             class="px-5 "
           >
             <img
-              class="h-16"
+              class=""
               style="z-index:999"
-              src="@/assets/icons/icon_consultation_off.png"
+              src="@/assets/icons/icon_consultation_off_80x80.png"
               alt=""
             >
           </div>
@@ -78,9 +78,9 @@
             class="px-5 "
           >
             <img
-              class="h-16"
+              class=""
               style="z-index:999"
-              src="@/assets/icons/icon_medicalHistory_off.png"
+              src="@/assets/icons/icon_medicalHistory_off_80x80.png"
               alt=""
             >
           </div>
@@ -111,9 +111,9 @@
             class="px-5 "
           >
             <img
-              class="h-16"
+              class=""
               style="z-index:999"
-              src="@/assets/icons/icon_myRecord_off.png"
+              src="@/assets/icons/icon_myRecord_off_80x80.png"
               alt=""
             >
           </div>

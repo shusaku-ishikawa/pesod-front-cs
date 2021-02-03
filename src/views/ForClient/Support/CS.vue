@@ -50,7 +50,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import ChatMessageCard from '@/views/Diagnostic/Doctors/Detail/Chat/MessageCard.vue';
+import ChatMessageCard from '@/views/ForClient/Diagnostic/Doctors/Detail/Chat/MessageCard.vue';
 import { useRoute } from 'vue-router';
 import useChat from '@/types/Chat';
 

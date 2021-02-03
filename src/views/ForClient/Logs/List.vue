@@ -29,7 +29,7 @@
 import { defineComponent, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import useLogs from '@/types/Logs';
-import LogListCard from '@/views/Logs/ListCard.vue';
+import LogListCard from './ListCard.vue';
 
 export default defineComponent({
   components: {

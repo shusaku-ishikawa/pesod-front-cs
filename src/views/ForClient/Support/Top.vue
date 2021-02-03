@@ -9,7 +9,7 @@
     </template>
     <div class="flex flex-col w-72 mx-auto pt-5">
       <div class="flex items-center py-1 mb-5">
-        <img class="h-20" src="@/assets/icons/icon_professional.png" alt="">
+        <img class="" src="@/assets/icons/icon_professional_80x80.png" alt="">
           
         <div class="text-left ml-2 flex-auto">
           <div>毛髪診断士相談室</div>
@@ -32,7 +32,7 @@
         </div>
       </div>
       <div class="flex items-center py-1">
-        <img class="h-20" src="@/assets/icons/icon_customerSupport.png" alt="">  
+        <img class="" src="@/assets/icons/icon_customerSupport_80x80.png" alt="">  
         <div class="text-left ml-2 flex-grow">
           <div>カスタマーサポート</div>
           <div class="text-sm">平日 10:00-19:00</div>

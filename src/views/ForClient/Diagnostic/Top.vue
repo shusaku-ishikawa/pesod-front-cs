@@ -7,7 +7,7 @@
         :class="{ 'bg-yellow-100': !answeredAll }"
       >
         <div>
-          <img class="h-20" src="@/assets/icons/icon_monshin.png" alt="">
+          <img class="" src="@/assets/icons/icon_monshin_80x80.png" alt="">
         </div>
         <div class="text-left ml-2">
           <div>問診</div>
@@ -52,13 +52,13 @@
         <div>
           <img
             v-if="answeredAll"
-            class="h-20"
-            src="@/assets/icons/icon_doctor_on.png"
+            class=""
+            src="@/assets/icons/icon_doctor_on_80x80.png"
             alt="">
           <img
             v-else
-            class="h-20"
-            src="@/assets/icons/icon_doctor_off.png"
+            class=""
+            src="@/assets/icons/icon_doctor_off_80x80.png"
             alt="">
           
         </div>
@@ -105,13 +105,13 @@
         <div>
           <img
             v-if="anseredAll"
-            class="h-20"
-            src="@/assets/icons/icon_medical_on.png"
+            class=""
+            src="@/assets/icons/icon_medical_on_80x80.png"
             alt="">
           <img
             v-else
-            class="h-20"
-            src="@/assets/icons/icon_medical_off.png"
+            class=""
+            src="@/assets/icons/icon_medical_off_80x80.png"
             alt="">
           
         </div>
@@ -152,14 +152,14 @@
         <div>
           <img
             v-if="answeredAll"
-            class="h-20"
-            src="@/assets/icons/icon_buy_on.png"
+            class=""
+            src="@/assets/icons/icon_buy_on_80x80.png"
             alt=""
           >
           <img
             v-else
-            class="h-20"
-            src="@/assets/icons/icon_buy_off.png"
+            class=""
+            src="@/assets/icons/icon_buy_off_80x80.png"
             alt=""
           >
           
@@ -206,9 +206,9 @@ export default defineComponent({
     } = useDoctor();
 
     const router = useRouter();
-    onMounted(() => {
-      router.push({ name: 'Top' });
-    });
+    // onMounted(() => {
+    //   router.push({ name: 'Top' });
+    // });
 
     return {
       answeredAll,
