@@ -1,7 +1,7 @@
 <template>
   <div class="w-full p-1">
     <form
-      class=""
+      class="relative"
       @submit.prevent="() => {}"  
     >
       <textarea 
@@ -25,7 +25,7 @@
         
         <div
           v-if="showMessageTemplates"
-          class="absolute bottom-10"
+          class="absolute bottom-10 "
         >
           <message-template-modal
             @select="onSelectTemplate($event)"
