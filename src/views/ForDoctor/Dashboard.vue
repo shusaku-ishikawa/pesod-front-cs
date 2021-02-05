@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="container"
     class="h-screen pt-16 flex"
   >
     <navbar-for-doctor />
@@ -23,8 +24,9 @@
     </div>
   </div>
 </template>
+
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import NavbarForDoctor from '@/components/NavbarForDoctor.vue';
 import LeftPane from './Dashboard/LeftPane.vue';
 import MainPane from './Dashboard/MainPane.vue';
@@ -39,9 +41,17 @@ export default defineComponent({
   },
   
   setup() {
+    const container = ref<HTMLElement | null>(null);
+
     const activePage = ref('main');
-  
+    
+    onMounted(() => {
+      if (container.value == null) return;
+      container.value.style.height = window.innerHeight + 'px';  
+    });
+
     return {
+      container,
       activePage
     };
   }

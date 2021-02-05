@@ -2,7 +2,9 @@
   <div class="w-full sm:max-w-sm md:max-w-md mx-auto shadow bg-white">
     <navbar />
     
-    <div class=" min-h-screen w-full py-16 flex flex-col">
+    <div
+      ref="contentArea"
+      class=" min-h-screen w-full py-16 flex flex-col">
       <slot name="title">
       </slot>
       <slot name="default">
@@ -14,7 +16,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent,ref, onMounted, withDirectives } from 'vue';
 import Navbar from '@/components/Navbar.vue';
 import MenuFooter from '@/components/MenuFooter.vue';
 
@@ -22,6 +24,17 @@ export default defineComponent({
   components: {
     Navbar,
     MenuFooter
+  },
+  setup() {
+
+    const contentArea = ref<HTMLElement | null>(null);
+    onMounted(() => {
+      if (contentArea.value == null) return;
+      contentArea.value.style.height = `${window.innerHeight}px`;
+    });
+    return {
+      contentArea
+    }
   }
 })
 </script>
