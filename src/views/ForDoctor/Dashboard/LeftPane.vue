@@ -4,7 +4,7 @@
   >
     <div class="flex mb-3">
       <input
-        class="border"
+        class="border flex-grow"
         type="text">
       <button
         class="border bg-white"
@@ -21,12 +21,13 @@
       <div
         v-for="(c, i) in clients"
         :key="i"
-        class="py-2 flex items-center px-3 mb-5 border-b "
+        class="py-2 flex items-center px-3 py-5 border-b  hover:bg-blue-200 cursor-pointer"
+        @click="onPage('main')"
       >
         <div
           class="flex flex-col flex-grow text-left"
         >
-          <div class="flex items-center">
+          <div class="flex items-center justify-between">
             <div class="font-medium text-lg ">
               {{ c.name }}
             </div>
@@ -41,7 +42,7 @@
             ID: {{ c.id }}
           </div>
         </div>
-        <div>
+        <div class="ml-2">
           <svg
             class="w-6"
             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -54,12 +55,12 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, SetupContext } from "vue";
 
 export default defineComponent({
   components: {
   },
-  setup() {
+  setup(_, context: SetupContext) {
     const clients = [
       {
         name: 'ペルソナ太郎',
@@ -88,7 +89,12 @@ export default defineComponent({
       },
       
     ]
+    const onPage = (page: string) => {
+      context.emit('page', page)
+    };
+
     return {
+      onPage,
       clients
     };
   }
