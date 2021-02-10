@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex pt-2 pb-4 px-2 hover:bg-gray-50 flex flex-col"
+    class="flex pt-2 pb-4 px-2 hover:bg-gray-50 flex flex-col shadow-2xl"
   >
     <div class="text-left font-medium text-lg">
       {{ log.date }}

@@ -3,7 +3,8 @@
     <template v-slot:title>
       <div class="relative">
         <svg
-          class="absolute top-0 left-0 w-10 h-10"
+          @click="() => { router.push({ name: 'Signup2'}) }"
+          class="absolute top-0 left-0 w-10 h-10 cursor-pointer"
           xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
@@ -38,12 +39,16 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   components: {
   },
   setup() {
-    return null;
+    const router = useRouter();
+    return {
+      router
+    };
   }
 })
 </script>

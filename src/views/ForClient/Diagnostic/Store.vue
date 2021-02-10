@@ -1,15 +1,5 @@
-<template>
-  <base-layout>
-    <template v-if="route.name !== 'DiagnosticTop'" v-slot:title>
-      <div
-        
-        class="bg-gray-400 py-2 w-full"
-      >
-        ストア
-      </div>
-    </template>
-    <router-view></router-view>
-  </base-layout>
+<template>  
+  <router-view></router-view>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';

@@ -4,7 +4,7 @@
     </div>
     <div class="mx-auto px-2 py-2">
       <div class="relative flex justify-center py-0">
-        <div
+        <!-- <div
           @click="showDrawer = !showDrawer"
           class="sm:hidden cursor-pointer absolute left-0"
         >
@@ -20,7 +20,7 @@
             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
-        </div>
+        </div> -->
         
         <div class="font-medium text-3xl">
           Persona

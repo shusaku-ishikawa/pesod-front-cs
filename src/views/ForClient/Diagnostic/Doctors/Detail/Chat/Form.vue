@@ -4,11 +4,13 @@
       class="relative"
       @submit.prevent="() => {}"  
     >
+   
       <textarea 
         class="focus:outline-none w-full border-t p-2"
         cols="30"
         rows="2"
-        v-model="message"
+        :value="modelValue"
+        @input="onInputMessage"
       ></textarea>
       <div class="flex justify-between">
         <button
@@ -18,6 +20,8 @@
           テンプレート
         </button>
         <button
+          @click="onSendMessage"
+          :disabled="!modelValue.trim()"
           class="bg-gray-100 rounded-lg border text-sm" 
         >
           送信
@@ -46,18 +50,34 @@ export default defineComponent({
     MessageTemplateModal
   },
   props: {
+    modelValue: {
+      type: String
+    }
   },
   setup(props, ctx: SetupContext) {
-    const message = ref<string>('');
+    // const message = ref<string>('');
     
     const showMessageTemplates = ref(false);
     const onSelectTemplate = (m: string) => {
-      message.value = m;
+      // message.value = m;
+      ctx.emit('update:modelValue', props.modelValue + m);
       showMessageTemplates.value = false;
+    };
+    const onInputMessage = (ev: InputEvent) => {
+      const { target } = ev;
+      console.log('innput chagne')
+      if (!(target instanceof HTMLTextAreaElement)) return;
+      ctx.emit('update:modelValue', target.value);
+    };
+
+    const onSendMessage = () => {
+      ctx.emit('send');
     };
 
     return {
-      message,
+      // message,
+      onInputMessage,
+      onSendMessage,
       onSelectTemplate,
       showMessageTemplates
     };

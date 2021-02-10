@@ -1,20 +1,19 @@
 <template>
   <div class="flex-grow">
-    <div class="py-2 bg-gray-200 flex items-center ">
-      <router-link
-        :to="{ name: 'LogsList' }"
-        v-slot="{ href, navigate }"
-      >
-        <svg
-          :href="href"
-          @click="navigate"
-          class="h-6 w-6"
-          xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-        </svg>
-      </router-link>
-      <div>毛髪記録</div>
-    </div>
+    <page-title>
+      <div class="flex self-left mr-auto">
+        <router-link
+          :to="{ name: 'LogsList' }"
+          v-slot="{ href, navigate }"
+        >
+          <page-title-back
+            :href="href"
+            @click="navigate"
+          ></page-title-back>
+        </router-link>
+        <div>毛髪記録</div>
+      </div>
+    </page-title>
     <div class="px-2 flex flex-col">
       <div class="flex text-lg text-left ">
         <div>日付</div>

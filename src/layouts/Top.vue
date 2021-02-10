@@ -1,5 +1,8 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-gray-200">
+  <div
+    ref="contentArea"
+    class="min-h-screen flex flex-col bg-gray-100"
+  >
     <div class="my-10 text-2xl font-extrabold px-2">
       <slot name="title">
       </slot>
@@ -11,10 +14,20 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 
 export default defineComponent({
   components: {
+  },
+  setup() {
+    const contentArea = ref<HTMLElement | null>(null);
+    onMounted(() => {
+      if (contentArea.value == null) return;
+      contentArea.value.style.height = `${window.innerHeight}px`;
+    });
+    return {
+      contentArea
+    }
   }
 })
 </script>

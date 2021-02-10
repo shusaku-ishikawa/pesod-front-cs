@@ -56,9 +56,13 @@ export default function useChat() {
       },
     ];
   };
+  const addMessage = (message: IMessage) => {
+    messages.value.push(message);
+  };
 
   return {
     messages,
-    fetchMessages
+    fetchMessages,
+    addMessage
   }
 }

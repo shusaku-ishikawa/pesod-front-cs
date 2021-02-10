@@ -1,13 +1,12 @@
 <template>
-  <div class="flex-grow relative">
-    <div class="py-2 bg-gray-200">
+  <div class="flex flex-col flex-grow relative">
+    <page-title>
       毛髪記録
-    </div>
-    <div class="text-center flex flex-col">
+    </page-title>
+    <div class="text-center flex flex-col flex-grow">
       
-      <div class="flex-grow relative overflow-y-auto">
+      <div class="flex-grow relative overflow-y-auto px-2 space-y-4">
         <log-list-card
-          :class="{ 'border-b-2 border-gray-600': i < logs.length - 1 }"
           v-for="(l, i) in logs"
           :key="i"
           :log="l"

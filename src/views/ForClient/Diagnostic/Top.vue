@@ -170,7 +170,7 @@
         </div>
         <div class="flex-grow text-right">
           <router-link
-            :to="{ name: 'StorePrescription' }"
+            :to="{ name: 'StoreProductList' }"
             v-slot="{ href, navigate }"
           >
             <svg

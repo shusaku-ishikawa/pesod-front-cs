@@ -1,11 +1,9 @@
 <template>
   <base-layout>
     <template v-slot:title>
-      <div
-        class="bg-gray-400 py-2"
-      >
+      <page-title>
         問診表
-      </div>
+      </page-title>
     </template>
     <div class="flex-grow flex flex-col">  
       <router-view

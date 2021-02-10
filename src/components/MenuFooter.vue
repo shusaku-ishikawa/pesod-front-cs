@@ -1,5 +1,5 @@
 <template>
-  <div class="h-16 w-full bg-gray-200 items-center flex ">
+  <div class="h-16 w-full bg-gray-100 items-center flex ">
     <div
       @click="() => { router.push({ name: 'MyPageTop' }) }"
       class="h-full flex-grow flex flex-col cursor-pointer pt-2"

@@ -3,6 +3,11 @@ import { RouteRecordRaw } from 'vue-router'
 const clientRoutes: Array<RouteRecordRaw> = [
   {
     path: '/',
+    name: 'Lp',
+    component: () => import(/* webpackChunkName: "Lp" */ '@/views/ForClient/Lp.vue')
+  },
+  {
+    path: '/login',
     name: 'Login',
     component: () => import(/* webpackChunkName: "Login" */ '@/views/ForClient/Login.vue')
   },
@@ -153,6 +158,18 @@ const clientRoutes: Array<RouteRecordRaw> = [
         path: 'product',
         name: 'StoreProduct',
         component: () => import(/* webpackChunkName: "StoreProduct" */ '@/views/ForClient/Diagnostic/Store/Product.vue'),
+        children: [
+          {
+            path: '',
+            name: 'StoreProductList',
+            component: () => import(/* webpackChunkName: "StoreProductList" */ '@/views/ForClient/Diagnostic/Store/Product/List.vue')
+          },
+          {
+            path: ':id',
+            name: 'StoreProductDetail',
+            component: () => import(/* webpackChunkName: "StoreProductDetail" */ '@/views/ForClient/Diagnostic/Store/Product/Detail.vue')
+          }
+        ]
       },
       {
         path: 'payment1',

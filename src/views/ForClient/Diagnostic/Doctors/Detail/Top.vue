@@ -1,9 +1,9 @@
 <template>
   <base-layout>
     <template v-slot:title>
-      <div class="bg-gray-400 py-2">
-          医師プロフィール
-      </div>
+      <page-title>
+        医師プロフィール
+      </page-title>
     </template>
     <div class="flex flex-col h-full">
       <div class="grid grid-cols-12 flex-grow flex flex-col">

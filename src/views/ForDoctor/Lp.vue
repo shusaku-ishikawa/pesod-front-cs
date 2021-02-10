@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="contentArea"
     class="lp-back h-screen table-cell align-middle w-screen"
   >
     
@@ -36,7 +37,7 @@
   }
 </style>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 
@@ -44,13 +45,15 @@ export default defineComponent({
   components: {
   },
   setup() {
-    const router = useRouter();
-    
-    const onSubmit = () => {
-      router.push({ name: 'DiagnosticTop' })  
-    };
+    const contentArea = ref<HTMLElement | null>(null);
+
+    onMounted(() => {
+      if (contentArea.value == null) return;
+      contentArea.value.style.height = `${window.innerHeight}px`;
+    });
+
     return {
-      onSubmit
+      contentArea
     };
   }
 })

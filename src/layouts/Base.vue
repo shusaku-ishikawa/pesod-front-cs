@@ -4,7 +4,7 @@
     
     <div
       ref="contentArea"
-      class=" min-h-screen w-full py-16 flex flex-col">
+      class=" min-h-screen w-full py-16 flex flex-col overflow-y-auto">
       <slot name="title">
       </slot>
       <slot name="default">

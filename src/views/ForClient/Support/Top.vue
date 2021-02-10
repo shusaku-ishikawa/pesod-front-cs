@@ -1,13 +1,11 @@
 <template>
   <base-layout>
     <template v-slot:title>
-      <div
-        class="bg-gray-400 py-2 w-full"
-      >
+      <page-title>
         相談窓口
-      </div>
+      </page-title>
     </template>
-    <div class="flex flex-col w-72 mx-auto pt-5">
+    <div class="flex flex-col  mx-auto pt-5 px-5">
       <div class="flex items-center py-1 mb-5">
         <img class="" src="@/assets/icons/icon_professional_80x80.png" alt="">
           

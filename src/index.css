@@ -20,13 +20,24 @@ input:focus-within ~ label {
 }
 
 button {
-  @apply disabled:opacity-50 px-4 py-2 sm:text-sm focus:outline-none sm:w-auto font-medium text-base;
+  @apply relative disabled:opacity-50 px-4 py-2 sm:text-sm focus:outline-none sm:w-auto font-medium text-base;
 }
 
 button.primary {
-  @apply bg-gray-400 border border-gray-400 text-black;
+  @apply bg-gray-200 border border-gray-400 text-black;
 }
-
+button.arrow::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 26%;
+  right: 20px;
+  width: 26px;
+  height: 12px;
+  transform: skewX(40deg);
+  border-bottom: 1px solid #000;
+  border-right: 1px solid #000;
+}
 button.secondary {
   @apply bg-white border border-gray-600 text-black;
 }
