@@ -16,7 +16,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent,ref, onMounted, withDirectives } from 'vue';
+import { defineComponent,ref, onMounted, withDirectives, onBeforeUnmount } from 'vue';
 import Navbar from '@/components/Navbar.vue';
 import MenuFooter from '@/components/MenuFooter.vue';
 
@@ -28,10 +28,20 @@ export default defineComponent({
   setup() {
 
     const contentArea = ref<HTMLElement | null>(null);
-    onMounted(() => {
+    const fitWindow = () => {
       if (contentArea.value == null) return;
+      alert('resizing' + `height is ${window.innerHeight}`)
       contentArea.value.style.height = `${window.innerHeight}px`;
+    };
+    onMounted(() => {
+      fitWindow();
+      window.addEventListener('resize', fitWindow);
+    
     });
+    onBeforeUnmount(() => {
+      window.removeEventListener('resize', fitWindow);
+    })
+    
     return {
       contentArea
     }
