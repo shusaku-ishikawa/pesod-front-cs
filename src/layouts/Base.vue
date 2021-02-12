@@ -42,18 +42,18 @@ export default defineComponent({
       contentArea.value.style.minHeight = `${window.innerHeight}px`;
     };
     onMounted(() => {
-      // setVh();
-      window.addEventListener('load', fitWindow);
-      window.addEventListener('resize', fitWindow);
-
-    });
-    onUpdated(() => {
       fitWindow();
-    })
-    onBeforeUnmount(() => {
-      window.removeEventListener('resize', fitWindow);
-      window.removeEventListener('load', fitWindow);
-    })
+      // setVh();
+      // window.addEventListener('load', fitWindow);
+      // window.addEventListener('resize', fitWindow);
+    });
+    // onUpdated(() => {
+    //   // fitWindow();
+    // })
+    // onBeforeUnmount(() => {
+    //   // window.removeEventListener('resize', fitWindow);
+    //   // window.removeEventListener('load', fitWindow);
+    // })
     
     return {
       contentArea
