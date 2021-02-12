@@ -1,11 +1,11 @@
 <template>
   <div
-    class="w-full sm:max-w-sm md:max-w-md mx-auto shadow bg-white">
+    ref="contentArea"
+    class="w-full min-h-screen sm:max-w-sm md:max-w-md mx-auto shadow bg-white">
     <navbar />
     
     <div
-      ref="contentArea"
-      class="content-area min-h-screen w-full py-16 flex flex-col overflow-y-auto">
+      class="content-area h-full w-full py-16 flex flex-col overflow-y-auto">
       <slot name="title">
       </slot>
       <slot name="default">
@@ -37,7 +37,7 @@ export default defineComponent({
     };
     const fitWindow = () => {
       if (contentArea.value == null) return;
-      contentArea.value.style.height = `${window.innerHeight}px`;
+      contentArea.value.style.maxHeight = `${window.innerHeight}px`;
     };
     onMounted(() => {
       // setVh();

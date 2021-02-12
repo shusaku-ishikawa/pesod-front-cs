@@ -23,7 +23,7 @@ export default defineComponent({
     const contentArea = ref<HTMLElement | null>(null);
     onMounted(() => {
       if (contentArea.value == null) return;
-      contentArea.value.style.height = `${window.innerHeight}px`;
+      contentArea.value.style.minHeight = `${window.innerHeight}px`;
     });
     return {
       contentArea
