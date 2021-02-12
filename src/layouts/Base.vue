@@ -1,10 +1,11 @@
 <template>
-  <div class="w-full sm:max-w-sm md:max-w-md mx-auto shadow bg-white">
+  <div
+    ref="contentArea"
+    class="w-full min-h-screen sm:max-w-sm md:max-w-md mx-auto shadow bg-white">
     <navbar />
     
     <div
-      ref="contentArea"
-      class="content-area min-h-screen w-full py-16 flex flex-col overflow-y-auto">
+      class="h-full w-full py-16 flex flex-col overflow-y-auto">
       <slot name="title">
       </slot>
       <slot name="default">
@@ -34,19 +35,19 @@ export default defineComponent({
       const vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty('--vh', `${vh}px`);
     };
-    // const fitWindow = () => {
-    //   if (contentArea.value == null) return;
-    //   contentArea.value.style.height = `${window.innerHeight}px`;
-    // };
+    const fitWindow = () => {
+      if (contentArea.value == null) return;
+      contentArea.value.style.height = `${window.innerHeight}px`;
+    };
     onMounted(() => {
       // setVh();
-      window.addEventListener('load', setVh);
-      window.addEventListener('resize', setVh);
+      window.addEventListener('load', fitWindow);
+      window.addEventListener('resize', fitWindow);
 
     });
     onBeforeUnmount(() => {
-      window.removeEventListener('resize', setVh);
-      window.removeEventListener('load', setVh);
+      window.removeEventListener('resize', fitWindow);
+      window.removeEventListener('load', fitWindow);
     })
     
     return {
