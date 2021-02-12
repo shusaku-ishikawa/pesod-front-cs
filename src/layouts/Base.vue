@@ -1,11 +1,11 @@
 <template>
   <div
-    ref="contentArea"
-    class="w-full min-h-screen sm:max-w-sm md:max-w-md mx-auto shadow bg-white">
+    class="w-full sm:max-w-sm md:max-w-md mx-auto shadow bg-white">
     <navbar />
     
     <div
-      class="h-full w-full py-16 flex flex-col overflow-y-auto">
+      ref="contentArea"
+      class="content-area min-h-screen w-full py-16 flex flex-col overflow-y-auto">
       <slot name="title">
       </slot>
       <slot name="default">
@@ -19,7 +19,7 @@
 <style lang="scss">
 </style>
 <script lang="ts">
-import { defineComponent,ref, onMounted, withDirectives, onBeforeUnmount } from 'vue';
+import { defineComponent,ref, onMounted, withDirectives, onBeforeUnmount, onUpdated } from 'vue';
 import Navbar from '@/components/Navbar.vue';
 import MenuFooter from '@/components/MenuFooter.vue';
 
@@ -45,6 +45,9 @@ export default defineComponent({
       window.addEventListener('resize', fitWindow);
 
     });
+    onUpdated(() => {
+      fitWindow();
+    })
     onBeforeUnmount(() => {
       window.removeEventListener('resize', fitWindow);
       window.removeEventListener('load', fitWindow);
