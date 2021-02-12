@@ -4,7 +4,7 @@
     
     <div
       ref="contentArea"
-      class=" min-h-screen w-full py-16 flex flex-col overflow-y-auto">
+      class="content-area min-h-screen w-full py-16 flex flex-col overflow-y-auto">
       <slot name="title">
       </slot>
       <slot name="default">
@@ -15,6 +15,8 @@
     ></menu-footer>
   </div>
 </template>
+<style lang="scss">
+</style>
 <script lang="ts">
 import { defineComponent,ref, onMounted, withDirectives, onBeforeUnmount } from 'vue';
 import Navbar from '@/components/Navbar.vue';
@@ -28,18 +30,23 @@ export default defineComponent({
   setup() {
 
     const contentArea = ref<HTMLElement | null>(null);
-    const fitWindow = () => {
-      if (contentArea.value == null) return;
-      alert('resizing' + `height is ${window.innerHeight}`)
-      contentArea.value.style.height = `${window.innerHeight}px`;
+    const setVh = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
     };
+    // const fitWindow = () => {
+    //   if (contentArea.value == null) return;
+    //   contentArea.value.style.height = `${window.innerHeight}px`;
+    // };
     onMounted(() => {
-      fitWindow();
-      window.addEventListener('resize', fitWindow);
-    
+      // setVh();
+      window.addEventListener('load', setVh);
+      window.addEventListener('resize', setVh);
+
     });
     onBeforeUnmount(() => {
-      window.removeEventListener('resize', fitWindow);
+      window.removeEventListener('resize', setVh);
+      window.removeEventListener('load', setVh);
     })
     
     return {
