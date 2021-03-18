@@ -64,6 +64,7 @@
         @submit.prevent="() => {}"
       >
         <p-checkbox
+          v-model="accept"
           class="mb-5"
           label="私はペルソナの利用規約と、プライバシーポリシーに同意します。"
         ></p-checkbox>
@@ -71,7 +72,8 @@
           class="text-center"
         >
           <button
-            @click="() => { router.push({ name: 'Signup2' }) }"
+            :disabled="!accept"
+            @click="onAccept"
             type="submit"
             class="primary arrow w-64 mb-10"
           >
@@ -83,15 +85,29 @@
   </top-layout>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { getRegexpTester } from '@/mixins/FormValidator';
+import { defineComponent, ref, SetupContext } from 'vue';
 import { useRouter } from 'vue-router';
 
 export default defineComponent({
   components: {
   },
-  setup() {
+  emits: [
+    'update:policy_accepted'
+  ],
+  setup(_, context: SetupContext) {
     const router = useRouter();
+
+    const accept = ref(false);
+
+    const onAccept = () => {
+      // context.emit('update:policy_accepted', true);
+      router.push({ name: 'Signup2' })
+    };
+
     return {
+      accept,
+      onAccept,
       router 
     };
   }

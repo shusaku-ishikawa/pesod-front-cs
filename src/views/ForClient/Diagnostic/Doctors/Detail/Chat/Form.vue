@@ -12,42 +12,27 @@
         :value="modelValue"
         @input="onInputMessage"
       ></textarea>
-      <div class="flex justify-between">
-        <button
-          @click="showMessageTemplates = true"
-          class="border rounded-lg py-1 text-sm"
-        >
-          テンプレート
-        </button>
+      <div class="flex ">
+        <slot name="menu"></slot>
         <button
           @click="onSendMessage"
           :disabled="!modelValue.trim()"
-          class="bg-gray-100 rounded-lg border text-sm" 
+          class="ml-auto bg-gray-100 rounded-lg border text-sm" 
         >
           送信
         </button>
-        
-        <div
-          v-if="showMessageTemplates"
-          class="absolute bottom-10 "
-        >
-          <message-template-modal
-            @select="onSelectTemplate($event)"
-            @close="showMessageTemplates = false"
-          ></message-template-modal>
-        </div>
       </div>
     </form>
     
   </div>
 </template>
 <script lang="ts">
-import { ref, computed, defineComponent, SetupContext, } from 'vue';
-import MessageTemplateModal from './MessageTemplateModal.vue';
+import { ref, computed, defineComponent, SetupContext, onMounted, } from 'vue';
+import useChatLog from '@/types/ChatLog';
+import { IMessageTemplate } from '@/types/Interfaces';
 
 export default defineComponent({
   components: {
-    MessageTemplateModal
   },
   props: {
     modelValue: {
@@ -57,12 +42,10 @@ export default defineComponent({
   setup(props, ctx: SetupContext) {
     // const message = ref<string>('');
     
-    const showMessageTemplates = ref(false);
-    const onSelectTemplate = (m: string) => {
-      // message.value = m;
-      ctx.emit('update:modelValue', props.modelValue + m);
-      showMessageTemplates.value = false;
-    };
+    const {
+      fetchCustomerMessageTemplates
+    } = useChatLog();
+
     const onInputMessage = (ev: InputEvent) => {
       const { target } = ev;
       console.log('innput chagne')
@@ -73,13 +56,12 @@ export default defineComponent({
     const onSendMessage = () => {
       ctx.emit('send');
     };
-
+    
+   
     return {
       // message,
       onInputMessage,
       onSendMessage,
-      onSelectTemplate,
-      showMessageTemplates
     };
   }
 })

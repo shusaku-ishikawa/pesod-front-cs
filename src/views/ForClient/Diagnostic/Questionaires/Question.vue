@@ -7,8 +7,7 @@
         </div>
       </div>
     </div>
-    <div class="mb-10 text-left">
-      {{ question }}
+    <div v-html="htmlify(question)" class="mb-5 text-left">
     </div>
   </div>
 </template>
@@ -36,7 +35,13 @@ export default defineComponent({
     }
   },
   setup(_, ctx: SetupContext) {
-    return null;
+    const htmlify = (str: string) => {
+      if (str == null) return '';
+      return str.replace(/(?:\r\n|\r|\n)/g, '<br />');
+    }
+    return {
+      htmlify
+    };
   }
 });
 </script>

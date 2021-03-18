@@ -1,8 +1,8 @@
 <template>
-  <div class="fixed z-10 inset-0 overflow-y-auto">
+  <div class="fixed z-10 inset-0 overflow-y-auto ">
     <div
-      @click="onClickOutside()"
-      class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center">
+      
+      class="table-cell h-screen px-4 text-center w-screen">
       <!--
         Background overlay, show/hide based on modal state.
 
@@ -13,7 +13,9 @@
           From: "opacity-100"
           To: "opacity-0"
       -->
-      <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+      <div
+        @click="onClickOutside()"
+        class="fixed inset-0 transition-opacity" aria-hidden="true">
         <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
       </div>
 
@@ -29,7 +31,7 @@
           From: "opacity-100 translate-y-0 sm:scale-100"
           To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
       -->
-      <slot name="default">
+      <slot name="default" class="">
       </slot>
     </div>
   </div>

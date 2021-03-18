@@ -2,14 +2,11 @@
   <div
     class="pt-10"
   >
-    <div>
-      
-    </div>
     <button
       class="w-72 primary mx-auto"
       @click="onClickStart()"
     >
-      {{ nextOpenQuestionId == null ? '回答を修正する' : '問診を開始する' }}
+      問診を開始する
     </button>
   </div>
 </template>
@@ -20,30 +17,37 @@
 import { defineComponent, onMounted, SetupContext } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import useQuestionaire from '@/types/Questionaire';
+import QuestionairesVue from '../Questionaires.vue';
+import { IQuestion } from '@/types/Interfaces';
 
 export default defineComponent({
   components: {
     
   },
   props: {
+    questions: {
+      type: Object as () => IQuestion[]
+    }
   },
-  setup(_, ctx: SetupContext) {
+  setup(props: any, ctx: SetupContext) {
     const route = useRoute();
     const router = useRouter();
 
-    const {
-      nextOpenQuestionId
+     const {
+      fetchQuestions,
     } = useQuestionaire();
-
+  
+    
     
     const onClickStart = () => {
       router.push({ name: 'DiagnosticQuestionaireDetail', params: { id: 1 } });
     };
     
-    onMounted(() => {
-      if (nextOpenQuestionId.value != null) {
-        router.replace({ name: 'DiagnosticQuestionaireDetail', params: { id: nextOpenQuestionId.value } })
-      }  
+    onMounted(async () => {
+      
+      if (props.questions.length) {
+        router.replace({ name: 'DiagnosticQuestionaireDetail', params: { id: props.questions[0].id } })      
+      }
     });
     
     return {

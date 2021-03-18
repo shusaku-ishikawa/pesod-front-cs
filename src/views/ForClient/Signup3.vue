@@ -26,7 +26,7 @@
           <div
             class="text-pink-400"
           >
-            sample@persona.com
+            {{ email }}
           </div>
           <div>
             にメールを送信しました
@@ -39,14 +39,19 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 export default defineComponent({
   components: {
   },
   setup() {
+    const route = useRoute();
     const router = useRouter();
+
+    const email = route.params.email;
+    // alert(email)
     return {
+      email,
       router
     };
   }

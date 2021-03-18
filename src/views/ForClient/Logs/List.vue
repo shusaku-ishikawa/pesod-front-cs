@@ -27,7 +27,7 @@
 <script lang="ts">
 import { defineComponent, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import useLogs from '@/types/Logs';
+import useHairRecord from '@/types/HairRecord';
 import LogListCard from './ListCard.vue';
 
 export default defineComponent({
@@ -39,13 +39,12 @@ export default defineComponent({
     const router = useRouter();
     
     const {
-      logs,
-      fetchLogs
-    } = useLogs();
+      fetchHairRecord
+    } = useHairRecord();
 
     return {
       router,
-      logs
+      
     };
   }
 })

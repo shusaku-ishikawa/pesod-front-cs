@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["MyPage"],{3825:function(e,t,n){"use strict";n.r(t);var r=n("7a23");function c(e,t,n,c,o,u){var a=Object(r["B"])("router-view");return Object(r["t"])(),Object(r["d"])(a)}var o=Object(r["i"])({components:{},setup:function(){return{}}});o.render=c;t["default"]=o}}]);
+//# sourceMappingURL=MyPage.78be4934.js.map

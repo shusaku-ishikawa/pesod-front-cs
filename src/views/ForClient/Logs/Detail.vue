@@ -124,16 +124,15 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
 
-import useLogs from '@/types/Logs';
+import useHairRecord from '@/types/HairRecord';
 
 export default defineComponent({
   components: {
   },
   setup() {
     const {
-      logs,
-      fetchLogs
-    } = useLogs();
+      fetchHairRecord
+    } = useHairRecord();
 
     
     const front = ref(null);
@@ -180,7 +179,7 @@ export default defineComponent({
       top,
       topImage,
       onTopImageChange,
-      logs
+      
     };
   }
 })

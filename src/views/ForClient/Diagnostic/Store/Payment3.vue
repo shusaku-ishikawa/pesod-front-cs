@@ -1,84 +1,118 @@
 <template>
-  <div class="">
-    <store-stepper
-      class="mb-5"
-      :step="2"
-    ></store-stepper>
-    <div class="border-b border-t">
-      支払い方法を選択
-    </div>
-    <div class="text-left p-2">
-      
+  <base-layout>
+    <template v-slot:title>
+      <page-title>
+        購入
+      </page-title>
+    </template>
+    <div class="flex flex-col flex-grow">
+      <store-stepper
+        class="mb-5"
+        :step="3"
+      ></store-stepper>
+      <div class="text-left p-2">
+        <product-list-card
+          v-for="(p, i) in productsInCart"
+          :key="i"
+          :product="p"
+          :isSelectable="false"
+        ></product-list-card>
+      </div>
+      <hr class="my-3">
+      <div class="mb-3">
+        <table class="border-collapsed w-full">
+          <tbody>
+            <tr>
+              <th class="font-normal">小計</th>
+              <td>ｘｘｘｘｘ</td>
+            </tr>
+            <tr class="text-sm">
+              <th class="font-normal">消費税</th>
+              <td>ｘｘｘｘｘ</td>
+            </tr>
+            
+          </tbody>
+          <tbody>
+            <tr class="text-lg">
+              <th class="font-normal">合計</th>
+              <td>xxxxxx</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mb-3">
+        <p-checkbox
+          label="定期便に登録する"
+          v-model="scheduledDelivery"
+        ></p-checkbox>
+      </div>
       <div>
-        <p-checkbox
-          label="登録済みのカードを使用"
-        ></p-checkbox>
-      </div>
-      <div class="mb-5">
-        <p-checkbox
-          label="その他"
-        ></p-checkbox>
-      </div>
-      <div class="mb-5" ref="payjs" id="payjs">
-        here
-      </div>
-      <div>
-        <p-checkbox
-          label="カード情報を登録する"
-        ></p-checkbox>
+        <button
+          @click="onFixOrder"
+          class="primary block mx-auto mb-3"
+        >
+          注文を確定する
+        </button>
+        <button
+          @click="router.push({ name: 'StorePayment2' })"
+        >
+          もどる
+        </button>
       </div>
     </div>
-    <div>
-      <button
-        class="primary block mx-auto mb-3"
-      >
-        最終確認にすすむ
-      </button>
-      <button>
-        もどる
-      </button>
-    </div>
-  </div>
+  </base-layout>
 </template>
-<script>
-import { defineComponent, onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+<script lang="ts">
+import { defineComponent, onMounted, ref, SetupContext } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { ISubscription, IProduct } from '@/types/Interfaces'
+import useProduct from '@/types/Product';
+
+import ProductListCard from './Product/ListCard.vue';
 
 import StoreStepper from './Stepper.vue'
 
 export default defineComponent({
   components: {
-    StoreStepper
+    StoreStepper,
+    ProductListCard
   },
-  setup() {
+  props: {
+    subscription: {
+      type: Object as () => ISubscription
+    }
+  },
+  setup(props: any, context: SetupContext) {
     const route = useRoute();
+    const router = useRouter();
 
-    const payjs = ref(null);
+    const {
+      getProduct
+    } = useProduct();
 
-    
-    onMounted(() => {
-      const scriptTag = document.createElement('script');
-      scriptTag.src = 'https://js.pay.jp/v2/pay.js';
-      scriptTag.addEventListener('load', () => {
-        alert('loaded')
-        // // elementsを取得します。ページ内に複数フォーム用意する場合は複数取得ください
-        /* eslint no-undef: 0 */
-        PayJP = window.Payjp('pk_test_777137856c4d8eba2c2ea6df');
-        const elements = PayJP.elements()
+    const productsInCart = ref<IProduct[]>([]);
+    const scheduledDelivery = ref(false);
 
-        // element(入力フォームの単位)を生成します
-        const cardElement = elements.create('card')
-        cardElement.mount('#payjs');
-
+    onMounted(async () => {
+      // 商品がカートになければ商品画面に戻る
+      if (props.subscription.product_ids.length === 0) {
+        router.push({ name: 'StoreProductList' })
+      }
+      props.subscription.product_ids.map(async (pid: any) => {
+        productsInCart.value.push(await getProduct(pid.id));
       });
-      if (payjs.value == null) return;
-      payjs.value.appendChild(scriptTag);
-      
     });
-    
+
+    const onFixOrder = () => {
+      console.log(props.subscription)
+      router.push({ name: 'StorePaymentDone' })
+    }
     return {
       route,
-      payjs,
+      router,
+      productsInCart,
+      onFixOrder,
+      scheduledDelivery
       // onSubmit
     };
   }

@@ -3,7 +3,7 @@
     <input
       @change="onChange"
       type="checkbox"
-      class="form-checkbox h-6 w-6 text-gray-600" :checked="value"><span class="ml-2 text-gray-700">
+      class="form-checkbox h-6 w-6 text-gray-600" :checked="modelValue"><span class="ml-2 text-gray-700">
       {{ $attrs.label }}
     </span>
   </label>
@@ -15,16 +15,19 @@ export default defineComponent({
         
   },
   props: {
-    value: {
+    modelValue: {
       type: Boolean,
     }
   },
+  emits: [
+    'update:modelValue'
+  ],
   setup(_, ctx: SetupContext) {
     const onChange = (e: InputEvent) => {
       const { target } = e;
       if (!(target instanceof HTMLInputElement)) return;
-      const { value } = target;
-      ctx.emit('input', value);
+      
+      ctx.emit('update:modelValue', target.checked);
     };
     return {
       onChange

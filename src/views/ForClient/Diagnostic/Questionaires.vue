@@ -5,40 +5,53 @@
         問診表
       </page-title>
     </template>
-    <div class="flex-grow flex flex-col">  
+    <div class="flex-grow flex flex-col">
       <router-view
-        v-if="questions.length > 0"
+        :myPrescript="myPrescript"
+        :questions="questions"
+        v-if="myPrescript != null && questions.length > 0"
         :key="$route.fullPath"
       ></router-view>
     </div>
   </base-layout>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineComponent, isProxy, onMounted, onUpdated, ref } from 'vue';
 import useQuestionaire from '@/types/Questionaire';
 import { IQuestion } from '@/types/Interfaces';
+import usePrescript from '@/types/Prescript'
+import { useRouter } from 'vue-router';
+
 export default defineComponent({
   components: {
   },
   setup() {
+    const router = useRouter();
+    const {
+      myPrescript,
+      getPrescript,
+    } = usePrescript();
 
     const {
       questions,
       fetchQuestions,
     } = useQuestionaire();
   
-    onMounted(() => {
-      fetchQuestions();
+    onMounted(async () => {
+      myPrescript.value = await getPrescript();
+      const data = await fetchQuestions();
+      questions.value = data;
     });
     
-    const onAnswer = (event: any, index: number) => {
-      if (event.target == null) return;
-      questions.value[index].answer = event.target.value;
-    };
-
+    onUpdated(() => {
+      if (myPrescript.value?.status != 1) {
+        router.push({ name: 'DiagnosticTop' })
+      }
+    })
+   
     return {
+      myPrescript,
       questions,
-      onAnswer
     };
   }
 })

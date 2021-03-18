@@ -5,16 +5,17 @@
   >
     
     <div
-      class="flex items-end space-y-2 mx-2"
+      class="flex items-end space-y-1 mx-2"
       
     >
       <span
+        v-html="htmlify(chatLog.message)"
         :class="{ 'rounded-bl-none': isMyMessage, 'rounded-br-none': !isMyMessage }"
-        class="text-left w-64 sm:max-w-sm md:max-w-md break-words text-sm leading-tight px-4 py-4 rounded-lg inline-block bg-gray-300 text-gray-600">
-        {{ message.message }}
+        class="text-left sm:max-w-sm md:max-w-md break-words text-sm leading-tight px-4 py-4 rounded-lg inline-block bg-gray-300 text-gray-600">
+        
       </span>
       <div class="text-xs ml-2">
-        16:10
+        {{ HHMM(chatLog.created_at) }}
       </div>
     </div>
     
@@ -24,33 +25,42 @@
   </div>
 </template>
 <script lang="ts">
+import moment from 'moment';
+
 import { computed, defineComponent, SetupContext, } from 'vue';
 
-import { IMessage } from '@/types/Interfaces';
-
-import useAuth from '@/types/Auth';
+import { IChatLog } from '@/types/Interfaces';
+import usePrescript from '@/types/Prescript';
 
 export default defineComponent({
   components: {
     
   },
   props: {
-    message: {
-      type: Object as () => IMessage,
+    chatLog: {
+      type: Object as () => IChatLog,
       required: true
+    },
+    isMyMessage: {
+      type: Boolean
     }
   },
-  setup(props, ctx: SetupContext) {
-    const {
-      loginUser
-    } = useAuth();
-
-    const isMyMessage = computed(() => {
-      return props.message.speaker.id === loginUser.value.id;
-    });
+  setup(props: any, ctx: SetupContext) {
     
+
+    
+    
+    
+    const HHMM = (dateStr: string) => {
+      return moment(dateStr).format('H:mm')
+    }
+    
+    const htmlify = (m: string) => {
+      return m.replaceAll('\n', '<br>')
+    }
     return {
-      isMyMessage
+      HHMM,
+      htmlify
     };
   }
 })

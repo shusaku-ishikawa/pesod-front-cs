@@ -24,4 +24,6 @@ app.component('TopLayout', TopLayout)
 app.component('FrameModal', FrameModal);
 app.component('PageTitle', PageTitle);
 app.component('PageTitleBack', PageTitleBack);
-app.mount('#app')
+app.mount('#app');
+
+

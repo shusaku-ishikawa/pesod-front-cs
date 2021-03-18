@@ -20,30 +20,47 @@
       </div>
     </template>
     <div class="grid grid-cols-12">
+      
       <form
+        :disabled="loading"
+        ref="from"
+        method="post"
         class="py-5 col-span-12 sm:col-span-6 sm:col-start-4 md:col-span-4 md:col-start-5 p-5 "
-        @submit.prevent="onSubmit"
+        @submit.prevent="onLogin"
       >
+        <div
+          v-if="loginError != ''"
+          class="mb-5 text-red-600"
+        >
+          {{ loginError }}
+        </div>
         <p-input
           class="mb-10"
           label="メールアドレス"
           id="email"
-          type="text"
+          type="email"
+          :required="true"
+          autocomplete="email"
+          v-model="formData.email"
+          :rules="[formRequired]"
         >
         </p-input>
-        
         <p-input
           class="mb-12"
           label="パスワード"
+          autocomplete="current-password"
           id="password"
           type="password"
+          v-model="formData.password"
+          :rules="[formRequired]"
         >
         </p-input>
-        
         <div
           class="text-center"
         >
+          
           <button
+            :disabled="loading"
             type="submit"
             class="primary arrow w-64 mb-10"
           >
@@ -59,20 +76,98 @@
   </top-layout>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { ILogin } from '@/types/Interfaces';
+import {formRequired} from '@/mixins/FormValidator';
+
+import useAuth from '@/types/Auth';
+import usePrescript from '@/types/Prescript';
 
 export default defineComponent({
   components: {
   },
   setup() {
     const router = useRouter();
+
+    const {
+      token,
+      getToken,
+      getUserId,
+    } = useAuth();
+    const {
+      getPrescript
+    } = usePrescript();
     
-    const onSubmit = () => {
-      router.push({ name: 'DiagnosticTop' })  
+    const formData = ref<ILogin>({
+      email: '',
+      password: '' 
+    });
+    
+    const form = ref<HTMLFormElement | null>(null);
+
+    const loginError = ref<string>('');
+    
+    const setLoginError = (message: string) => {
+      loginError.value = message;
+      window.setTimeout(() => {
+        loginError.value = '';
+      }, 5000);  
+    };
+    
+    onMounted(() => {
+      token.value = null;
+    });
+
+    const loading = ref(false);
+
+    const onLogin = async (event: Event) => {
+      // validate
+      if (form.value) {
+        const isValid = form.value.checkValidity();
+        if (!isValid) {
+          alert('not vaida')
+          return;
+        }
+      }
+      try {
+        loading.value = true;
+        const tokenData = await getToken(formData.value);
+        token.value = tokenData;
+        
+        router.push({ name: 'DiagnosticTop' }) ;
+      } catch (err) {
+        console.log(err)
+        if (err.response) {
+          const { status, data } = err.response;
+          
+          if (status >= 400 && status < 500) {
+            alert(JSON.stringify(data))
+            setLoginError('ログインに失敗しました。')
+          } else {
+            setLoginError(JSON.stringify(data))
+          }
+          // formData.value = {
+          //   email: '',
+          //   password: ''
+          // }
+        } else {
+          // network error or timeout
+          setLoginError(JSON.stringify(err))
+        }
+        
+      }
+      loading.value = false;
+      
     };
     return {
-      onSubmit
+      loading,
+      form,
+      formRequired,
+      formData,
+      loginError,
+      // formValid,
+      onLogin
     };
   }
 })

@@ -24,22 +24,38 @@
     </template>
     <div class="grid grid-cols-12">
       <form
-        class="py-5 col-span-12 sm:col-span-6 sm:col-start-4 md:col-span-4 md:col-start-5 rounded p-5 border"
-        @submit.prevent="onSubmit"
+        class="py-5 col-span-12 sm:col-span-6 sm:col-start-4 md:col-span-4 md:col-start-5 rounded p-5 "
+        :disabled="loading"
+        ref="from"
+        method="post"
+        @submit.prevent="onLogin"
       >
+         <div
+          v-if="loginError != ''"
+          class="mb-5 text-red-600"
+        >
+          {{ loginError }}
+        </div>
         <p-input
           class="mb-10"
           label="メールアドレス"
           id="email"
-          type="text"
+          type="email"
+          :required="true"
+          autocomplete="email"
+          v-model="formData.email"
+          :rules="[formRequired]"
         >
         </p-input>
         
         <p-input
           class="mb-12"
           label="パスワード"
+          autocomplete="current-password"
           id="password"
           type="password"
+          v-model="formData.password"
+          :rules="[formRequired]"
         >
         </p-input>
         
@@ -47,6 +63,7 @@
           class="text-center"
         >
           <button
+            :disabled="loading"
             type="submit"
             class="primary mb-10 w-72 sm:block sm:w-full"
           >
@@ -68,21 +85,103 @@
   </top-layout>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { ILogin } from '@/types/Interfaces';
+
+import {formRequired} from '@/mixins/FormValidator';
+
+import useAuth from '@/types/Auth';
+import useDoctor from '@/types/Doctor';
 
 export default defineComponent({
   components: {
   },
   setup() {
     const router = useRouter();
+
+    const {
+      getToken,
+      getUserId,
+    } = useAuth();
     
-    const onSubmit = () => {
-      router.push({ name: 'DoctorDashboard' })  
+    const {
+      getDoctor
+    } = useDoctor();
+
+    const formData = ref<ILogin>({
+      email: '',
+      password: '' 
+    });
+    
+    const form = ref<HTMLFormElement | null>(null);
+
+    const loginError = ref<string>('');
+    
+    const setLoginError = (message: string) => {
+      loginError.value = message;
+      window.setTimeout(() => {
+        loginError.value = '';
+      }, 5000);  
+    };
+    
+    onMounted(() => {
+      window.localStorage.removeItem('token');
+      window.localStorage.removeItem('profile');
+    });
+
+    const loading = ref(false);
+
+    const onLogin = async (event: Event) => {
+      // validate
+      if (form.value) {
+        const isValid = form.value.checkValidity();
+        if (!isValid) {
+          alert('not vaida')
+          return;
+        }
+      }
+      try {
+        loading.value = true;
+        const token = await getToken(formData.value);
+        window.localStorage.setItem('token', JSON.stringify(token));
+        const userId = await getUserId();
+        const profile = await getDoctor(userId);
+        console.log(profile)
+        window.localStorage.setItem('profile', JSON.stringify(profile));
+
+        router.push({ name: 'DoctorDashboard' }) ;
+      } catch (err) {
+        console.log(err)
+        if (err.response) {
+          const { status, data } = err.response;
+          console.log(data)
+          if (status >= 400 && status < 500) {
+            setLoginError('ログインに失敗しました。')
+          } else {
+            setLoginError(JSON.stringify(data))
+          }
+          // formData.value = {
+          //   email: '',
+          //   password: ''
+          // }
+        } else {
+          // network error or timeout
+          setLoginError('ネットワークエラー')
+        }
+        
+      }
+      loading.value = false;
+      
     };
     return {
-      router,
-      onSubmit
+      loading,
+      form,
+      formRequired,
+      formData,
+      loginError,
+      // formValid,
+      onLogin
     };
   }
 })

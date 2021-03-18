@@ -41,7 +41,9 @@
         >
           最終確認にすすむ
         </button>
-        <button>
+        <button
+          @click="router.push({ name: 'StorePayment1' })"
+        >
           もどる
         </button>
       </div>
@@ -49,8 +51,9 @@
   </base-layout>
 </template>
 <script>
+import router from '@/router';
 import { defineComponent, onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 import StoreStepper from './Stepper.vue'
 
@@ -60,17 +63,16 @@ export default defineComponent({
   },
   setup() {
     const route = useRoute();
-
+    const router = useRouter();
     const payjs = ref(null);
 
     let PayJP = null;
     let cardElement = null;
+
     onMounted(() => {
       const scriptTag = document.createElement('script');
       scriptTag.src = 'https://js.pay.jp/v2/pay.js';
       scriptTag.addEventListener('load', () => {
-        alert('loaded')
-        // // elementsを取得します。ページ内に複数フォーム用意する場合は複数取得ください
         
         /* eslint no-undef: 0 */
         PayJP = window.Payjp('pk_test_777137856c4d8eba2c2ea6df');
@@ -89,14 +91,17 @@ export default defineComponent({
       if (PayJP == null || cardElement == null) return;
       PayJP.createToken(cardElement).then((r) => {
         if (r.error) {
-          alert(r.error.message)
+          console.error(r.error.message)
         } else {
-          alert(r.id);
+          console.log(r.id);
         }
       });
+      router.push({ name: 'StorePayment3' })
     };
+    
     return {
       route,
+      router,
       payjs,
       onSubmit
     };

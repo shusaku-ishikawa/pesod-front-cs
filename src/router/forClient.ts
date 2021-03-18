@@ -28,12 +28,12 @@ const clientRoutes: Array<RouteRecordRaw> = [
     component: () => import(/* webpackChunkName: "Signup2" */ '@/views/ForClient/Signup2.vue')
   },
   {
-    path: '/signup3',
+    path: '/signup3/:email',
     name: 'Signup3',
     component:  () => import(/* webpackChunkName: "Signup3" */ '@/views/ForClient/Signup3.vue')
   },
   {
-    path: '/register',
+    path: '/register/:token',
     name: 'Register',
     component: () => import(/* webpackChunkName: "Register" */ '@/views/ForClient/Register.vue')
   },
@@ -181,6 +181,16 @@ const clientRoutes: Array<RouteRecordRaw> = [
         name: 'StorePayment2',
         component: () => import(/* webpackChunkName: "StorePayment2" */ '@/views/ForClient/Diagnostic/Store/Payment2.vue'),
       },
+      {
+        path: 'payment3',
+        name: 'StorePayment3',
+        component: () => import(/* webpackChunkName: "StorePayment3" */ '@/views/ForClient/Diagnostic/Store/Payment3.vue'),
+      },
+      {
+        path: 'paymentdone',
+        name: 'StorePaymentDone',
+        component: () => import(/* webpackChunkName: "StorePaymentDone" */ '@/views/ForClient/Diagnostic/Store/PaymentDone.vue'),
+      },
     ]
   },
   {
@@ -191,17 +201,17 @@ const clientRoutes: Array<RouteRecordRaw> = [
       {
         path: '',
         name: 'SupportTop',
-        component:  import(/* webpackChunkName: "SupportTop" */ '@/views/ForClient/Support/Top.vue')
+        component:  () => import(/* webpackChunkName: "SupportTop" */ '@/views/ForClient/Support/Top.vue')
       },
       {
         path: 'hair-consultant',
         name: 'SupportHairConsultant',
-        component:  import(/* webpackChunkName: "SupportHairConsultant" */ '@/views/ForClient/Support/HairConsultant.vue'),
+        component:  () => import(/* webpackChunkName: "SupportHairConsultant" */ '@/views/ForClient/Support/HairConsultant.vue'),
       },
       {
         path: 'cs',
         name: 'SupportCS',
-        component:  import(/* webpackChunkName: "SupportCS" */ '@/views/ForClient/Support/CS.vue'),
+        component: () => import(/* webpackChunkName: "SupportCS" */ '@/views/ForClient/Support/CS.vue'),
       },
       
     ]

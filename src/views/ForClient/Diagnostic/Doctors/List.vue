@@ -11,8 +11,9 @@
       >
       </doctor-list-filter>
       <div class="flex-grow relative overflow-y-auto">
-        <div class="absolute left-0 w-full">
+        <div class="absolute left-0 w-full pr-4">
           <doctor-list-card
+            :class="{ 'border-b': i < doctors.length - 1 }"
             v-for="(d, i) in doctors"
             :key="i"
             :doctor="d"
@@ -24,11 +25,14 @@
   </base-layout>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 
+import usePrescript from '@/types/Prescript';
 import useDoctors from '@/types/Doctor';
 import DoctorListCard from './ListCard.vue';
 import DoctorListFilter from './ListFilter.vue';
+import { IDoctor } from '@/types/Interfaces';
+import {useRouter} from 'vue-router';
 
 export default defineComponent({
   components: {
@@ -36,15 +40,27 @@ export default defineComponent({
     DoctorListFilter
   },
   setup() {
+    const router = useRouter();
+
+    
     const {
       doctors,
       fetchDoctors
     } = useDoctors();
 
-    onMounted(() => {
-      fetchDoctors();
+    const dataReady = ref(false);
+    
+    onMounted(async () => {
+      try {
+        doctors.value = await fetchDoctors();
+        dataReady.value = true;
+        console.log(doctors.value)
+      } catch (err) {
+        console.error(err);
+      }
     });
     return {
+      dataReady,
       doctors
     };
   }

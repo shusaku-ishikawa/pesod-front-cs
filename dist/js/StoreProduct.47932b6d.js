@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["StoreProduct"],{"8a28":function(t,e,r){"use strict";r.r(e);var a=r("7a23");function n(t,e,r,n,c,o){var u=Object(a["B"])("router-view");return Object(a["t"])(),Object(a["d"])(u,{"onUpdate:cart":t.onUpdateCart},null,8,["onUpdate:cart"])}var c=Object(a["i"])({emits:["update:cart"],setup:function(t,e){var r=function(t){e.emit("update:cart",t)};return{onUpdateCart:r}}});c.render=n;e["default"]=c}}]);
+//# sourceMappingURL=StoreProduct.47932b6d.js.map

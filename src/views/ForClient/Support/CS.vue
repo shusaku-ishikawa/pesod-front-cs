@@ -2,6 +2,7 @@
   <base-layout>
     <template v-slot:title>
       <page-title>
+
         <div class="flex items-center absolute left-0">
           <router-link
             :to="{ name: 'SupportTop' }"
@@ -15,52 +16,115 @@
           <div>
             相談窓口
           </div>
+          
         </div>
+        
         <div>カスタマーサポート</div>
+        <div
+          class="w-3 h-3 shadow-lg rounded-full ml-1 text-white"
+          :class="{ 'bg-green-400': wsState === 1, 'bg-gray-600': wsState === 3 }"
+        >
+        </div>
       </page-title>
     </template>
     <div class="flex-grow flex flex-col">
-      <div class="grid grid-cols-12 flex-grow flex flex-col">
-        <div class="col-span-12 sm:col-span-10 sm:col-start-2 flex flex-col">
-          <div class="flex items-center">
-            <div>
-              <svg
-                class="w-10 h-10"
-                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-              </svg>
-            </div>
-            <div>
-              毛髪診断士
-            </div>
-          </div>
-          <div class="relative overflow-y-auto flex-grow">
-            
-            <chat-message-card
-            v-for="(m, i) in messages"
-            :key="i"
-            :message="m"
-            ></chat-message-card>
-          </div>
+      <div
+        ref="messageArea"
+        class="relative overflow-y-auto flex-grow"
+      >
+        <div class="absolute w-full space-y-4 py-5">
+          <chat-message-card
+          v-for="(m, i) in messages"
+          :key="i"
+          :message="m"
+          ></chat-message-card>
         </div>
-        
       </div>
+      <chat-form
+        v-model="message"
+        @send="onSendMessage"
+      />
     </div>
   </base-layout>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import ChatMessageCard from '@/views/ForClient/Diagnostic/Doctors/Detail/Chat/MessageCard.vue';
+import ChatForm from '@/views/ForClient/Diagnostic/Doctors/Detail/Chat/Form.vue';
+
 import { useRoute } from 'vue-router';
-import useChat from '@/types/Chat';
+import useAuth from '@/types/Auth';
+import useChatLog from '@/types/ChatLog';
+import useSocket from '@/types/Socket';
+import usePrescript from '@/types/Prescript';
 
 export default defineComponent({
   components: {
+    ChatForm,
     ChatMessageCard
   },
   setup() {
+
+    const {
+      myPrescript,
+      getPrescript
+    } = usePrescript();
     
-    return null;
+    const {
+      chatLogs,
+      fetchDoctorChatLogs
+    } = useChatLog();
+
+    const {
+      WS_BASE_URL,
+      connection,
+      connect,
+      messageArea,
+      scrollDown,
+      wsState,
+      wsStateStr,
+      message,
+      prepareWs
+    } = useSocket();
+    
+    const url = `${WS_BASE_URL}/chat/cs/${myPrescript.value?.customer.uuid}`;
+    const onSendMessage = () => {
+      if (connection.value == null) return;
+      if (!message.value.trim()) return;
+      if (connection.value.readyState === connection.value.OPEN) {
+        // send message
+        // messageJson
+        const messageJson = {
+          speaker: {
+            id: 1,
+            name: 'Robert'
+          },
+          message: message.value
+        };
+        try {
+          connection.value.send(JSON.stringify(messageJson));
+          message.value = ''; // reset 
+        } catch (err) {
+          console.error('errr')
+        }
+      }
+    };
+
+    onMounted(() => {
+      prepareWs(url, chatLogs);
+      window.setTimeout(() => {
+        scrollDown();
+      }, 100)
+      
+    });
+
+    return {
+      onSendMessage,
+      message,
+      chatLogs,
+      messageArea,
+      wsState
+    };
   }
 })
 </script>
