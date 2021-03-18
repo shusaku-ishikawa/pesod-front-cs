@@ -11,7 +11,7 @@
       <img
         :src="product.image"
         alt=""
-        style="width: 50px; height: 50px"
+        style="width: 50px; height: auto"
       >
     </div>
     <div class="flex-grow text-left ml-2">

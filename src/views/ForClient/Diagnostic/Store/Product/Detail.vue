@@ -13,11 +13,11 @@
       </page-title>
     </template>
     <div v-if="product" class="flex flex-col flex-grow bg-white">
-      <div class="mx-auto p-5">
+      <div class="p-5">
         <img
           :src="product.image"
           alt=""
-          class="w-36 h-36"
+          class="w-36 mx-auto mb-3"
         >
         <div class="text-lg mb-5">
           <div>{{ product.name }}</div>

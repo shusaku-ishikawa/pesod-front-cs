@@ -10,7 +10,8 @@ const fetchProducts = async (): Promise<IProduct[]> => {
 };
 
 const getProduct = async (id: string) => {
-  const {data} = await client.get(`/products/${id}`);
+  console.log(id)
+  const {data} = await client.get(`/product/${id}`);
   console.log(data)
   return data;
 }
