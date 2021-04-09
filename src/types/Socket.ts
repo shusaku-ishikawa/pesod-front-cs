@@ -65,6 +65,7 @@ export default function useSocket() {
     };
     connection.value.onerror = (ev: Event) => {
       console.log('on error')
+      console.log(ev)
       if (connection.value == null) return;
       
     };

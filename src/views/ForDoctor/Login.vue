@@ -101,7 +101,9 @@ export default defineComponent({
     const router = useRouter();
 
     const {
-      getToken,
+      createToken,
+      storeToken,
+      remoteToken,
       getUserId,
     } = useAuth();
     
@@ -126,8 +128,7 @@ export default defineComponent({
     };
     
     onMounted(() => {
-      window.localStorage.removeItem('token');
-      window.localStorage.removeItem('profile');
+      remoteToken()
     });
 
     const loading = ref(false);
@@ -143,12 +144,12 @@ export default defineComponent({
       }
       try {
         loading.value = true;
-        const token = await getToken(formData.value);
-        window.localStorage.setItem('token', JSON.stringify(token));
-        const userId = await getUserId();
-        const profile = await getDoctor(userId);
-        console.log(profile)
-        window.localStorage.setItem('profile', JSON.stringify(profile));
+        const token = await createToken(formData.value);
+        storeToken(token);
+        // const userId = await getUserId();
+        // const profile = await getDoctor(userId);
+        // console.log(profile)
+        // window.localStorage.setItem('profile', JSON.stringify(profile));
 
         router.push({ name: 'DoctorDashboard' }) ;
       } catch (err) {

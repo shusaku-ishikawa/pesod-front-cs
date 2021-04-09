@@ -1,17 +1,35 @@
 <template>
   <base-layout>
     <template v-slot:title>
-      <page-title>
-        医師一覧
-      </page-title>
+      <div class="">
+        <svg
+          @click="() => { router.push({ name: 'DiagnosticTop' }) }"
+          xmlns="http://www.w3.org/2000/svg"
+          class="absolute h-6 w-6 cursor-pointer" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+        <div>
+          医師を選択
+        </div>
+      </div>
     </template>
-    <div class="flex flex-col flex-grow">
-      <doctor-list-filter
-        class="my-5"
-      >
-      </doctor-list-filter>
-      <div class="flex-grow relative overflow-y-auto">
-        <div class="absolute left-0 w-full pr-4">
+    <div class="flex flex-col flex-grow pt-10">
+      <div class="px-2">
+        <div class="font-semibold mb-3">
+          受診を希望する医師を選択してください
+        </div>
+        <div class="text-left text-sm text-gray-400 mb-3">
+          医師を選択すると、詳細画面へ遷移します。診察はチャ
+          ットで行われるため、対面によるストレスを感じることは
+          ありません。
+        </div>
+        <div class="bg-gray-100 py-2 px-2 text-xs text-gray-600 text-left">
+          健康被害の可能性がある等、医師の判断で他の通信手段でご連
+          絡させていただく場合がございます。
+        </div>
+      </div>
+      <div class="flex-grow  overflow-y-auto">
+        <div class=" left-0 w-full pr-4">
           <doctor-list-card
             :class="{ 'border-b': i < doctors.length - 1 }"
             v-for="(d, i) in doctors"
@@ -37,7 +55,6 @@ import {useRouter} from 'vue-router';
 export default defineComponent({
   components: {
     DoctorListCard,
-    DoctorListFilter
   },
   setup() {
     const router = useRouter();

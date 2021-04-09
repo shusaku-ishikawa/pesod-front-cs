@@ -1,37 +1,29 @@
 import { client } from '@/types/Axios';
 import { ILogin, ISignup, ICustomer, IPrescript, IToken, IRegistration } from '@/types/Interfaces';
 import { computed, ComputedRef, WritableComputedRef } from 'vue';
-import { cloneDeep, clone } from "lodash";
+import { cloneDeep, clone, runInContext } from "lodash";
 
-const token: WritableComputedRef<IToken | null> = computed({
-  get: () => {
-    const token = window.localStorage.getItem('token');
-    if (token == null) return null;
-    return JSON.parse(token);
-  },
-  set: (data: IToken | null) => {
-    if (data == null) {
-      window.localStorage.removeItem('token');
-      return;
-    }
-    window.localStorage.setItem('token', JSON.stringify(data))
-  }  
-});
-
-const profile = computed(() => {
-  const data = window.localStorage.getItem('profile');
-  if (data) {
-    return JSON.parse(data);
-  } else {
-    return null;
-  }
-});
+// const token: WritableComputedRef<IToken | null> = computed({
+//   get: () => {
+//     const token = window.localStorage.getItem('token');
+//     if (token == null) return null;
+//     return JSON.parse(token);
+//   },
+//   set: (data: IToken | null) => {
+//     if (data == null) {
+//       window.localStorage.removeItem('token');
+//       return;
+//     }
+//     window.localStorage.setItem('token', JSON.stringify(data))
+//   }  
+// });
 
 
-
-const isLoggedIn = computed(() => {
-  return (token.value != null);
-});
+const getUUID = async () => {
+  const {data} = await client.get('/uuid/')
+  console.log(data)
+  return data;
+}
 
 const sendSignupEmail = async (formData: any) => {
   const {data} = await client.post('/customer_pre_create/', formData);
@@ -53,11 +45,25 @@ const registerProfile = async (registrationUrl: string, formData: IRegistration)
   console.log(data)
   return data;
 }
-const getToken = async (postData: ILogin) => {
+
+const getToken = () => {
+  const d = window.localStorage.getItem('token')
+  if (d == null) return;
+  return JSON.parse(d);
+}
+const createToken = async (postData: ILogin) => {
   const {data} = await client.post('/auth/jwt/create/', postData);
   // console.log(data)
   return data;
   // window.localStorage.setItem('token', JSON.stringify(data));    
+};
+
+const storeToken = (token: IToken) => {
+  window.localStorage.setItem('token', JSON.stringify(token))
+}
+
+const remoteToken = () => {
+  window.localStorage.removeItem('token');
 };
 
 const getUserId = async () => {
@@ -78,21 +84,20 @@ const signup = async (postData: ISignup) => {
   );
 };
 
-const logout = () => {
-  window.localStorage.removeItem('token');
-};
+
+
 export default function useAuth () {
   return {
     sendSignupEmail,
     activateAccount,
     registerProfile,
-    token,
-    profile,
+    createToken,
+    storeToken,
+    getToken,
+    remoteToken,
     getUserId,
     getProfile,
-    logout,
     signup,
-    isLoggedIn,
-    getToken,
+    getUUID
   }
 }

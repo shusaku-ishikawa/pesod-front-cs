@@ -2,13 +2,14 @@
   <div
     class="flex py-4 hover:bg-gray-50"
   >
-    <div class="my-auto mx-2">
+    <div class="flex-shrink-0 my-auto mx-2 ">
       
       <img
         v-if="doctor.image"
         :src="doctor.image"
         alt=""
-        style="width: 80px"
+        style="width: 80px!important"
+        class="rounded-full"
       >
       <svg
         v-else
@@ -40,7 +41,7 @@
     <div class="my-auto">
       <svg
         @click="() => { router.push({ name: 'DiagnosticDoctorDetailTop', params: { id: doctor.id } }) }"
-        class="w-10 h-10 text-gray-400 cursor-pointer"
+        class="w-8 h-8 text-gray-400 cursor-pointer"
         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
       </svg>

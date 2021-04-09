@@ -9,7 +9,7 @@
           <svg
             :href="href"
             @click="navigate"
-            class="absolute top-0 left-0 w-10 h-10 cursor-pointer"
+            class="absolute top-0 left-0 w-6 h-6 cursor-pointer"
             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
@@ -19,13 +19,21 @@
         </div>
       </div>
     </template>
-    <div class="grid grid-cols-12">
-      
+    <div class="">
+      <div class="mb-10">
+        <img
+          class="mx-auto"
+          style="width: 100px"
+          src="@/assets/img/pesod_logo_s.png"
+          alt=""
+          
+        >
+      </div>
       <form
         :disabled="loading"
         ref="from"
         method="post"
-        class="py-5 col-span-12 sm:col-span-6 sm:col-start-4 md:col-span-4 md:col-start-5 p-5 "
+        class="py-5 p-5 "
         @submit.prevent="onLogin"
       >
         <div
@@ -35,7 +43,7 @@
           {{ loginError }}
         </div>
         <p-input
-          class="mb-10"
+          class="mb-3"
           label="メールアドレス"
           id="email"
           type="email"
@@ -83,6 +91,7 @@ import {formRequired} from '@/mixins/FormValidator';
 
 import useAuth from '@/types/Auth';
 import usePrescript from '@/types/Prescript';
+import StoreVue from './Diagnostic/Store.vue';
 
 export default defineComponent({
   components: {
@@ -91,9 +100,9 @@ export default defineComponent({
     const router = useRouter();
 
     const {
-      token,
-      getToken,
-      getUserId,
+      createToken,
+      remoteToken,
+      storeToken,
     } = useAuth();
     const {
       getPrescript
@@ -116,7 +125,7 @@ export default defineComponent({
     };
     
     onMounted(() => {
-      token.value = null;
+      remoteToken();
     });
 
     const loading = ref(false);
@@ -132,10 +141,9 @@ export default defineComponent({
       }
       try {
         loading.value = true;
-        const tokenData = await getToken(formData.value);
-        token.value = tokenData;
-        
-        router.push({ name: 'DiagnosticTop' }) ;
+        const tokenData = await createToken(formData.value);
+        storeToken(tokenData);
+        router.push({ name: 'Top' }) ;
       } catch (err) {
         console.log(err)
         if (err.response) {

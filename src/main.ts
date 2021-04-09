@@ -6,6 +6,7 @@ import './index.css'
 
 import PersonaInput from '@/components/PersonaInput.vue'
 import PersonaCheckbox from '@/components/PersonaCheckbox.vue'
+import PersonaSelect from '@/components/PersonaSelect.vue'
 
 import BaseLayout from '@/layouts/Base.vue';
 import TopLayout from '@/layouts/Top.vue';
@@ -18,7 +19,7 @@ const app = createApp(App)
 app.use(router)
 app.component('PInput', PersonaInput)
 app.component('PCheckbox', PersonaCheckbox)
-
+app.component('PSelect', PersonaSelect);
 app.component('BaseLayout', BaseLayout)
 app.component('TopLayout', TopLayout)
 app.component('FrameModal', FrameModal);

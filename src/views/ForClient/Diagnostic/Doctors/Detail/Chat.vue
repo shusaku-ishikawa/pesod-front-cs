@@ -1,65 +1,76 @@
 <template>
   <base-layout v-if="myPrescript">
     <template v-slot:title>
-      <page-title>
-        <div class="flex items-center">
-          <div>診察室</div>
-          <div class="flex items-center text-sm ml-2">
-            <div>[</div>
-            <img
-              v-if="doctor.image"
-              :src="doctor.image"
-              alt="doctor"
-              style="height: 30px; width: 30px"
-            >
-            <svg
-              v-else
-              style="height: 30px; width: 30px"
-              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-            </svg>
-            <div class="px-2">
-              {{ doctor.first_name }} {{ doctor.last_name }}
-            </div>
-            <div>]</div>
-          </div>
+      <div class="">
+        <svg
+          @click="() => { router.push({ name: 'DiagnosticTop' }) }"
+          xmlns="http://www.w3.org/2000/svg"
+          class="absolute h-6 w-6 cursor-pointer" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+        <div>
+          診察ルーム
         </div>
-        
-        <ws-state-marker
-          :wsState="wsState"
-        ></ws-state-marker>
-      </page-title>
+      </div>
     </template>
     <!-- <div class="flex-grow flex flex-col"> -->
-      
+    
     <div
       ref="messageArea"
-      class="relative overflow-y-auto flex-grow pt-1"
+      class="relative overflow-y-auto flex-grow "
     >
+       <page-title class="mb-3">
+          <div class="flex items-center">
+            <div>診察室</div>
+            <div class="flex items-center text-sm ml-2">
+              <div>[</div>
+              <img
+                v-if="doctor.image"
+                :src="doctor.image"
+                alt="doctor"
+                style="height: 30px; width: 30px"
+              >
+              <svg
+                v-else
+                style="height: 30px; width: 30px"
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+              </svg>
+              <div class="px-2">
+                {{ doctor.first_name }} {{ doctor.last_name }}
+              </div>
+              <div>]</div>
+            </div>
+          </div>
+          
+          <ws-state-marker
+            :wsState="wsState"
+          ></ws-state-marker>
+      </page-title>
     
       <div class="absolute w-full space-y-4 pb-5">
-        <div
+        
+        <chat-date-label
           v-if="chatLogs.length > 0"
-          class="date flex"
-        >
-          {{ getDate(chatLogs[0].created_at) }}
-        </div>
+          :dateStr="chatLogs[0].created_at"
+        ></chat-date-label>
         <template
           v-for="(log, i) in chatLogs"
           :key="i"
         >
-          <div
-            class="date flex"
-            v-if="i > 1 && getDate(chatLogs[i].created_at) !== getDate(chatLogs[i - 1].created_at)">
-            {{ getDate(log.created_at) }}
-          </div>
+         
+          <chat-date-label
+            v-if="i > 1 && getDate(chatLogs[i].created_at) !== getDate(chatLogs[i - 1].created_at)"
+            :dateStr="log.created_at"
+          ></chat-date-label>
           <chat-message-card
           :chatLog="log"
           :isMyMessage="log.speaker === myPrescript.customer.id"
           ></chat-message-card>
           
         </template>
-        <div
+        
+        <!-- <div
           class="px-2"
           v-if="myPrescript.prescript_products.length" 
         >
@@ -68,12 +79,6 @@
           >
             処方提案を受けています
           </div>
-          <product-list-card
-            v-for="(p, i) in myPrescript.prescript_products"
-            :key="i"
-            :product="p"
-            :isSelectable="false"
-          ></product-list-card>
           <div
             class="flex items-center"
           >
@@ -90,15 +95,40 @@
             </button>
             
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
+    <!--  -->
+    <div
+      v-if="myPrescript.prescript_products.length && myPrescript.status >= 4"
+      class="bg-gray-100 text-center py-3"
+    >
+      <div class="text-lg">診察は終了です。</div>
+      <div>「<span class="text-blue-400 cursor-pointer" @click="router.push({ name: 'DiagnosticTop' })">お手続きメニュー</span>」へ戻る </div>
+    </div>
     <chat-form
+      v-if="myPrescript.status == 3"
       v-model="message"
       @send="onSendMessage"
     >
       <template v-slot:menu>
         <button
+          @click="onAccept"
+          class="rounded border text-sm ">
+          はい
+        </button>
+        <button
+          @click="onDeny"
+          class="rounded border text-sm">
+          いいえ
+        </button>
+        <button
+          @click="sendMessage('承知しました')"
+          class="rounded border text-sm">
+          承知しました
+        </button>
+      
+        <!-- <button
           @click="showMessageTemplates = !showMessageTemplates"
           class="border rounded-lg py-1 text-sm flex items-center"
         >
@@ -115,7 +145,7 @@
             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
           </svg>
-        </button>
+        </button> -->
       </template> 
     </chat-form>
     <div
@@ -174,14 +204,14 @@ import WsStateMarker from '@/components/WsStateMarker.vue';
 
 import moment from 'moment';
 
-import ProductListCard from '@/views/ForClient/Diagnostic/Store/Product/ListCard.vue';
+import ChatDateLabel from './Chat/DateLabel.vue';
 
 export default defineComponent({
   components: {
     ChatMessageCard,
     ChatForm,
     WsStateMarker,
-    ProductListCard
+    ChatDateLabel
   },
   props: {
     doctor: {
@@ -194,13 +224,14 @@ export default defineComponent({
     const router = useRouter();
 
     const {
-      token
+      getToken
     } = useAuth();
 
     const {
       myPrescript,
       getPrescript,
-      acceptPrescriptProducts
+      acceptPrescriptProducts,
+      deletePrescriptProducts
     } = usePrescript();
 
     const {
@@ -238,29 +269,48 @@ export default defineComponent({
 
     // alert(JSON.stringify(myPrescript.value))
     
-    const onSendMessage = () => {
+    const sendMessage = (messageStr: string) => {
       if (myPrescript.value == null) return;
       if (connection.value == null) return;
-      if (!message.value.trim()) return;
       if (connection.value.readyState === connection.value.OPEN) {
         // send message
         // messageJson
         const messageJson: IChatMessage = {
           uuid: myPrescript.value.customer.uuid,
-          message: message.value,
+          message: messageStr,
         };
-        try {
-          connection.value.send(JSON.stringify(messageJson));
-          message.value = ''; // reset 
-        } catch (err) {
-          console.error('errr')
-        }
+        connection.value.send(JSON.stringify(messageJson));
       }
+    }
+    
+    const onAccept = async () => {
+      if (myPrescript.value == null) return;
+      if (myPrescript.value.prescript_products?.length) {
+        // accept
+        const data = await acceptPrescriptProducts();
+      }
+      myPrescript.value = await getPrescript();
+
+      sendMessage('はい')
+    };
+    const onDeny = async () => {
+      if (myPrescript.value == null) return;
+      if (myPrescript.value.prescript_products?.length) {
+        const data = await deletePrescriptProducts(myPrescript.value.prescript_no);
+      }
+      myPrescript.value = await getPrescript();
+      sendMessage('いいえ')
+    }
+    
+    const onSendMessage = () => {
+      if (!message.value.trim()) return;
+      sendMessage(message.value);
+      message.value = '';
     };
 
     const onMessageReceivedCallback = async (messageJson: IChatMessage) => {
-      if (messageJson.message.includes('[[処方提案]]')) {
-        alert('処方提案うけたよ')
+      if (messageJson.message.includes('table')) {
+        
         myPrescript.value = await getPrescript();
         // if (data.prescript_products.length > 0) {
           
@@ -284,7 +334,7 @@ export default defineComponent({
         console.error(err.response)
         return;
       }
-      const url = `${WS_BASE_URL}/chat/doctor/${myPrescript.value?.customer.uuid}/?token=${token.value?.access}`;
+      const url = `${WS_BASE_URL}/chat/doctor/${myPrescript.value?.customer.uuid}/?token=${getToken()?.access}`;
     
       prepareWs(url, chatLogs, onMessageReceivedCallback);
       window.setTimeout(() => {
@@ -302,11 +352,9 @@ export default defineComponent({
       return moment(dateStr).format('yyyy/MM/DD')
     }
 
-    const onAcceptPrescriptProducts = async () => {
-      const data = await acceptPrescriptProducts();
-      router.push({ name: 'DiagnosticTop' })
-    }
+   
     return {
+      sendMessage,
       myPrescript,
       connection,
       router,
@@ -320,7 +368,8 @@ export default defineComponent({
       onSelectTemplate,
       customerMessageTemplates,
       showMessageTemplates,
-      onAcceptPrescriptProducts
+      onDeny,
+      onAccept
     };
   }
 })

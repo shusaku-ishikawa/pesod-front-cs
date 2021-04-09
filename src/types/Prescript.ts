@@ -58,6 +58,14 @@ const acceptPrescriptProducts = async () => {
   return data;
 };
 
+const deletePrescriptProducts = async (prescriptNo: string) => {
+  const {data} = await client.delete(`/prescribe/${prescriptNo}`);
+  return data;
+
+}
+
+
+
 export default function usePrescript () {
   const myPrescript = ref<IPrescript | null>(null);
   const prescripts = ref<IPrescript[]>([]);
@@ -72,6 +80,7 @@ export default function usePrescript () {
     fetchPrescripts,
     setPrescriptProducts,
     acceptPrescriptProducts,
+    deletePrescriptProducts
     
   }
 }

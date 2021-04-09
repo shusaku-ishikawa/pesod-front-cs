@@ -7,6 +7,7 @@ export default function useSubscription() {
   
   const createSubscription = async (formData: ISubscription) => {
     const {data} = await client.post('/subscription/', formData);
+    return data;
   }
   
   return {

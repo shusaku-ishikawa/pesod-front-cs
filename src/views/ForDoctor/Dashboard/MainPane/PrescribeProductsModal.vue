@@ -1,6 +1,6 @@
 <template>
   <div class="inline-block shadow-xl transform align-middle" >
-    <div class="rounded bg-white px-6 py-4 sm:pb-4">
+    <div class="my-20 rounded bg-white px-6 py-4 sm:pb-4">
       <div class="mb-3 border-b">
         <product-list-card
           v-for="(p, i) in products"

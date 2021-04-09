@@ -1,13 +1,11 @@
 <template>
   <div>
-    <div class="mb-5 text-left">
+    <div class=" text-left">
       <div class="relative inline-block ">
-        <div class="font-bold text-3xl">Q{{ index }}</div>
-        <div class="absolute top-5 right-0 h-7 angled-line border-b-4 border-r-4 border-black ml-3">
-        </div>
+        <div class="font-bold text-xl">Q{{ index }}</div>
       </div>
     </div>
-    <div v-html="htmlify(question)" class="mb-5 text-left">
+    <div v-html="question" class="mb-5 text-left">
     </div>
   </div>
 </template>

@@ -72,7 +72,8 @@ export default defineComponent({
     const router = useRouter();
     
     const {
-      token,
+      getToken,
+      remoteToken,
       sendSignupEmail
     } = useAuth();
 
@@ -92,7 +93,7 @@ export default defineComponent({
     };
     
     onMounted(() => {
-      token.value = null;
+      remoteToken();
     });
 
     const loading = ref(false);

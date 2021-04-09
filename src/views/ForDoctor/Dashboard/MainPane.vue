@@ -36,6 +36,7 @@
       </svg>
     </div>
     <div
+      ref="messageArea" 
       class="flex-grow overflow-auto relative pt-5"
     >
 
@@ -43,24 +44,24 @@
         class="absolute w-full space-y-4"
       >
         
-        <div
+        
+        <chat-date-label
           v-if="chatLogs.length > 0"
-          class="date flex"
-        >
-          {{ getDate(chatLogs[0].created_at) }}
-        </div>
+          :dateStr="chatLogs[0].created_at"
+        ></chat-date-label>
         <template
           v-for="(log, i) in chatLogs"
           :key="i"
         >
-          <div
-            class="date flex"
+         
+          <chat-date-label
             v-if="i > 1 && getDate(chatLogs[i].created_at) !== getDate(chatLogs[i - 1].created_at)">
-            {{ getDate(log.created_at) }}
-          </div>
+            
+            :dateStr="log.created_at"
+          </chat-date-label>
           <chat-message-card
           :chatLog="log"
-          :isMyMessage="log.speaker === prescript.customer.id"
+          :isMyMessage="log.speaker === userId"
           ></chat-message-card>
         </template>
       </div>
@@ -98,30 +99,16 @@
           </button>
         </template> 
       </chat-form>
-      <div
+      <frame-modal
         v-if="showMessageTemplates"
-        style="height: 100px"
-        class="relative overflow-y-scroll"
+        @close="showMessageTemplates = false"
       >
-        <ul
-          v-if="doctorMessageTemplates.length"
-          class="absolute w-full"
-        >
-          <li
-            @click="onSelectTemplate(t)"
-            v-for="(t, i) in doctorMessageTemplates"
-            :key="i"
-            class="border-b border-gray-100 hover:bg-gray-50"
-          >
-            {{ t.message }}
-          </li>
-        </ul>
-        <div
-          v-else
-        >
-          テンプレートがありません。
-        </div>
-      </div>
+        <template-modal
+          :templates="doctorMessageTemplates"
+          @select:template="onSelectTemplate"
+          @close="showMessageTemplates = false"
+        ></template-modal>
+      </frame-modal>
       <frame-modal
         v-if="showPrescribeProducts"
         @close="showPrescribeProducts = false"
@@ -147,7 +134,7 @@
 }
 </style>
 <script lang="ts">
-import { defineComponent, ref, onMounted, SetupContext, onBeforeUnmount, onBeforeMount } from "vue";
+import { defineComponent, ref, onMounted, SetupContext, onBeforeUnmount, onBeforeMount, watch } from "vue";
 import ChatForm from '@/views/ForClient/Diagnostic/Doctors/Detail/Chat/Form.vue';
 import ChatMessageCard from '@/views/ForClient/Diagnostic/Doctors/Detail/Chat/MessageCard.vue';
 
@@ -161,13 +148,18 @@ import { IPrescript, IChatMessage, IMessageTemplate, IProduct } from '@/types/In
 
 import moment from 'moment';
 import WsStateMarker from '@/components/WsStateMarker.vue';
+import ChatDateLabel from '@/views/ForClient/Diagnostic/Doctors/Detail/Chat/DateLabel.vue'
+import FrameModal from "@/components/FrameModal.vue";
+import TemplateModal from './MainPane/TemplateModal.vue';
 
 export default defineComponent({
   components: {
     ChatForm,
     ChatMessageCard,
     prescribeProductsModal,
-    WsStateMarker
+    WsStateMarker,
+    ChatDateLabel,
+    TemplateModal
   },
   props: {
     prescript: {
@@ -177,7 +169,9 @@ export default defineComponent({
   setup(props: any, context: SetupContext) {
     
     const {
-      token
+      getToken,
+      getUUID,
+      getUserId,
     } = useAuth();
 
     const {
@@ -205,22 +199,50 @@ export default defineComponent({
 
     let url: string;
     
+    const uuid = ref<string>('');
+    const userId = ref<string>('');
+
+    const sendMessage = (messageStr: string) => {
+      if (connection.value == null) return;
+      if (connection.value.readyState === connection.value.OPEN) {
+        // send message
+        // messageJson
+        const messageJson: IChatMessage = {
+          uuid: uuid.value,
+          message: messageStr,
+        };
+        console.log(messageJson)
+        try {
+          connection.value.send(JSON.stringify(messageJson));
+          message.value = ''; // reset 
+        } catch (err) {
+          console.error('errr')
+        }
+      }
+    }
+
     const doctorMessageTemplates = ref<IMessageTemplate[]>([]);
     const showMessageTemplates = ref(false);
+    
     const onSelectTemplate = (t: IMessageTemplate) => {
       // message.value = m;
+      sendMessage(t.message);
       showMessageTemplates.value = false;
+      
     };
 
     const showPrescribeProducts = ref(false);
     
-
     onMounted(async () => {
+      const uuidData = await getUUID();
+      userId.value = await getUserId();
+      uuid.value = uuidData.uuid;
+      console.log(uuidData)
       doctorMessageTemplates.value = await fetchDoctorMessageTemplates();
 
       if (props.prescript == null) return;
       
-      url = `${WS_BASE_URL}/chat/doctor/${props.prescript.customer.uuid}/?token=${token.value?.access}`;
+      url = `${WS_BASE_URL}/chat/doctor/${props.prescript.customer.uuid}/?token=${getToken()?.access}`;
       // alert(url)
       try {
         const data = await fetchDoctorChatLogs(props.prescript.id);  
@@ -236,6 +258,12 @@ export default defineComponent({
       
     });
 
+    watch(() => props.prescript, async () => {
+      chatLogs.value = await fetchDoctorChatLogs(props.prescript.id);
+      window.setTimeout(() => {
+        scrollDown();
+      }, 100)
+    });
     onBeforeUnmount(() => {
       // alert('closing socket')
       close();
@@ -245,32 +273,50 @@ export default defineComponent({
       return moment(dateStr).format('yyyy/M/D')
     }
 
+    
+
     const onSendMessage = () => {
-      if (connection.value == null) return;
-      if (!message.value.trim()) return;
-      if (connection.value.readyState === connection.value.OPEN) {
-        // send message
-        // messageJson
-        const messageJson: IChatMessage = {
-          uuid: props.prescript.customer.uuid,
-          message: message.value,
-        };
-        try {
-          connection.value.send(JSON.stringify(messageJson));
-          message.value = ''; // reset 
-        } catch (err) {
-          console.error('errr')
-        }
+      if (message.value.trim() != '') {
+        sendMessage(message.value);
       }
     };
 
     const buildPrescribeMessage = (products: IProduct[]) => {
-      let message = '<u>[[処方提案]]</u><br>';
-      products.map((p: IProduct) => {
-        message = `${message}<strong>${p.name}</strong><br>${p.price.toLocaleString()}円<br>${p.usage}<br><br>`
-      })
+      // let message = '<u>[[処方提案]]</u><br>';
+      // products.map((p: IProduct) => {
+      //   message = `${message}<strong>${p.name}</strong><br>${p.price.toLocaleString()}円<br>${p.usage}<br><br>`
+      // })
       
-      return message;
+      // return message;
+      let html = '';
+      console.log(products)
+      products.map((p: IProduct) => {
+        const elem = `
+          <div>
+            <div>
+              ${p.name}
+            </div>
+            <div>
+              ${p.categories}
+            </div>
+            <div>
+              メーカー：${p.maker}
+            </div>
+            <div>
+              <img
+                style="height: 100px"
+                src="${p.image}"
+              />
+            </div>
+            <div>
+              用途：${p.dose}
+            </div>
+            
+          </div>
+        `;
+        html += elem + '<hr class="my-3">';
+      });
+      return html;
     };
 
     const onPrescribe = async (products: IProduct[]) => {
@@ -279,21 +325,9 @@ export default defineComponent({
       if (props.prescript == null) return;
       const data = await setPrescriptProducts(props.prescript.prescript_no, products);
       
-      if (connection.value == null) return;
-      if (connection.value.readyState === connection.value.OPEN) {
-        // const message = 
-        
-        const messageJson: IChatMessage = {
-          uuid: props.prescript.customer.uuid,
-          message: buildPrescribeMessage(products),
-        };
-        try {
-          connection.value.send(JSON.stringify(messageJson));
-          message.value = ''; // reset 
-        } catch (err) {
-          console.error('errr')
-        }
-      }
+      const messageStr = buildPrescribeMessage(products);
+      sendMessage(messageStr);
+      
     }
 
     const onPage = (page: string) => {
@@ -304,6 +338,9 @@ export default defineComponent({
    
     
     return {
+      uuid,
+      userId,
+      messageArea,
       getDate,
       message,
       onSendMessage,

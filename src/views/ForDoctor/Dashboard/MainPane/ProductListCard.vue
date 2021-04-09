@@ -6,12 +6,12 @@
         @update:modelValue="onCheck($event)"
       ></p-checkbox>
     </div>
-    <div class="ml-4">
+    <div class="ml-4 flex-shrink-0">
       
       <img
         :src="product.image"
         alt=""
-        style="width: 50px; height: 50px"
+        style="width: 100px; height: auto"
       >
     </div>
     <div class="flex-grow text-left ml-4">

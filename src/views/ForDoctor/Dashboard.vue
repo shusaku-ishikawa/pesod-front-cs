@@ -77,7 +77,7 @@ export default defineComponent({
     const router = useRouter();
 
     const {
-      token
+      getToken
     } = useAuth();
 
     const activePrescript = ref<IPrescript | null>(null);

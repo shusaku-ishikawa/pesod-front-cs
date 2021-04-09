@@ -3,11 +3,13 @@
     ref="contentArea"
     class="lp-back h-screen table-cell align-middle w-screen"
   >
+    
     <div class="">
-      <div class="sm:flex justify-center mb-48">
-        <div class="text-6xl">
-          Persona
-        </div>
+      <div class="mb-10">
+        <img
+          class="mx-auto"
+          style="width: 200px"
+          src="@/assets/img/pesod_logo.png" alt="">
       </div>
       <router-link
         :to="{ name: 'Login' }"
@@ -16,7 +18,7 @@
         <button
           :href="href"
           @click="navigate"
-          class="block mx-auto primary arrow w-64 mb-10"
+          class="block mx-auto primary w-64 mb-10"
         >
           ログイン
         </button>
@@ -28,7 +30,7 @@
         <button
           :href="href"
           @click="navigate"
-          class="primary arrow w-64"
+          class="bg-black text-white w-64"
         >
           新規登録
         </button>
@@ -39,7 +41,7 @@
 </template>
 <style lang="scss">
   .lp-back {
-    background-image: url(/img/back.png);
+    background-image: url(/img/top_bk.png);
     background-size: contain;
     
   }

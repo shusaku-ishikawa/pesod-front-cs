@@ -9,40 +9,23 @@ input[type="password"] {
 body{
   font-family: "メイリオ",Meiryo,"ヒラギノ角ゴ Pro W3","Hiragino Kaku Gothic Pro",Osaka,"ＭＳ Ｐゴシック","MS PGothic",Arial,Helvetica,sans-serif!important;
 }
-input:focus-within ~ label,
-input:not(:placeholder-shown) ~ label {
-  @apply transform scale-75 -translate-y-6;
-}
-
-input:focus-within ~ label {
-  @apply text-blue-500;
-}
 
 button {
-  @apply relative disabled:opacity-50 px-4 py-2 sm:text-sm focus:outline-none sm:w-auto font-medium text-base;
+  @apply disabled:opacity-50 px-4 py-2 sm:text-sm focus:outline-none sm:w-auto font-medium text-base rounded;
 }
 
 button.primary {
-  @apply bg-gray-200 border border-gray-400 text-black;
+  @apply text-white;
+  background-color: #0AA2E8;
 }
-button.arrow::after {
-  content: "";
-  display: block;
-  position: absolute;
-  top: 26%;
-  right: 20px;
-  width: 26px;
-  height: 12px;
-  transform: skewX(40deg);
-  border-bottom: 1px solid #000;
-  border-right: 1px solid #000;
-}
+
 button.secondary {
   @apply bg-white border border-gray-600 text-black;
 }
 
-button.hilight {
-  @apply bg-yellow-200 border border-yellow-600 text-black;
+.hilight {
+  @apply border;
+  background-color: #CCEAFF;
 }
 button.error {
   @apply bg-red-500 text-white;

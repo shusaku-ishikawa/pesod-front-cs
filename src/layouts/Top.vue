@@ -1,9 +1,9 @@
 <template>
   <div
     ref="contentArea"
-    class="min-h-screen flex flex-col bg-gray-100"
+    class="min-h-screen flex flex-col bg-white"
   >
-    <div class="my-10 text-2xl font-extrabold px-2">
+    <div class="my-3 text-lg font-extrabold px-2">
       <slot name="title">
       </slot>
     </div>

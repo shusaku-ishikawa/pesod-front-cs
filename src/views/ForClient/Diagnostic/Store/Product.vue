@@ -1,5 +1,8 @@
 <template>
   <router-view
+    v-if="products.length"
+    :products="products"
+    :cart="cart"
     @update:cart="onUpdateCart"
   ></router-view>
 </template>
@@ -7,6 +10,7 @@
 import { defineComponent, onMounted, SetupContext } from 'vue';
 import { useRoute } from 'vue-router';
 import { IProduct, ISubscription } from '@/types/Interfaces';
+import useProducts from '@/types/Product';
 
 export default defineComponent({
   // props: {
@@ -17,12 +21,27 @@ export default defineComponent({
   emits: [
     'update:cart',
   ],
+  props: {
+    cart: {
+      type: Object as () => IProduct[]
+    }
+  },
   setup(props: any, context: SetupContext) {
+    const {
+      products,
+      fetchProducts  
+    } = useProducts();
 
-    const onUpdateCart = (products: IProduct[]) => {
-      context.emit('update:cart', products);
+    const onUpdateCart = (event: IProduct[]) => {
+      console.log(event)
+      context.emit('update:cart', event);
     };
+
+    onMounted(async () => {
+      products.value = await fetchProducts();
+    })
     return {
+      products,
       onUpdateCart
     }
   }

@@ -1,8 +1,16 @@
 <template>
   <div>
     <div
-      class="text-left relative border-b border-black focus-within:border-blue-500"
+      class="text-left border-b border-black focus-within:border-blue-500"
+      :class="{ 'border-red-600': error, 'border-gray-400': $attrs.disabled }"
     >
+      <label
+        :for="$attrs.id"
+        class="text-sm font-semibold"
+        :class="{ 'text-red-600': error }"
+      >
+        {{ $attrs.label }}
+      </label>
       <input
         ref="inputElement"
         placeholder=" "
@@ -11,15 +19,12 @@
         :value="modelValue"
         :autocomplete="$attrs.autocomplete ? $attrs.autocomplete : 'on'"
         @input="onInput"
-        class="bg-transparent block w-full appearance-none focus:outline-none"
+        :disabled="$attrs.disabled"
+        class="block w-full appearance-none focus:outline-none"
+        :class="{ 'text-gray-600 ': $attrs.disabled }"
       >
       
-      <label
-        :for="$attrs.id"
-        class="absolute top-0 duration-300 origin-0"
-      >
-        {{ $attrs.label }}
-      </label>
+      
     </div>
     <div
       v-if="error"
@@ -29,11 +34,13 @@
     </div>
   </div>
 </template>
-<style lang="scss">
-  
+<style lang="scss" scoped >
+  input:disabled {
+    
+  }
 </style>
 <script lang="ts">
-import { defineComponent, onMounted, PropType, ref, SetupContext } from 'vue';
+import { defineComponent, onMounted, watch, ref, SetupContext } from 'vue';
 
 import useFormField from '@/mixins/FormInput';
 
@@ -45,9 +52,8 @@ export default defineComponent({
     modelValue: {
       type: String,
     },
-    rules: {
-      type: Array as PropType<Function[]>,
-      default: () => []
+    error: {
+      type: String
     }
   },
   emits: [
@@ -55,39 +61,40 @@ export default defineComponent({
   ],
   setup(props, ctx: SetupContext) {
     
-    const {
-      error,
-      validate
-    } = useFormField();
     
     const inputElement = ref<HTMLInputElement | null>(null);
 
-    const validateValue = (value: any) => {
-      const message = validate(value, props.rules);
-      if (inputElement.value) {
-        inputElement.value.setCustomValidity(message);
-      }
-      return message;
-    }
+    // const validateValue = (value: any) => {
+    //   const message = validate(value, props.rules);
+    //   if (inputElement.value) {
+    //     inputElement.value.setCustomValidity(message);
+    //   }
+    //   return message;
+    // }
     const onInput = (e: InputEvent) => {
       const { target } = e;
       if (!(target instanceof HTMLInputElement)) return;
       const { value } = target;
-      validateValue(value);
+      // validateValue(value);
       ctx.emit('update:modelValue', value);
     };
-    
-    onMounted(() => {
-      if (inputElement.value) {
-        // inputElement.value.setCustomValidity('入力してください')
-        const message = validateValue(props.modelValue);
-      }  
-    });
+    watch(() => props.error, () => {
+      if (props.error) {
+        inputElement.value?.setCustomValidity(props.error);
+      } else {
+        inputElement.value?.setCustomValidity("");
+      }
+    })
+    // onMounted(() => {
+    //   if (props.error) {
+    //     inputElement.value.set
+    //   } 
+    // });
 
     return {
       inputElement,
       onInput,
-      error,
+      
     }
   }
 })

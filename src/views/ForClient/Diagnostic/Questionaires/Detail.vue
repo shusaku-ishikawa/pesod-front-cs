@@ -2,12 +2,12 @@
   <div
     class="px-6 pt-5 flex-grow flex flex-col"
   >
-    <div class="relative w-full flex-grow overflow-y-auto mb-5" style="min-height: 200px">
-        <question
-          class="absolute w-full"
-          :index="questionIndex + 1"
-          :question="question.question_body"
-        />
+    <div class=" w-full flex-grow overflow-y-auto mb-5" style="min-height: 150px">
+      <question
+        class=" w-full"
+        :index="questionIndex + 1"
+        :question="question.question_body"
+      />
     </div>
     <div class="flex flex-col">
       <div
@@ -22,59 +22,55 @@
       </div>
       <div
         v-if="question.question_types.includes('アップロード')"
-        class="mb-10 border-2 rounded "
+        class="mb-10 "
       >
+      
         <image-selector
+          :photoType="question.question_types.includes('前頭部') ? 'A' : 'B'" 
           v-model="uploadingImage"
         ></image-selector>
       </div>
       <div
         v-if="question.question_types.includes('選択式')"
       >
+      
         <div
           v-for="(o, i) in question.qa_options"
           :key="i"
-          class="text-center mb-3"
-        >
-          <button
-            @click="onSelectAnswer(i)"
-            class="w-full "
-            :class="{ 'hilight ': isOptionSelected(o.id), 'secondary': !isOptionSelected(o.id) }"
-          >
-            {{ o.option }}
-          </button>
+          @click="onSelectAnswer(i)"
+          class="flex items-center text-center mb-3 border rounded shadow-xl text-sm cursor-pointer p-2 leading-5"
+          :class="{ 'hilight ': isOptionSelected(o.id), 'h-10': question.question_layout == 1, 'h-16': question.question_layout == 2 || question.question_layout == 3, 'h-24': question.question_layout == 4 }"
+        > 
+          <p-checkbox
+            v-if="question.question_layout >= 3"
+            :modelValue="isOptionSelected(o.id)"
+          ></p-checkbox>
+          <div class="text-left">{{ o.option }}</div>
         </div>
       </div>
       <div class="grid grid-cols-2 gap-1 mb-3">
-        <div class="col-span-1">
+        <div
+          v-if="hasPrevious"
+          :class="{ 'col-span-1': true }"
+        >
           <button
             @click="onClickPrevious()"
             class="secondary w-full"
             v-if="hasPrevious"
           >
-            <div class="inline-block">前に戻る</div>
-            <svg 
-              class="w-6 h-6 float-left"
-              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-            </svg>
+           前に戻る
+           
           </button>
         </div>
-        <div class="col-span-1">
+        <div 
+          :class="{ 'col-span-1': hasPrevious, 'col-span-2': !hasPrevious }">
           <button
             @click="onClickNext()"
-           
             :disabled="!hasAnswers"
-            class="secondary w-full relative"
+            class=" w-full relative"
+            :class="{ 'bg-black border text-white': hasAnswers, 'secondary': !hasAnswers }"
           >
-            <div class="inline-block">
-              {{ hasNext ? '次に進む' : '確定する' }}
-            </div>
-            <svg
-              class="w-6 h-6 float-right"
-              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-            </svg>
+            {{ hasNext ? '次に進む' : '確定する' }}
           </button>
          
           
@@ -111,6 +107,7 @@ export default defineComponent({
     questions: {
       type: Object as () => IQuestion[]
     },
+    
     myPrescript: {
       type: Object as () => IPrescript,
     }
@@ -167,7 +164,8 @@ export default defineComponent({
         answer: currentAnswer.value.id || '',
         option: selectedOption.id,
       };
-      if (question.question_types === '複数選択式') {
+      // alert(question.question_types)
+      if (question.question_types.includes('複数選択式')) {
         currentAnswer.value.answer_options.push(newAnswerOption);
       } else {
         currentAnswer.value.answer_options = [newAnswerOption];

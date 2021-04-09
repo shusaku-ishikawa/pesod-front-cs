@@ -3,6 +3,7 @@
     <input
       @change="onChange"
       type="checkbox"
+      :disabled="$attrs.disabled"
       class="form-checkbox h-6 w-6 text-gray-600" :checked="modelValue"><span class="ml-2 text-gray-700">
       {{ $attrs.label }}
     </span>

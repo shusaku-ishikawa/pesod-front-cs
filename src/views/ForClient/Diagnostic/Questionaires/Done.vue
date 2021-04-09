@@ -4,33 +4,29 @@
   >
     <div class="text-left flex flex-col h-full">
       <div class="mb-10 text-center">
-        <svg
-          class="w-24 h-24 inline-block"
-          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <div class="font-bold">
-          全て回答済み
+        
+        <img class="mx-auto w-36 mb-2" src="@/assets/img/monshin_complete.png" alt="">
+        <div class="font-bold text-2xl">
+          問診は完了しました。<br>
+          お疲れ様でした。
         </div>
       </div>
     
       <div class="text-center">
-        <div class="mb-5">
-          担当医師：未選択
-        </div>
+       
         <div
           class=""
         >
           <router-link
-            :to="{ name: 'DiagnosticDoctorList' }"
+            :to="{ name: 'DiagnosticTop' }"
             v-slot="{ href, navigate }"
           >
             <button
               :href="href"
               @click="navigate"
-              class="primary w-full"
+              class="bg-black text-white w-full"
             >
-              医師選択一覧へ
+              お手続き一覧に戻る
             </button>
           </router-link>
         </div>

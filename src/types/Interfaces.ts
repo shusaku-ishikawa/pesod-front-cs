@@ -61,7 +61,7 @@ interface ICustomer{
   prefecture: string;
   city: string;
   address: string;
-  
+  phone_number: string;
 }
 interface IChatLog{
   id?: number;
@@ -138,11 +138,12 @@ interface IProduct{
   id?: string;
   name: string;
   image: string;
-  categories: Array<string>;
   is_on_sale: boolean;
+  categories: string;
   price: number;
   maker: string;
   tax_rate: number;
+  drug_class: string;
   quantity: number;
   usage: string;
   dose: string;
@@ -151,15 +152,32 @@ interface IProduct{
   is_sales: boolean;
 }
 interface IDelivery{
+  [key: string]: any,
+  receiver: string;
   prefecture: string;
   city: string;
   street: string;
   building: string;
   address: string;
   zip_code: string;
+  phone_number: string;
+  deliv_time: number;
 }
+interface IDeliveryValidator{
+  [key: string]: any,
+  receiver: Array<Function>;
+  prefecture: Array<Function>;
+  city: Array<Function>;
+  street: Array<Function>;
+  building: Array<Function>;
+  address: Array<Function>;
+  zip_code: Array<Function>;
+  phone_number: Array<Function>;
+  deliv_time: Array<Function>;  
+}
+
 interface ISubscriptionProduct{
-  id: string;
+  product: string;
   item_count: number;
 }
 
@@ -173,7 +191,7 @@ interface ISubscription{
   address: string;
   phone_number: string;
   deliv_method: string;
-  pay_method: string;
+  pay_method: number;
   product_ids: ISubscriptionProduct[];
 }
 export {
@@ -195,5 +213,6 @@ export {
   IRegistration,
   IProduct,
   IDelivery,
+  IDeliveryValidator,
   ISubscription
 }

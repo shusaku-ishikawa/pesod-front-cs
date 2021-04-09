@@ -1,10 +1,10 @@
 <template>
-  <div class="px-1 py-3">
+  <div class="px-5 py-3">
     <div class="flex items-center">
         <div class="flex items-center text-teal-600 relative">
             <div
                 :class="{ 'bg-gray-600 text-white border-gray-600': step >= 1 }"
-                class="rounded-full h-12 w-12 py-3 border-2 "
+                class="rounded-full h-10 w-10 py-1 border-2 text-lg"
             >
                 
                 <div>
@@ -21,12 +21,12 @@
         </div>
         <div
             :class="{ 'border-gray-600': step >= 2 }"
-            class="flex-auto border-t-4 border-teal-600"
+            class="flex-auto border-t-8 border-teal-600"
         ></div>
         <div class="flex items-center text-teal-600 relative">
             <div
                 :class="{ 'bg-gray-600 text-white border-gray-600': step >= 2 }"
-                class="rounded-full h-12 w-12 py-3 border-2 border-teal-600"
+                class="rounded-full h-10 w-10 py-1 text-lg  border-2 border-teal-600"
             >
                 <div>2</div>
             </div>
@@ -41,12 +41,12 @@
         </div>
         <div
             :class="{ 'border-gray-600': step >= 3 }"
-            class="flex-auto border-t-4 border-teal-600"
+            class="flex-auto border-t-8 border-teal-600"
         ></div>
         <div class="flex items-center text-teal-600 relative">
             <div
                 :class="{ 'bg-gray-600 text-white border-gray-600': step >= 3 }"
-                class="rounded-full h-12 w-12 py-3 border-2 "
+                class="rounded-full h-10 w-10 py-1 text-lg  border-2 "
             >
                 
                 <div>
@@ -63,12 +63,12 @@
         </div>
         <div
             :class="{ 'border-gray-600': step >= 4 }"
-            class="flex-auto border-t-4 border-teal-600"
+            class="flex-auto border-t-8 border-teal-600"
         ></div>
          <div class="flex items-center text-teal-600 relative">
             <div
                 :class="{ 'bg-gray-600 text-white border-gray-600': step >= 4 }"
-                class="rounded-full h-12 w-12 py-3 border-2 "
+                class="rounded-full h-10 w-10 py-1 text-lg  border-2 "
             >
                 
                 <div>

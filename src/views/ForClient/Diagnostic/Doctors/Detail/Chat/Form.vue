@@ -4,11 +4,17 @@
       class="relative"
       @submit.prevent="() => {}"  
     >
-   
+      <svg
+        @click="expand = !expand"
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-8 h-8 absolute cursor-pointer right-0 top-1" viewBox="0 0 20 20" fill="currentColor">
+        <path stroke="#374151" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8V4m0 0h4M3 4l4 4m8 0V4m0 0h-4m4 0l-4 4m-8 4v4m0 0h4m-4 0l4-4m8 4l-4-4m4 4v-4m0 4h-4" />
+      </svg>
       <textarea 
+        placeholder="メッセージを入力"
         class="focus:outline-none w-full border-t p-2"
         cols="30"
-        rows="2"
+        :rows="expand ? 20 : 2"
         :value="modelValue"
         @input="onInputMessage"
       ></textarea>
@@ -57,8 +63,11 @@ export default defineComponent({
       ctx.emit('send');
     };
     
+    const expand = ref(false);
+    
    
     return {
+      expand,
       // message,
       onInputMessage,
       onSendMessage,

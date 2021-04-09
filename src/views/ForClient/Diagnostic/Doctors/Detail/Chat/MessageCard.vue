@@ -1,20 +1,23 @@
 <template>
   <div
     class="flex items-end px-1"
-    :class="{ 'justify-end': !isMyMessage }"
+    :class="{ 'justify-end': isMyMessage }"
   >
     
     <div
       class="flex items-end space-y-1 mx-2"
+      :class="{ 'flex-row-reverse ': isMyMessage }"
       
     >
       <span
-        v-html="htmlify(chatLog.message)"
-        :class="{ 'rounded-bl-none': isMyMessage, 'rounded-br-none': !isMyMessage }"
-        class="text-left sm:max-w-sm md:max-w-md break-words text-sm leading-tight px-4 py-4 rounded-lg inline-block bg-gray-300 text-gray-600">
+        v-html="chatLog.message"
+        :class="{ 'rounded-bl-none bg-gray-300': !isMyMessage, 'rounded-br-none': isMyMessage }"
+        class="text-left sm:max-w-sm md:max-w-md break-words text-sm leading-tight px-4 py-4 rounded-lg inline-block text-gray-600"
+        :style="{ 'background-color': isMyMessage ? '#CCEAFF' : '' }"
+      >
         
       </span>
-      <div class="text-xs ml-2">
+      <div class="text-xs mx-2">
         {{ HHMM(chatLog.created_at) }}
       </div>
     </div>

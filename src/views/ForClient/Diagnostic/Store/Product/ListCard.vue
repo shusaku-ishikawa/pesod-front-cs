@@ -1,36 +1,40 @@
 <template>
-  <div class="flex items-center px-3 py-2 hover:bg-gray-100">
+  <div 
+    class="relative flex items-center px-3 py-2 "
+    :class="{ 'shadow border rounded mb-2': isSelectable, 'bg-gray-200': !product.is_sales }"
+  >
+    <div
+      v-if="!product.is_sales"
+      class="left-0 absolute py-3 bg-white w-full"
+    >
+      医薬品の購入には処方が必要です。
+    </div>
     <div v-if="isSelectable">
       <p-checkbox
         :modelValue="inCart"
         @update:modelValue="onCheck($event)"
+        :disabled="!product.is_sales"
       ></p-checkbox>
     </div>
-    <div>
-      
+    <div class="flex-shrink-0">
+
       <img
         :src="product.image"
         alt=""
-        style="width: 50px; height: auto"
+        style="width: 100px; height: auto"
       >
     </div>
-    <div class="flex-grow text-left ml-2">
-      <div>
-        {{ product.name }}
+    <div class="flex-grow text-left ">
+      <div class="">
+        <u
+          @click="onClick"
+        >{{ product.name }}</u>
       </div>
-      <div>
+      <div class="text-2xl">
         {{ (product.price || 0).toLocaleString() }}円
       </div>
     </div>
-    <div>
-      <svg
-        v-if="isSelectable"
-        @click="() => { router.push({ name: 'StoreProductDetail', params: { id: product.id } }) }"
-        class="w-8 h-8 inline-block cursor-pointer"
-        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-      </svg>
-    </div>
+    
   </div>
 </template>
 <script lang="ts">
@@ -42,7 +46,8 @@ export default defineComponent({
   components: {
   },
   emits: [
-    'update:inCart'
+    'update:inCart',
+    'showDetail'
   ],
   props: {
     product: {
@@ -63,10 +68,13 @@ export default defineComponent({
       console.log(e)
       context.emit('update:inCart', e);
     };
-
+    const onClick = () => {
+      context.emit('showDetail', props.product)
+    }
     return {
       router,
-      onCheck
+      onCheck,
+      onClick
     };
   }
 })
