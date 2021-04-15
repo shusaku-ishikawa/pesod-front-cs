@@ -4,21 +4,22 @@
       <div class="">
         <svg
           @click="() => { router.push({ name: 'DiagnosticTop' }) }"
-          class="h-8 w-8 cursor-pointer absolute "
+          class="h-6 w-6 left-1 cursor-pointer absolute "
           xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+        
         </svg>
         <div>
           定期購入の申し込み
         </div>
       </div>
     </template>
-    <div class="flex flex-col flex-grow bg-white px-3">
-      <div class="bg-gray-100 py-2 px-1 text-sm mb-3">
+    <div class="flex flex-col flex-grow bg-white px-3 pt-5">
+      <div class="bg-gray-100 py-2 px-1 mb-5" style="font-size: 12px">
         申し込みをご希望の商品にチェックを入れてください
       </div>
       <div class=" flex-grow flex flex-col ">
-        <template v-for="(p , i) in products" :key="i">
+        <template v-for="(p , i) in products.filter(p => p.is_sales)" :key="i">
           <store-product-list-card
             :inCart="isInCart(p)"
             :product="p"
@@ -28,44 +29,20 @@
           ></store-product-list-card>
         </template>
       </div>
-      <div>
-        <table class="w-64 mx-auto">
-          <tbody>
-            <tr>
-              <th class="text-left">商品数</th>
-              <td class="text-right">
-                {{ cart.length }}個
-              </td>
-            </tr>
-            <tr>
-              <th class="text-left">小計</th>
-              <td class="text-right">
-                {{ cartItemTotalPrice.toLocaleString() }}円
-              </td>
-            </tr>
-            <tr>
-              <th class="text-left">消費税</th>
-              <td class="text-right">
-                {{ cartItemTotalTax.toLocaleString() }}円
-              </td>
-            </tr>
-            <tr class="text-2xl font-bold">
-              <th class="text-left">合計</th>
-              <td class="text-right">
-                {{ (cartItemTotalPrice + cartItemTotalTax).toLocaleString() }}円
-              </td>
-            </tr>
-            
-          </tbody>
-        </table>
+      <div style="margin: 25px">
+        <cart-price-table
+          :cart="cart"
+        ></cart-price-table>
       </div>
-      <div class="py-3 ">
+      <div class="" style="margin-bottom: 50px; ">
         <button
           :disabled="!cart.length"
           @click="commitCart()"
           class="image"
         >
-          <img src="@/assets/img/monshin_next_on.png" alt="">
+          <img v-if="cart.length" src="@/assets/img/store/pay_next_on.png" alt="">
+          <img v-else src="@/assets/img/store/pay_next_off.png" alt="">
+          
         </button>
       </div>
     </div>
@@ -90,10 +67,13 @@ import useProducts from '@/types/Product';
 import StoreProductListCard from './ListCard.vue'
 import DetailModal from './DetailModal.vue';
 import {clone, cloneDeep} from 'lodash'
+import CartPriceTable from "./CartPriceTable.vue";
+
 export default defineComponent({
   components: {
     StoreProductListCard,
-    DetailModal
+    DetailModal,
+    CartPriceTable
   },
   props: {
     products: {
@@ -117,20 +97,7 @@ export default defineComponent({
     const showDetail = ref<IProduct | null>(null);
 
     // const cart = ref<IProduct[]>([]);
-    const cartItemTotalPrice = computed(() => {
-      let total = 0;
-      props.cart.map((p: IProduct) => {
-        total += p.price;
-      })
-      return total;
-    });
-    const cartItemTotalTax = computed(() => {
-      let total = 0;
-      props.cart.map((p: IProduct) => {
-        total += p.price * p.tax_rate / 100;
-      })
-      return total;
-    })
+    
     const isInCart = (p: IProduct) => {
       
       const r = props.cart.find((cp: IProduct) => cp.id === p.id) != null;
@@ -197,8 +164,6 @@ export default defineComponent({
       router,
       showDetail,
       isInCart,
-      cartItemTotalPrice,
-      cartItemTotalTax,
       editCart,
       commitCart,
       checkAll,

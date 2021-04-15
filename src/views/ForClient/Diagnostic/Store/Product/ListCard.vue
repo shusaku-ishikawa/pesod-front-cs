@@ -1,14 +1,9 @@
 <template>
   <div 
     class="relative flex items-center px-3 py-2 "
-    :class="{ 'shadow border rounded mb-2': isSelectable, 'bg-gray-200': !product.is_sales }"
+    :class="{ 'shadow border rounded mb-2': isSelectable, 'bg-primary-light': inCart }"
   >
-    <div
-      v-if="!product.is_sales"
-      class="left-0 absolute py-3 bg-white w-full"
-    >
-      医薬品の購入には処方が必要です。
-    </div>
+   
     <div v-if="isSelectable">
       <p-checkbox
         :modelValue="inCart"
@@ -21,16 +16,16 @@
       <img
         :src="product.image"
         alt=""
-        style="width: 100px; height: auto"
+        style="width: 80px; height: auto"
       >
     </div>
-    <div class="flex-grow text-left ">
-      <div class="">
+    <div class="flex-grow text-left " style="margin: 0px 15px">
+      <div class="" style="font-size: 14px">
         <u
           @click="onClick"
         >{{ product.name }}</u>
       </div>
-      <div class="text-2xl">
+      <div class="text-2xl text-right" style="line-height: 25px">
         {{ (product.price || 0).toLocaleString() }}円
       </div>
     </div>

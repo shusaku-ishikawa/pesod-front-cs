@@ -2,24 +2,25 @@
   <base-layout>
     <template v-slot:title>
       <div class="">
+        
         <svg
-          @click="() => { router.push({ name: 'StoreProductList' }) }"
-          class="h-8 w-8 cursor-pointer absolute "
+          @click="() => { router.push({ name: 'DiagnosticTop' }) }"
+          class="h-6 w-6 left-1 cursor-pointer absolute "
           xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+        
         </svg>
         <div>
           定期購入の申し込み
         </div>
       </div>
     </template>
-    <div class="flex flex-col flex-grow pb-5">
-      <store-stepper
-        class="mb-10"
-        :step="3"
-      ></store-stepper>
-      <div class="bg-gray-100 p-2 text-left text-sm">
-        申し込みはまだ確定しておりません。内容の最終確認をお願いい
+    <div class="flex flex-col flex-grow pb-5" style="padding: 20px 30px">
+      <div class="pb-5">
+        <img src="@/assets/img/store/pay_list03.png" alt="">
+      </div>
+      <div class="bg-gray-100 px-8 py-1 text-left " style="font-size: 12px; ">
+        申し込みはまだ確定しておりません。<br>内容の最終確認をお願いい
         たします。
       </div>
       <div class="text-left p-2 mb-3">
@@ -30,78 +31,52 @@
           :isSelectable="false"
         ></product-list-card>
       </div>
-      <div class="mb-3">
-        <table class="w-72 mx-auto">
-          <tbody>
-            <tr>
-              <th class="text-left">商品数</th>
-              <td class="text-right">
-                {{ cart.length }}個
-              </td>
-            </tr>
-            <tr>
-              <th class="text-left">小計</th>
-              <td class="text-right">
-                {{ cartItemTotalPrice.toLocaleString() }}円
-              </td>
-            </tr>
-            <tr>
-              <th class="text-left">消費税</th>
-              <td class="text-right">
-                {{ cartItemTotalTax.toLocaleString() }}円
-              </td>
-            </tr>
-            <tr class="text-2xl font-bold">
-              <th class="text-left">合計</th>
-              <td class="text-right">
-                {{ (cartItemTotalPrice + cartItemTotalTax).toLocaleString() }}円
-              </td>
-            </tr>
+      <div class="">
+        <cart-price-table
+          :cart="cart"
+        ></cart-price-table>
+      </div>
+    </div>
+    <div>
+      <div class="bg-gray-100 text-left" style="height: 30px; padding-left: 30px; line-height: 30px">
+        配送先情報
+      </div>
+      <div class="" style="padding: 20px 30px">
+        <div class="text-left mb-4">
+          <label for="">お宛名</label>
+          <div class="text-lg">
+            {{ delivery.receiver }}様
+          </div>
+        </div>
+        <div class="text-left mb-4">
+          <label for="">ご住所</label>
+          <div class="text-lg">
+            <div>{{ delivery.zip_code }}</div>
+            <div>
+              {{ delivery.prefecture }}{{ delivery.city }}{{ delivery.address }}
+            </div>
+          </div>
+        </div>
+        <div class="text-left mb-4">
+          <label for="">電話番号</label>
+          <div class="text-lg">
+            <div>{{ delivery.phone_number }}</div>
             
-          </tbody>
-        </table>
-      </div>
-      <div>
-        <div class="bg-gray-100 p-1 mb-3">
-          配送先情報
+          </div>
         </div>
-        <div class="w-72 inline-block mx-auto ">
-          <div class="text-left mb-4">
-            <label for="">お宛名</label>
-            <div class="text-2xl">
-              {{ delivery.receiver }}様
-            </div>
+        <div class="text-left mb-4">
+          <label for="">配送希望時間帯</label>
+          <div class="text-lg">
+            <div>{{ delivTimes.find(d => d.value == delivery.deliv_time).text }}</div>
+            
           </div>
-          <div class="text-left mb-4">
-            <label for="">ご住所</label>
-            <div class="text-2xl">
-              <div>{{ delivery.zip_code }}</div>
-              <div>
-                {{ delivery.prefecture }}{{ delivery.city }}{{ delivery.address }}
-              </div>
-            </div>
-          </div>
-          <div class="text-left mb-4">
-            <label for="">電話番号</label>
-            <div class="text-2xl">
-              <div>{{ delivery.phone_number }}</div>
-             
-            </div>
-          </div>
-          <div class="text-left mb-4">
-            <label for="">配送希望時間帯</label>
-            <div class="text-2xl">
-              <div>{{ delivTimes.find(d => d.value == delivery.deliv_time).text }}</div>
-             
-            </div>
-          </div>
-          
         </div>
-        
-        
       </div>
+    </div>  
+    
+    <div >
       <div v-if="card" class="mb-3">
-        <div class="bg-gray-100 p-1 mb-2">
+        <div class="bg-gray-100 text-left" style="height: 30px; padding-left: 30px; line-height: 30px">
           クレジットカード決済
         </div>
         <div class="p-2 text-lg items-center flex justify-center">
@@ -113,22 +88,21 @@
           </div>
         </div>
       </div>
-      
-      <div class="px-2">
-        <button
-          @click="onFixOrder"
-          class="block w-full bg-black text-white mx-auto mb-3 py-4"
-        >
-          定期購入を申し込む
-        </button>
-        <button
-          class="secondary w-full py-4"
-          @click="router.push({ name: 'StorePayment2' })"
-        >
-          もどる
-        </button>
-      </div>
-      
+    </div>
+    
+    <div class="px-2" style="padding: 0px 30px 50px">
+      <button
+        @click="onFixOrder"
+        class="image mb-2"
+      >
+        <img src="@/assets/img/store/pay_complete.png" alt="">
+      </button>
+      <button
+        class="image"
+        @click="router.push({ name: 'StorePayment2' })"
+      >
+        <img src="@/assets/img/store/pay_back_long.png" alt="">
+      </button>
     </div>
   </base-layout>
 </template>
@@ -140,12 +114,13 @@ import useProduct from '@/types/Product';
 
 import ProductListCard from './Product/ListCard.vue';
 
-import StoreStepper from './Stepper.vue'
+import CartPriceTable from "./Product/CartPriceTable.vue";
 
 export default defineComponent({
   components: {
-    StoreStepper,
-    ProductListCard
+    // Sto?reStepper,
+    ProductListCard,
+    CartPriceTable
   },
   emits: [
     'commit:order'

@@ -3,10 +3,11 @@
     <template v-slot:title>
       <div class="">
         <svg
-          @click="() => { router.push({ name: 'StoreProductList' }) }"
-          class="h-8 w-8 cursor-pointer absolute "
+          @click="() => { router.push({ name: 'DiagnosticTop' }) }"
+          class="h-6 w-6 left-1 cursor-pointer absolute "
           xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+        
         </svg>
         <div>
           定期購入の申し込み
@@ -14,11 +15,10 @@
       </div>
     </template>
     <div class="flex flex-col flex-grow pb-5">
-      <store-stepper
-        class="mb-10"
-        :step="1"
-      ></store-stepper>
-      <div class="bg-gray-100">
+      <div class="" style="padding: 20px 30px">
+        <img src="@/assets/img/store/pay_list01.png" alt="">
+      </div>
+      <div class="bg-gray-100 text-left" style="height: 30px; padding-left: 30px; line-height: 30px">
         配送先情報の設定
       </div>
       <div class="text-left p-2">
@@ -35,27 +35,28 @@
         </div> -->
       </div>
       <div
-        class="px-3 pt-5"
+        class=" pt-5"
+        style="padding: 0px 30px;"
       >
         <div>
           <form 
             ref="form"
           >
-             <div class="mb-7">
-              <p-input
-                label="お宛名"
+             <div class="mb-7 text-left">
+              <label class="text-sm font-semibold" for="atena">お宛名</label>
+              <input
+                class="block w-full border-b"
+                id="atena"
+                :value="delivery.receiver"
                 type="text"
-                :disabled="true"
-                :required="true"
-                autocomplete="name"
-                :modelValue="delivery.receiver"
-                @update:modelValue="updateValue('receiver', $event)"
-                :error="errors.receiver"
-              ></p-input>
+                disabled
+                style="line-height: 40px; font-size: 20px"
+              >
+             
             </div>
             <div class="mb-7">
               <p-input
-                label="郵便番号"
+                label="郵便番号(ハイフンなし数字7桁)"
                 type="text"
                 :required="true"
                 autocomplete="zip_code"
@@ -99,7 +100,7 @@
             </div>
             <div class="mb-7">
               <p-input
-                label="電話番号"
+                label="電話番号(ハイフンなし数字15桁以内)"
                 type="text"
                 autocomplete="phone"
                 :modelValue="delivery.phone_number"
@@ -136,14 +137,16 @@
           @click="onCommitDelivery"
           class="image mb-3"
         >
-            <img src="@/assets/img/monshin_next_on.png" alt="">
+          <img v-if="validate()" src="@/assets/img/store/pay_next_on.png" alt="">
+          <img v-else src="@/assets/img/store/pay_next_off.png" alt="">
         
         </button>
         <button
-          class="secondary w-full py-3 text-lg"
+          class="image"
+          style="margin-bottom: 50px"
           @click="router.push({ name: 'StoreProductList' })"
         >
-          もどる
+          <img src="@/assets/img/store/pay_back_long.png" alt="">
         </button>
       </div>
       
@@ -164,7 +167,7 @@ import { has } from 'lodash';
 
 export default defineComponent({
   components: {
-    StoreStepper
+    // StoreStepper
   },
   emits: [
     'update:delivery'
