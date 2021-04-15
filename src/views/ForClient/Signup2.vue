@@ -1,5 +1,5 @@
 <template>
-  <top-layout>
+  <base-layout>
     <template v-slot:title>
       <div class="relative">
         <svg
@@ -55,7 +55,7 @@
         </div>
       </form>
     </div>
-  </top-layout>
+  </base-layout>
 </template>
 <script lang="ts">
 import { defineComponent, onMounted, ref,  } from 'vue';
@@ -73,7 +73,7 @@ export default defineComponent({
     
     const {
       getToken,
-      remoteToken,
+      removeToken,
       sendSignupEmail
     } = useAuth();
 
@@ -93,7 +93,7 @@ export default defineComponent({
     };
     
     onMounted(() => {
-      remoteToken();
+      removeToken();
     });
 
     const loading = ref(false);

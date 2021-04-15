@@ -1,25 +1,28 @@
 import { ref, computed } from 'vue';
 import { IProduct } from './Interfaces';
-import { client } from '@/types/Axios';
+import useAxios from '@/types/Axios';
 
-const fetchProducts = async (): Promise<IProduct[]> => {
-  const { data } = await client.get('/products/');
-  console.log(data);
-  return data.results;
-  
-};
 
-const getProduct = async (id: string) => {
-  console.log(id)
-  const {data} = await client.get(`/product/${id}`);
-  console.log(data)
-  return data;
-}
-
-export default function useProducts() {
+export default function useProducts(userType = 'customer') {
   const product = ref<IProduct | null>(null);
   const products = ref<IProduct[]>([]);
-
+  const {
+    client  
+  } = useAxios(userType);
+  const fetchProducts = async (): Promise<IProduct[]> => {
+    const { data } = await client.get('/products/');
+    console.log(data);
+    return data;
+    
+  };
+  
+  const getProduct = async (id: string) => {
+    console.log(id)
+    const {data} = await client.get(`/product/${id}`);
+    console.log(data)
+    return data;
+  }
+  
   return {
     product,
     products,

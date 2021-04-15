@@ -4,7 +4,7 @@
       <div class="">
         <svg
           @click="() => { router.push({ name: 'DiagnosticDoctorList' }) }"
-          class="h-8 w-8 cursor-pointer absolute "
+          class="left-1 h-8 w-8 cursor-pointer absolute "
           xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
         </svg>
@@ -18,7 +18,7 @@
         <div class="col-span-10 col-start-2">
           <div class="py-10">
             <img
-              class="w-36 h-36 inline-block"
+              class="w-36 h-36 inline-block rounded-full"
               v-if="doctor.image"
               :src="doctor.image" alt="">
             <svg
@@ -28,17 +28,23 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
+          <div class="mb-5 font-bold text-lg">
+            {{ doctor.first_name }} {{ doctor.last_name }} 医師
+          </div>
           <div class="mb-10">
             
             <button
               @click="onSelectDoctor()"
-              class="block w-full bg-black text-white mb-3"
+              class="block w-full bg-black text-white py-3"
+              style="margin-bottom: 20px; font-weight: 600"
             >
               この医師を選ぶ
             </button>
             <button
               @click="() => { router.push({ name: 'DiagnosticDoctorList' }) }"
-              class="sedondary border block w-full ">
+              class="sedondary border block w-full py-3"
+              style="margin-bottom: 20px; font-weight: 600"
+            >
               他の医師にする
             </button>
           </div>
@@ -73,7 +79,7 @@
                 所在地
               </div>
               <div class="py-2 text-lg">
-                {{ doctor.prefecture }} {{ doctor.city }} {{ doctor.address }}
+                {{ doctor.prefecture }} {{ doctor.city }}
               </div>
             </div>
             <div class="border-b text-left mb-5">
@@ -120,7 +126,7 @@ export default defineComponent({
         const data = await selectDoctor(prop.doctor.id || -1);
         // update myPrescript
         
-        router.push({ name: 'DiagnosticDoctorDetailChat' })
+        router.push({ name: 'DiagnosticTop' })
       } catch (err) {
         console.error(err)
       }

@@ -1,11 +1,12 @@
 <template>
   <div class="inline-block shadow-xl transform align-middle" >
     <div class="my-20 rounded bg-white px-6 py-4 sm:pb-4">
-      <div class="mb-3 border-b">
+      <div class="text-left">テンプレート選択</div>
+      <div class="mb-2">
         <div
           v-for="(t, i) in templates"
           :key="i"
-          class="border-b py-2 text-left cursor-pointer"
+          class="border rounded mb-1 py-2 px-4 text-left cursor-pointer"
           @click="selectedTemplate = t"
           :class="{ 'bg-blue-100': selectedTemplate && selectedTemplate.id == t.id }"
         >
@@ -13,16 +14,18 @@
         </div>
         
       </div>
+      <hr class="mb-3">
       <div class="flex ">
         <button
           @click="onSelect"
-          class="primary"
+          class="border rounded "
           :disabled="selectedTemplate == null"
         >
-          選択
+          下書きに入力
         </button>
         <button
           @click="onClose"
+          class="ml-auto bg-gray-200 text-white"
         >
           閉じる
         </button>

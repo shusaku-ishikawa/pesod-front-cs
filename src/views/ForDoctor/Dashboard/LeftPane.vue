@@ -2,12 +2,12 @@
   <div
     class="min-h-full w-full px-2 py-3"
   >
-    <div class="flex mb-3 w-full ">
+    <div class="relative mb-3 w-full ">
       <input
-        class="border block flex-grow pl-2 "
+        class="rounded-full px-4 focus:outline-none focus:ring w-full py-2 border block flex-grow "
         type="text">
       <button
-        class="border bg-white"
+        class="absolute right-2 top-1 rounded-full bg-white"
       >
         <svg
           class="h-4 w-4"
@@ -17,27 +17,60 @@
       </button>
       
     </div>
+    <div class="mb-5">
+      <button
+        @click="onlyActive = !onlyActive"
+        :class="{ 'bg-green-600 text-white': !onlyActive }"
+        class="block w-full shadow bg-gray-200 text-black">
+        {{ onlyActive ? '全て表示' : '対応中のみ表示' }}
+      </button>
+    </div>
     <div>
       <div
         v-for="(p, i) in prescripts.filter(p => p.status > 2)"
         :key="i"
-        class="py-2 flex items-center px-3 py-2 border-b  hover:bg-blue-200 cursor-pointer text-sm"
+        class="py-2 flex items-center px-3 py-2 border-b  hover:bg-blue-200 text-sm"
         @click="onSelectPrescript(p)"
-        :class="{ 'bg-gray-200': modelValue && modelValue.id === p.id }"
+        :class="{ 'bg-primary-light': modelValue && modelValue.id === p.id, 'cursor-pointer': p.status == 3 }"
       >
+        <div class="flex-shrink-0">
+          
+          <img
+            v-if="p.customer.icon_type == 0"
+            class="w-12"
+            src="@/assets/img/doctor/icon_man.png" alt=""
+          >
+          <img
+            v-if="p.customer.icon_type == 1"
+            class="w-12"
+            src="@/assets/img/doctor/icon_woman.png" alt=""
+          >
+          <img
+            v-if="p.customer.icon_type == 2"
+            class="w-12"
+            src="@/assets/img/doctor/icon_dog.png" alt=""
+          >
+          <img
+            v-if="p.customer.icon_type == 3"
+            class="w-12"
+            src="@/assets/img/doctor/icon_cat.png" alt=""
+          >
+          <img
+            v-if="p.customer.icon_type == 4"
+            class="w-12"
+            src="@/assets/img/doctor/icon_robot.png" alt=""
+          >
+          
+          
+        </div>
         <div
-          class="flex flex-col flex-grow text-left"
+          class="ml-3 flex flex-col flex-grow text-left"
         >
           <div class="flex items-center justify-between">
             <div class="font-medium text-base ">
               {{ p.customer.first_name }} {{ p.customer.last_name }}
             </div>
-            <div
-              class=" ml-1 px-2 rounded shadow-lg text-xs"
-              :class="{ 'bg-yellow-100 text-black': p.status === 3, 'text-gray-600 border-gray-200': p.status !== 3 }"
-            >
-              {{ p.status === 3 ? '対応中' : '対応済' }}
-            </div>
+            
           </div>
           <div>
             ID: {{ p.customer.id }}
@@ -78,9 +111,9 @@ export default defineComponent({
     const {
       prescripts,
       fetchPrescripts  
-    } = usePrescript();
+    } = usePrescript('doctor');
 
-    
+    const onlyActive = ref(false)
     
     onMounted(async () => {
       prescripts.value = await fetchPrescripts();
@@ -94,7 +127,8 @@ export default defineComponent({
 
     return {
       onSelectPrescript,
-      prescripts
+      prescripts,
+      onlyActive
     };
   }
 })

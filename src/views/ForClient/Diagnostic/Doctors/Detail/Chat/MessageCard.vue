@@ -12,8 +12,8 @@
       <span
         v-html="chatLog.message"
         :class="{ 'rounded-bl-none bg-gray-300': !isMyMessage, 'rounded-br-none': isMyMessage }"
-        class="text-left sm:max-w-sm md:max-w-md break-words text-sm leading-tight px-4 py-4 rounded-lg inline-block text-gray-600"
-        :style="{ 'background-color': isMyMessage ? '#CCEAFF' : '' }"
+        class="text-left sm:max-w-sm md:max-w-md break-words leading-tight px-4 py-4 rounded-lg inline-block text-gray-600"
+        :style="{ 'font-size': '12px', 'background-color': isMyMessage ? '#CCEAFF' : '' }"
       >
         
       </span>

@@ -1,5 +1,5 @@
 <template>
-  <top-layout>
+  <base-layout>
     <template v-slot:title>
       <div class="relative">
         <!-- <svg
@@ -175,7 +175,7 @@
           
       </div>
     </form>
-  </top-layout>
+  </base-layout>
 </template>
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';

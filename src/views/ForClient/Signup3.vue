@@ -1,5 +1,5 @@
 <template>
-  <top-layout>
+  <base-layout>
     <template v-slot:title>
       <div class="relative">
         <svg
@@ -35,7 +35,7 @@
       </div>
       
     </div>
-  </top-layout>
+  </base-layout>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';

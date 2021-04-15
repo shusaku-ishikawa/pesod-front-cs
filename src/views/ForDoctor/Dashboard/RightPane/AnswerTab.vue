@@ -15,12 +15,55 @@
         問診表
       </div>
     </div> -->
-    <div class="px-3">
-      <client-profile
-        v-if="prescript"
-        class="mb-5"
-        :prescript="prescript"
-      ></client-profile>
+    <div class="px-1">
+      <div class="mb-5">
+        <div class="text-left">顧客基本情報</div>
+        <table class="w-full border-collapsed border">
+          <tbody>
+            <tr class="border">
+              <th class=" bg-primary-light">お名前</th>
+              <td>{{ prescript.customer.first_name }}{{ prescript.customer.last_name }}</td>
+            </tr>
+            <tr class="border">
+              <th class=" bg-primary-light">性別</th>
+              <td>{{ prescript.customer.gender }}</td>
+            </tr>
+            <tr class="border">
+              <th class=" bg-primary-light">生年月日</th>
+              <td>{{ prescript.customer.birthday }}</td>
+            </tr>
+            
+            
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div class="text-left">過去のPesod利用状況</div>
+        <table class="w-full border-collapsed border">
+          <tbody>
+            <tr class="border">
+              <th class="bg-primary-light">診療回数</th>
+              <td>{{ prescript.customer.first_name }}{{ prescript.customer.last_name }}</td>
+            </tr>
+            <tr class="border">
+              <th class=" bg-primary-light">定期購入</th>
+              <td>{{ prescript.customer.gender }}</td>
+            </tr>
+            <tr class="border">
+              <th class=" bg-primary-light">定期注文回数</th>
+              <td>{{ prescript.customer.birthday }}</td>
+            </tr>
+            <tr class="border">
+              <th class=" bg-primary-light">定期ステータス</th>
+              <td>{{ prescript.customer.birthday }}</td>
+            </tr>
+            
+            
+            
+          </tbody>
+        </table>
+      </div>
+      
       <div
         v-for="(a, i) in answers"
         :key="i"
@@ -77,7 +120,6 @@ import { onBeforeRouteUpdate } from "vue-router";
 
 export default defineComponent({
   components: {
-    ClientProfile,
     Question
   },
   props: {
@@ -90,7 +132,7 @@ export default defineComponent({
     const {
       answers,
       fetchAnswers
-    } = useAnswer();
+    } = useAnswer('doctor');
 
     const setAnswers = async () => {
       const data = await fetchAnswers(props.prescript.customer.uuid);

@@ -1,5 +1,7 @@
 <template>
   <div
+    @click="() => { router.push({ name: 'DiagnosticDoctorDetailTop', params: { id: doctor.id } }) }"
+        
     class="flex py-4 hover:bg-gray-50"
   >
     <div class="flex-shrink-0 my-auto mx-2 ">
@@ -21,26 +23,20 @@
     <div
       class="px-2 flex-grow flex flex-col"
     >
-       <div class="flex items-center">
-         <div class="whitespace-nowrap font-medium pr-3">{{ doctor.prefecture }}</div>
-         <!-- <div class=" px-2 text-xs border-2 border-gray-600">
-           オンライン診療検収受講済み
-          </div> -->
-       </div>
+       
        <div class="text-left mt-1">
-         <div class="font-medium text-sm">{{ doctor.first_kana }} {{ doctor.last_kana }}</div>
-         <div class="font-medium text-lg ">{{ doctor.first_name }} {{ doctor.last_name }}</div>
-         <div class="text-sm">
-           {{ doctor.clinic_name }}
+         <div class="font-semibold text-lg mb-1">{{ doctor.first_name }} {{ doctor.last_name }} 医師</div>
+         <div class="text-sm mb-1">
+           <div>クリニック名:</div>
+           <div>{{ doctor.clinic_name }}</div>
          </div>
          <div class="text-sm">
-           {{ doctor.status }}
+           {{ doctor.prefecture }}{{ doctor.city }}
          </div>
        </div>
     </div>
     <div class="my-auto">
       <svg
-        @click="() => { router.push({ name: 'DiagnosticDoctorDetailTop', params: { id: doctor.id } }) }"
         class="w-8 h-8 text-gray-400 cursor-pointer"
         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />

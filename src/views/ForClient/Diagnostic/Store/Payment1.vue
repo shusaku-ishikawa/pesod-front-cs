@@ -134,12 +134,13 @@
         <button
           :disabled="!validate()"
           @click="onCommitDelivery"
-          class="block bg-black text-white w-full block mx-auto mb-2  "
+          class="image mb-3"
         >
-          次に進む
+            <img src="@/assets/img/monshin_next_on.png" alt="">
+        
         </button>
         <button
-          class="secondary w-full"
+          class="secondary w-full py-3 text-lg"
           @click="router.push({ name: 'StoreProductList' })"
         >
           もどる

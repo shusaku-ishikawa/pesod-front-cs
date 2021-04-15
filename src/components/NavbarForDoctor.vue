@@ -3,12 +3,13 @@
     
     <div class="relative h-full flex items-center px-10">
       <div class="font-medium text-3xl">
-        Persona
+        <img src="@/assets/img/doctor/pesod_logo_doctor_s.png" alt="">
         <!-- <pix-cardio-logo /> -->
       </div>
+      {{ getProfileFromStorage() }}
       
-      <div v-if="profile != null" class="relative flex items-center ml-auto">
-        <div>ようこそ {{ profile.first_name }} {{ profile.last_name }} 様</div>
+      <div v-if="getProfileFromStorage() != null" class="relative flex items-center ml-auto">
+        <div>ようこそ {{ getProfileFromStorage().first_name }} {{ getProfileFromStorage().last_name }} 様</div>
         <div>  
           <svg
             @click="showDrawer = !showDrawer"
@@ -49,7 +50,7 @@ export default defineComponent({
     const router = useRouter();
 
     const {
-      profile,
+      getProfileFromStorage,
       isLoggedIn
     } = useAuth();
 
@@ -64,7 +65,7 @@ export default defineComponent({
     return {
       menu,
       router,
-      profile,
+      getProfileFromStorage,
       showDrawer,
       isLoggedIn,
     }

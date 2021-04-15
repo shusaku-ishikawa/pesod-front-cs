@@ -1,5 +1,5 @@
 <template>
-  <top-layout>
+  <base-layout>
     <template v-slot:title>
       <div class="relative">
         <svg
@@ -82,7 +82,7 @@
         </div>
       </form>
     </div>
-  </top-layout>
+  </base-layout>
 </template>
 <script lang="ts">
 import { getRegexpTester } from '@/mixins/FormValidator';

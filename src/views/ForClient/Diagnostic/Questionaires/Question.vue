@@ -2,7 +2,7 @@
   <div>
     <div class=" text-left">
       <div class="relative inline-block ">
-        <div class="font-bold text-xl">Q{{ index }}</div>
+        <div class="font-bold text-xl" style="padding-bottom: 10px">Q{{ index }}</div>
       </div>
     </div>
     <div v-html="question" class="mb-5 text-left">

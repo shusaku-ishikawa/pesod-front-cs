@@ -36,9 +36,9 @@
           v-if="defaultCard && useCurrentCard"
           :creditCard="defaultCard"
         ></credit-card>
-        <div v-show="!useCurrentCard" class="mb-3">
+        <div v-show="!useCurrentCard" class="" style="padding-bottom: 50px">
           <div class="mb-5" ref="payjs" id="payjs">
-            here
+            
           </div>
           <!-- <div>
             <p-checkbox
@@ -50,13 +50,13 @@
         <div>
           <button
             @click="onSubmit()"
-            :disabled="(useCurrentCard && defaultCard == null)"
-            class="bg-black text-white w-full block mx-auto mb-3"
+            :disabled="(useCurrentCard && defaultCard == null) || loading"
+            class="image mb-3"
           >
-            次に進む
+             <img src="@/assets/img/monshin_next_on.png" alt="">
           </button>
           <button
-            class="secondary w-full block mx-auto mb-3"
+            class="secondary w-full block mx-auto py-3 text-lg mb-3"
             @click="router.push({ name: 'StorePayment1' })"
           >
             もどる
@@ -132,15 +132,17 @@ export default defineComponent({
     });
     const useCurrentCard = ref(false);
     
+    const loading = ref(false);
     const onSubmit = () => {
       if (useCurrentCard.value) {
         context.emit('commit:payment', defaultCard.value);
         return; 
       }
       if (PayJP == null || cardElement == null) return;
+      loading.value = true;
       PayJP.createToken(cardElement).then(async (r) => {
         if (r.error) {
-          console.error(r.error.message)
+          console.error(r.error)
           alert(r.error.message)
         } else {
           console.log(r.id);
@@ -152,7 +154,8 @@ export default defineComponent({
           // alert(payload)
           try {
             const ret = await createCard(payload)
-            console.log(ret)
+            const card = ret.cards.find(c => c.id == ret.default_card)
+            context.emit('commit:payment', card)
           } catch (err) {
             const response = err.response;
             if (response) {
@@ -163,8 +166,9 @@ export default defineComponent({
               }
             }
           }
-          context.emit('commit:payment', ret)
+          
         }
+        loading.value = false;
       });
       // r
     };
@@ -179,7 +183,8 @@ export default defineComponent({
       cards,
       cardCreated,
       createAsDefault,
-      defaultCard
+      defaultCard,
+      loading
     };
   }
 })

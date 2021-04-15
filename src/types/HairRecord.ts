@@ -1,17 +1,22 @@
 import { IHairRecord } from '@/types/Interfaces';
-import { client } from './Axios';
+import useAxios from './Axios';
 
-const fetchHairRecord = async () => {
-  return null;
-}
 
-const addHairRecord = async (postData: FormData) => {
-  const { data } = await client.post('/hairrecord/', postData, { headers: { 'content-type': 'multipart/form-data' } });
-  console.log(data);
-  return data;
-}
 
-export default function useHairRecord() {
+export default function useHairRecord(userType = 'customer') {
+  const {
+    client  
+  } = useAxios(userType);
+  
+  const fetchHairRecord = async () => {
+    return null;
+  }
+  
+  const addHairRecord = async (postData: FormData) => {
+    const { data } = await client.post('/hairrecord/', postData, { headers: { 'content-type': 'multipart/form-data' } });
+    console.log(data);
+    return data;
+  }
   return {
     fetchHairRecord,
     addHairRecord

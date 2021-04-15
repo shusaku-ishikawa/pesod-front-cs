@@ -3,19 +3,20 @@
     class="min-h-full w-full sm:px-3 sm:py-5"
   >
     <div>
-      <ul class='flex cursor-pointer text-sm justify-center'>
+      <ul class='flex cursor-pointer text-base justify-center'>
         <li
           
           v-for="(t, i) in tabs"
           :key="i"
           @click="tab = t.value"
-          :class="{ 'bg-gray-400 text-white ': t.value === tab }"
+          :class="{ 'bg-primary text-white ': t.value === tab }"
           class='flex-auto py-1 px-4 bg-white rounded-t-lg border'
         >
           {{ t.text }}
         </li>
       </ul>
     </div>
+    
     <answer-tab
       v-if="tab === 'answer'"
       :prescript="prescript"
@@ -52,7 +53,7 @@ export default defineComponent({
       },
       {
         value: 'profile',
-        text: 'ユーザ情報'
+        text: '顧客情報'
       },
       {
         value: 'hairRecord',

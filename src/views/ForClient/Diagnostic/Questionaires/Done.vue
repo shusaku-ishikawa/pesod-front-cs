@@ -3,10 +3,10 @@
     class="px-12 pt-5 h-full"
   >
     <div class="text-left flex flex-col h-full">
-      <div class="mb-10 text-center">
+      <div class=" text-center mb-5 ">
         
-        <img class="mx-auto w-36 mb-2" src="@/assets/img/monshin_complete.png" alt="">
-        <div class="font-bold text-2xl">
+        <img class="mx-auto w-36" style="margin-top:100px; margin-bottom: 20px" src="@/assets/img/monshin_complete.png" alt="">
+        <div class="font-bold" style="font-size: 1.3rem; line-height: 2.5rem">
           問診は完了しました。<br>
           お疲れ様でした。
         </div>
@@ -24,7 +24,8 @@
             <button
               :href="href"
               @click="navigate"
-              class="bg-black text-white w-full"
+              class="bg-black text-white w-full py-4"
+              style="font-weight: 600"
             >
               お手続き一覧に戻る
             </button>

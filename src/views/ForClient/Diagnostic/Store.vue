@@ -161,6 +161,7 @@ export default defineComponent({
 
     const onCommitPayment = (event: any) => {
       card.value = event;
+      console.log(event)
       router.push({ name:'StorePayment3' })
     }
     const validateOrder = () => {

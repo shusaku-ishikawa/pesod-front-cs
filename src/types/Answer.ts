@@ -1,7 +1,7 @@
 
 import { ref } from 'vue';
 import { IAnswer, IAnswerOption } from "@/types/Interfaces";
-import {client} from '@/types/Axios';
+import useAxios from '@/types/Axios';
 
 const answers = ref<IAnswer[]>([]);
 
@@ -11,40 +11,38 @@ interface ICreateAnswer{
   descriptive_answer: string | null;
   hair_image?: string;
 }
-const fetchAnswers = async (uuid?: string): Promise<IAnswer[]> => {
-  const url = uuid == null ? '/answers/' : `/answers/?uuid=${uuid}`;
-  const { data } = await client.get(url);
-  console.log(data);
-  answers.value = data.results;
-  return data.results;
-};
 
-const createAnswer = async (answer: IAnswer) => {
-  console.log(answer)
-  if (answer.customer.id == null) throw Error('customer has no id');
-  console.log(answer.answer_options)
-  const options = answer.answer_options.map((a: IAnswerOption) => ({ option: a.option }))
 
-  const postData: ICreateAnswer = {
-    question_id: answer.question.id,
-    options: options,
-    descriptive_answer: answer.descriptive_answer,
+export default function useAnswer(userType = 'customer') {
+  const {
+    client  
+  } = useAxios(userType);
+  const fetchAnswers = async (uuid?: string): Promise<IAnswer[]> => {
+    const url = uuid == null ? '/answers/' : `/answers/?uuid=${uuid}`;
+    const { data } = await client.get(url);
+    return data;
   };
-  if (answer.hair_image != null) {
-    const base64 = answer.hair_image // .replace(/^data:image\/(png|jpe?g);base64,/, "");
-    postData.hair_image = base64;
-    console.log(base64)
-  }
-  console.log(postData)
   
-  // console.log(formData)
-  const {data} = await client.post('/answer/', postData);
-  console.log(data)
-  return data;
+  const createAnswer = async (answer: IAnswer) => {
+    if (answer.customer.id == null) throw Error('customer has no id');
+    const options = answer.answer_options?.map((a: IAnswerOption) => ({ option: a.option }))
   
-};
-
-export default function useAnswer() {
+    const postData: ICreateAnswer = {
+      question_id: answer.question.id,
+      options: options,
+      descriptive_answer: answer.descriptive_answer,
+    };
+    if (answer.hair_image != null) {
+      const base64 = answer.hair_image // .replace(/^data:image\/(png|jpe?g);base64,/, "");
+      postData.hair_image = base64;
+    }
+    
+    // console.log(formData)
+    const {data} = await client.post('/answer/', postData);
+    console.log(data)
+    return data;
+    
+  };
   return {
     answers,
     fetchAnswers,

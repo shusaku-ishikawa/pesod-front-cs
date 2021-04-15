@@ -1,25 +1,34 @@
 <template>
   <div class="inline-block shadow-xl transform align-middle" >
     <div class="my-20 rounded bg-white px-6 py-4 sm:pb-4">
-      <div class="mb-3 border-b">
-        <product-list-card
+      <div class="text-left">商品選択</div>
+      <div class="mb-3 grid grid-cols-2 gap-1">
+        <div
           v-for="(p, i) in products"
           :key="i"
+          class="col-span-1"
+        >
+        <product-list-card
+          
           :product="p"
           @update:toPrescribe="updateToPrescribe(p, $event)"
           :toPrescribe="isToPrescribe(p)"
-        ></product-list-card>
+        ></product-list-card> 
+        </div>
+        
       </div>
+      <hr class="my-3">
       <div class="flex ">
         <button
           @click="onPrescribe"
-          class="primary"
+          class="border rounded "
           :disabled="!productsToPrescribe.length"
         >
           処方提案
         </button>
         <button
           @click="onClose"
+          class="bg-gray-200 text-white border ml-auto"
         >
           閉じる
         </button>
@@ -48,7 +57,7 @@ export default defineComponent({
     const {
       products,
       fetchProducts
-    } = useProduct();
+    } = useProduct('doctor');
     
     const productsToPrescribe = ref<IProduct[]>([]);
 

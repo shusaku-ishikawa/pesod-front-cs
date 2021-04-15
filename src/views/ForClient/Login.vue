@@ -1,5 +1,5 @@
 <template>
-  <top-layout>
+  <base-layout>
     <template v-slot:title>
       <div class="relative">
         <router-link
@@ -9,7 +9,7 @@
           <svg
             :href="href"
             @click="navigate"
-            class="absolute top-0 left-0 w-6 h-6 cursor-pointer"
+            class="absolute top-0 left-1 w-6 h-6 cursor-pointer"
             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
@@ -19,8 +19,8 @@
         </div>
       </div>
     </template>
-    <div class="">
-      <div class="mb-10">
+    <div class="" style="padding: 0px 20px">
+      <div class="" style="margin-top: 40px">
         <img
           class="mx-auto"
           style="width: 100px"
@@ -43,8 +43,9 @@
           {{ loginError }}
         </div>
         <p-input
-          class="mb-3"
+          class="mb-5"
           label="メールアドレス"
+          placeholder="sample@pesod.com"
           id="email"
           type="email"
           :required="true"
@@ -66,22 +67,24 @@
         <div
           class="text-center"
         >
+
           
           <button
             :disabled="loading"
             type="submit"
-            class="primary arrow w-64 mb-10"
+            class="image"
           >
-            ログイン
-            
-          </button>
+            <img
+              src="@/assets/img/top_login_btn.png" alt=""> 
+              
+            </button>
           <div>
-            <a class="cursor-pointer ">パスワードをお忘れの方はこちら</a>
+            <a class="cursor-pointer ">パスワードをお忘れの方は<u>こちら</u></a>
           </div>
         </div>
       </form>
     </div>
-  </top-layout>
+  </base-layout>
 </template>
 <script lang="ts">
 import { computed, defineComponent, onMounted, ref } from 'vue';
@@ -101,7 +104,7 @@ export default defineComponent({
 
     const {
       createToken,
-      remoteToken,
+      removeToken,
       storeToken,
     } = useAuth();
     const {
@@ -125,7 +128,7 @@ export default defineComponent({
     };
     
     onMounted(() => {
-      remoteToken();
+      removeToken();
     });
 
     const loading = ref(false);

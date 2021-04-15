@@ -2,63 +2,73 @@
   <div
     class="px-6 pt-5 flex-grow flex flex-col"
   >
-    <div class=" w-full flex-grow overflow-y-auto mb-5" style="min-height: 150px">
+    <div class=" w-ful " style="min-height: 150px; margin-bottom: 50px">
       <question
         class=" w-full"
         :index="questionIndex + 1"
-        :question="question.question_body"
+        :question="currentQuestion.question_body"
       />
     </div>
     <div class="flex flex-col">
-      <div
-        v-if="question.question_types.includes('記述式') && currentAnswer"
-        class="pb-10"
-      >
-        <p-input
-          v-model="currentAnswer.descriptive_answer"
-          type="text"
-          label="回答"
-        ></p-input>
+      <div class="text-blue-400 text-left mb-3 text-sm">
+        ＊{{ currentQuestion.question_types }}
       </div>
       <div
-        v-if="question.question_types.includes('アップロード')"
+        v-if="currentQuestion.question_types.includes('アップロード')"
         class="mb-10 "
       >
       
         <image-selector
-          :photoType="question.question_types.includes('前頭部') ? 'A' : 'B'" 
+          :photoType="currentQuestion.question_types.includes('前頭部') ? 'A' : 'B'" 
           v-model="uploadingImage"
         ></image-selector>
       </div>
       <div
-        v-if="question.question_types.includes('選択式')"
+        v-if="currentQuestion.question_types.includes('選択式')"
       >
       
         <div
-          v-for="(o, i) in question.qa_options"
+          v-for="(o, i) in currentQuestion.qa_options"
           :key="i"
           @click="onSelectAnswer(i)"
-          class="flex items-center text-center mb-3 border rounded shadow-xl text-sm cursor-pointer p-2 leading-5"
-          :class="{ 'hilight ': isOptionSelected(o.id), 'h-10': question.question_layout == 1, 'h-16': question.question_layout == 2 || question.question_layout == 3, 'h-24': question.question_layout == 4 }"
+          class="flex items-center text-left border rounded shadow-xl text-sm cursor-pointer p-2 leading-5"
+          style="margin-bottom: 6px"
+          :class="{ 'hilight ': isOptionSelected(o.id), 'h-10': currentQuestion.question_layout == 1, 'h-16': currentQuestion.question_layout == 2 || currentQuestion.question_layout == 3, 'h-24': currentQuestion.question_layout == 4 }"
         > 
           <p-checkbox
-            v-if="question.question_layout >= 3"
+            v-if="currentQuestion.question_layout >= 3"
             :modelValue="isOptionSelected(o.id)"
           ></p-checkbox>
-          <div class="text-left">{{ o.option }}</div>
+          <div class="flex-shrink-0" v-if="o.image">
+            <img :src="o.image" class="h-12" alt="">
+          </div>
+          <div
+            :class="{ 'text-center flex-grow': currentQuestion.question_layout == 1 }"
+            class="font-bold ml-2">{{ o.option }}</div>
         </div>
       </div>
-      <div class="grid grid-cols-2 gap-1 mb-3">
+      <div
+        v-if="currentQuestion.question_types.includes('記述式') && currentAnswer"
+        class="mb-10 mt-5"
+      >
+        <p-input
+          v-model="currentAnswer.descriptive_answer"
+          type="text"
+          placeholder="「その他」の理由をご記入ください"
+          label=""
+        ></p-input>
+      </div>
+      <div class="grid grid-cols-2 gap-1 mt-3 mb-3">
         <div
           v-if="hasPrevious"
           :class="{ 'col-span-1': true }"
         >
           <button
             @click="onClickPrevious()"
-            class="secondary w-full"
+            class="image"
             v-if="hasPrevious"
           >
-           前に戻る
+           <img src="@/assets/img/monshin_back.png" alt="">
            
           </button>
         </div>
@@ -67,36 +77,34 @@
           <button
             @click="onClickNext()"
             :disabled="!hasAnswers"
-            class=" w-full relative"
-            :class="{ 'bg-black border text-white': hasAnswers, 'secondary': !hasAnswers }"
+            class="image"
           >
-            {{ hasNext ? '次に進む' : '確定する' }}
+            <img v-if="hasAnswers && hasPrevious" src="@/assets/img/monshin_next_on_s.png" alt="">
+            <img v-if="!hasAnswers && hasPrevious" src="@/assets/img/monshin_next_off_s.png" alt="">
+            
+            <img v-if="hasAnswers && !hasPrevious" src="@/assets/img/monshin_next_on.png" alt="">
+            <img v-if="!hasAnswers && !hasPrevious" src="@/assets/img/monshin_next_off.png" alt="">
+            
           </button>
          
           
         </div>
       </div>
-      <div v-if="answeredAll">
-        you have completed the ques
-      </div>
+      
     </div>
    
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, SetupContext, onMounted, Ref, ComputedRef } from 'vue';
+import { defineComponent, ref, computed, SetupContext, onMounted, Ref, ComputedRef, onUpdated, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { IAnswer, IAnswerOption, IHairRecord, IQuestion, IPrescript } from '@/types/Interfaces';
 import ImageSelector from '@/components/ImageSelector.vue';
-import useQuestionaire from '@/types/Questionaire';
-import useAnswer from '@/types/Answer';
-import usePrescript from '@/types/Prescript';
-import useHairRecord from '@/types/HairRecord';
 
 import Question from './Question.vue';
+import {cloneDeep} from 'lodash'
 
-import moment from 'moment';
 
 export default defineComponent({
   components: {
@@ -104,37 +112,46 @@ export default defineComponent({
     ImageSelector
   },
   props: {
-    questions: {
-      type: Object as () => IQuestion[]
+    hasNext: Boolean,
+    hasPrevious: Boolean,
+    currentQuestion: {
+      type: Object as () => IQuestion,
     },
-    
+    existingAnswer: {
+      type: Object as () => IAnswer,
+    },
+    questionIndex: {
+      type: Number,
+    },
     myPrescript: {
       type: Object as () => IPrescript,
     }
   },
-  setup(props: any, ctx: SetupContext) {
+  emits: [
+    'next',
+    'previous'
+  ],
+  setup(props: any, context: SetupContext) {
     const route = useRoute();
     const router = useRouter();
 
     const qId: string = route.params.id.toString();
     
-    const {
-      fixInterview
-    } = usePrescript();
+    // const {
+    //   fixInterview
+    // } = usePrescript();
     
     
-    const {
-      answers,
-      fetchAnswers,
-      createAnswer
-    } = useAnswer();
+    // const {
+    //   createAnswer
+    // } = useAnswer();
 
-    const {
-      addHairRecord
-    } = useHairRecord();
+    // const {
+    //   addHairRecord
+    // } = useHairRecord();
     
-    const question = props.questions.find((q: IQuestion) => q.id === qId);
-    const questionIndex = props.questions.findIndex((q: IQuestion) => q.id === qId);
+    // const question = props.questions.find((q: IQuestion) => q.id === qId);
+    // const questionIndex = props.questions.findIndex((q: IQuestion) => q.id === qId);
     
     const uploadingImage = ref<string | null>(null);
     const currentAnswer = ref<IAnswer | null>(null);
@@ -146,10 +163,10 @@ export default defineComponent({
     };
 
     const onSelectAnswer = (oIndex: number) => {
-      if (question == null || props.myPrescript == null) return;
+      if (props.currentQuestion == null || props.myPrescript == null) return;
       if (currentAnswer.value == null) return;
 
-      const selectedOption = question.qa_options[oIndex];
+      const selectedOption = props.currentQuestion.qa_options[oIndex];
       
       // if already selected -> remove option
       const currentAnswerOptionIds = currentAnswer.value.answer_options.map(o => o.option);
@@ -165,77 +182,63 @@ export default defineComponent({
         option: selectedOption.id,
       };
       // alert(question.question_types)
-      if (question.question_types.includes('複数選択式')) {
+      if (props.currentQuestion.question_types.includes('複数選択式')) {
         currentAnswer.value.answer_options.push(newAnswerOption);
       } else {
         currentAnswer.value.answer_options = [newAnswerOption];
       }
     };
 
-    const hasPrevious = computed(() => {
-      console.log(questionIndex)
-      return questionIndex > 0;  
-    });
-
-    const hasNext = computed(() => {
-      return questionIndex < props.questions.length -1
-    });
 
     const hasAnswers = computed(() => {
-      if (question == null) return false;
+      if (props.currentQuestion == null) return false;
       if (currentAnswer.value == null) return false;
-      if (question.question_types.includes('アップロード')) {
+      if (props.currentQuestion.question_types.includes('アップロード')) {
         return uploadingImage.value != null;
-      } else if (question.question_types.includes('選択式')) {
+      } else if (props.currentQuestion.question_types.includes('選択式')) {
         
-        if (question.question_types.includes('記述式')) {
-          return currentAnswer.value.descriptive_answer != null && currentAnswer.value.descriptive_answer != null;
+        if (props.currentQuestion.question_types.includes('記述式')) {
+          return currentAnswer.value.answer_options.length > 0;
         } else {
           return currentAnswer.value.answer_options.length > 0;
         }
-      } else if (question.question_types.includes('記述式')) {
+      } else if (props.currentQuestion.question_types.includes('記述式')) {
         return currentAnswer.value.descriptive_answer != '' && currentAnswer.value.descriptive_answer != null;
       }
     });
 
     const onClickPrevious = () => {
-      if (question == null) return;
-      const currentIndex = props.questions.findIndex((q: IQuestion) => q.id === question.id);
-      if (currentIndex > 0) {
-        router.push({ params: { id: props.questions[currentIndex - 1].id } })
-      }
+      if (props.currentQuestion == null) return;
+      // const currentIndex = props.questions.findIndex((q: IQuestion) => q.id === question.id);
+      // if (currentIndex > 0) {
+      //   router.push({ params: { id: props.questions[currentIndex - 1].id } })
+      // }
+      context.emit('previous', currentAnswer.value)
     };
     const onClickNext = async () => {
-      if (question == null || currentAnswer.value == null) return;
-      if (question.question_types.includes('アップロード')) {
+      if (props.currentQuestion == null || currentAnswer.value == null) return;
+      if (props.currentQuestion.question_types.includes('アップロード')) {
         // create hair record
         if (uploadingImage.value == null) return;
         currentAnswer.value.hair_image = uploadingImage.value;
         
       }
-      try {
-        console.log(currentAnswer.value)
-        const data = await createAnswer(currentAnswer.value);
-        
-        const currentIndex = props.questions.findIndex((q: IQuestion) => q.id === question.id);
-        if (currentIndex < props.questions.length - 1) {
-          router.push({ params: { id: props.questions[currentIndex + 1].id } })
-        } else {
-          // done
-          try {
-            await fixInterview();
-            router.push({ name: 'DiagnosticQuestionaireDone' });
-          } catch (err) {
-            console.error(err);
-          }
-        }
-      } catch (err) {
-        if (err.response) {
-          const { status, data } = err.response;
-          console.error(data) 
-        }
-        return;
-      }
+      context.emit('next', currentAnswer.value)
+      // const data = await createAnswer(currentAnswer.value);
+      
+      // const currentIndex = props.questions.findIndex((q: IQuestion) => q.id === question.id);
+      // if (currentIndex < props.questions.length - 1) {
+      //   router.push({ params: { id: props.questions[currentIndex + 1].id } })
+      // } else {
+      //   // done
+      //   try {
+      //     await fixInterview();
+      //     router.push({ name: 'DiagnosticQuestionaireDone' });
+      //   } catch (err) {
+      //     console.error(err);
+      //   }
+      // }
+      
       
     };
     // const blobToFile = (theBlob: Blob, fileName: string): File => {       
@@ -251,6 +254,7 @@ export default defineComponent({
       request.onload = function() {
         imageReader.onload = function() {
           const data = imageReader.result;
+          
           if (typeof data === 'string') {
             uploadingImage.value = data;    
           }
@@ -265,54 +269,47 @@ export default defineComponent({
       request.send();
     }
     
-    onMounted(async () => {
-      if (question == null || props.myPrescript == null) return;
+    const localizeAnswer = () => {
+      if (props.currentQuestion == null || props.myPrescript == null) return;
       
       // get current answer
-      let existingAnswer: IAnswer | undefined;
-      try {
-        const data: IAnswer[] = await fetchAnswers();
-        answers.value = data;
-        existingAnswer = data.find((a: IAnswer) => a.question.id === question.id);
-        console.log(data);
-        console.log(existingAnswer)
-      } catch (err) {
-        console.error(err)
+      if (props.existingAnswer != null) {
+        currentAnswer.value = cloneDeep(props.existingAnswer);
         
-        throw err;
-      }
-      
-      if (existingAnswer != null) {
-        currentAnswer.value = existingAnswer;
-        if (currentAnswer.value.hair_record != null && typeof currentAnswer.value.hair_record == 'string') {
-          fetchFileFromUrl(currentAnswer.value.hair_record);
+        if (currentAnswer.value?.hair_record != null, typeof currentAnswer.value?.hair_record == 'object') {
+          const url = currentAnswer.value?.hair_record?.image;
+          if (url == null) return;
+          fetchFileFromUrl(currentAnswer.value?.hair_record?.image || '');
         }
       } else {
         currentAnswer.value = {
           customer: props.myPrescript.customer,
-          question: question,
+          question: props.currentQuestion,
           prescript: props.myPrescript,
           descriptive_answer: '',
           answer_options: [],
           hair_record: null,
         };
       }
-      
-    });
-    const answeredAll = computed(() => {
-      return answers.value.length === props.questions.length;
+    }
+    watch([() => props.questionIndex], () => {
+      localizeAnswer()
     })
+    
+    // onUpdated(() => {
+    //   // alert('updated')
+    // })
+    
+    onMounted(() => {
+      localizeAnswer();
+    });
+    
     return {
-      question,
-      questionIndex,
       currentAnswer,
-      answeredAll,
       uploadingImage,
       isOptionSelected,
       onSelectAnswer,
       hasAnswers,
-      hasPrevious,
-      hasNext,
       onClickPrevious,
       onClickNext,
     };

@@ -63,9 +63,9 @@
         <button
           :disabled="!cart.length"
           @click="commitCart()"
-          class="bg-black text-white block mb-5 mx-auto w-full"
+          class="image"
         >
-          次に進む
+          <img src="@/assets/img/monshin_next_on.png" alt="">
         </button>
       </div>
     </div>

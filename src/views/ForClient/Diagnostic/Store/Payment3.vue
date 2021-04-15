@@ -104,11 +104,11 @@
         <div class="bg-gray-100 p-1 mb-2">
           クレジットカード決済
         </div>
-        <div class="p-2 text-2xl items-center flex justify-center">
+        <div class="p-2 text-lg items-center flex justify-center">
           <div>
             {{ card.brand }}  
           </div>
-          <div class="ml-5">
+          <div class="ml-5 text-base">
             **** **** **** {{ card.last4 }}
           </div>
         </div>
@@ -117,12 +117,12 @@
       <div class="px-2">
         <button
           @click="onFixOrder"
-          class="block w-full bg-black text-white mx-auto mb-3"
+          class="block w-full bg-black text-white mx-auto mb-3 py-4"
         >
           定期購入を申し込む
         </button>
         <button
-          class="secondary w-full"
+          class="secondary w-full py-4"
           @click="router.push({ name: 'StorePayment2' })"
         >
           もどる

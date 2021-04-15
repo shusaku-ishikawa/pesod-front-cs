@@ -1,7 +1,8 @@
 <template>
   <div
-    class="w-full bg-gray-100 items-center flex "
-    style="height: 50px; background-color: #CCEAFF"
+    class="w-full bg-gray-100 items-center flex header"
+    style="height: 50px"
+    
   >
     <div
       @click="() => { router.push({ name: 'MyPageTop' }) }"
@@ -99,6 +100,14 @@
     </div>
   </div>
 </template>
+<style scoped>
+  .header {
+    background-image: url(/img/header_bk.png);
+    background-repeat: repeat-x;
+    background-size: 100% 100%;
+  }
+
+</style>
 <script>
 import { defineComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';

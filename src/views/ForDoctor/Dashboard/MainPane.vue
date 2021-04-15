@@ -20,8 +20,37 @@
     </div>
     <div class=" flex items-center border-b border-black p-1 justify-between" v-if="prescript">
       <div class="flex items-center">
-        <div class="text-lg">
-          {{ prescript.customer.first_name }} {{ prescript.customer.last_name }} 様との会話
+        <div>
+
+          <img
+            v-if="prescript.customer.icon_type == 0"
+            class="w-8"
+            src="@/assets/img/doctor/icon_man.png" alt=""
+          >
+          <img
+            v-if="prescript.customer.icon_type == 1"
+            class="w-8"
+            src="@/assets/img/doctor/icon_woman.png" alt=""
+          >
+          <img
+            v-if="prescript.customer.icon_type == 2"
+            class="w-8"
+            src="@/assets/img/doctor/icon_dog.png" alt=""
+          >
+          <img
+            v-if="prescript.customer.icon_type == 3"
+            class="w-8"
+            src="@/assets/img/doctor/icon_cat.png" alt=""
+          >
+          <img
+            v-if="prescript.customer.icon_type == 4"
+            class="w-8"
+            src="@/assets/img/doctor/icon_robot.png" alt=""
+          >
+        </div>
+        
+        <div class="ml-2 text-base">
+          {{ prescript.customer.first_name }} {{ prescript.customer.last_name }} 様 診察ルーム
         </div>
         <ws-state-marker
           class="ml-2"
@@ -172,17 +201,17 @@ export default defineComponent({
       getToken,
       getUUID,
       getUserId,
-    } = useAuth();
+    } = useAuth('doctor');
 
     const {
       setPrescriptProducts
-    } = usePrescript();
+    } = usePrescript('doctor');
 
     const {
       chatLogs,
       fetchDoctorChatLogs,
       fetchDoctorMessageTemplates
-    } = useChatLog()
+    } = useChatLog('doctor')
     
     const {
       WS_BASE_URL,
@@ -226,7 +255,8 @@ export default defineComponent({
     
     const onSelectTemplate = (t: IMessageTemplate) => {
       // message.value = m;
-      sendMessage(t.message);
+      // sendMessage(t.message);
+      message.value = t.message;
       showMessageTemplates.value = false;
       
     };
@@ -259,6 +289,7 @@ export default defineComponent({
     });
 
     watch(() => props.prescript, async () => {
+      
       chatLogs.value = await fetchDoctorChatLogs(props.prescript.id);
       window.setTimeout(() => {
         scrollDown();

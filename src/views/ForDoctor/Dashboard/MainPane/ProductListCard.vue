@@ -1,5 +1,7 @@
 <template>
-  <div class="flex items-center px-3 py-2 hover:bg-gray-100">
+  <div
+    :class="{ 'bg-primary-light': toPrescribe }"
+    class="flex h-full items-center px-3 py-2 hover:bg-gray-100 border rounded">
     <div>
       <p-checkbox
         :modelValue="toPrescribe"
@@ -15,15 +17,27 @@
       >
     </div>
     <div class="flex-grow text-left ml-4">
-      <div>
+      <div class="mb-2">
         {{ product.name }}
       </div>
-      <div>
-        {{ (product.price || 0).toLocaleString() }}円
-      </div>
-      <div>
-        {{ product.usage }}
-      </div>
+      <table class="text-sm">
+        <tbody>
+          <tr>
+            <th>製造会社</th>
+            <td>{{ product.maker }}</td>
+          </tr>
+          <tr>
+            <th>入数</th>
+            <td>{{ product.quantity }}</td>
+          </tr>
+          <tr>
+            <th>金額</th>
+            <td>{{ product.price.toLocaleString() }}</td>
+          </tr>
+          
+        </tbody>
+      </table>
+      
     </div>
   </div>
 </template>

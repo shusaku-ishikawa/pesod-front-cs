@@ -13,7 +13,7 @@
       </label>
       <input
         ref="inputElement"
-        placeholder=" "
+        :placeholder="$attrs.placeholder"
         :id="$attrs.id"
         :type="$attrs.type"
         :value="modelValue"

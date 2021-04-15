@@ -33,7 +33,7 @@ interface IHairRecord{
   id?: number;
   shooting_part: number;
   shooting_date: string;
-  image: File;
+  image: string;
 }
 
 interface IAnswer{
@@ -43,8 +43,8 @@ interface IAnswer{
   prescript: IPrescript;
   descriptive_answer: string | null;
   answer_options: IAnswerOption[];
-  hair_record: Blob | string | null;
-  hair_image?: string
+  hair_record: IHairRecord | null;
+  hair_image?: string;
 }
 interface IAnswerOption{
   id?: number;
@@ -152,7 +152,7 @@ interface IProduct{
   is_sales: boolean;
 }
 interface IDelivery{
-  [key: string]: any,
+  [key: string]: any;
   receiver: string;
   prefecture: string;
   city: string;
@@ -164,7 +164,7 @@ interface IDelivery{
   deliv_time: number;
 }
 interface IDeliveryValidator{
-  [key: string]: any,
+  [key: string]: any;
   receiver: Array<Function>;
   prefecture: Array<Function>;
   city: Array<Function>;

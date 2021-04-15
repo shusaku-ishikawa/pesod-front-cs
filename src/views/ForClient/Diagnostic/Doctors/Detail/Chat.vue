@@ -19,15 +19,14 @@
       ref="messageArea"
       class="relative overflow-y-auto flex-grow "
     >
-       <page-title class="mb-3">
-          <div class="flex items-center">
-            <div>診察室</div>
+       <page-title class="mb-3 text-left flex" style="height: 40px">
+          <div class="w-full flex items-center">
             <div class="flex items-center text-sm ml-2">
-              <div>[</div>
               <img
                 v-if="doctor.image"
                 :src="doctor.image"
                 alt="doctor"
+                class="rounded-full"
                 style="height: 30px; width: 30px"
               >
               <svg
@@ -39,13 +38,12 @@
               <div class="px-2">
                 {{ doctor.first_name }} {{ doctor.last_name }}
               </div>
-              <div>]</div>
+             
             </div>
+           
           </div>
           
-          <ws-state-marker
-            :wsState="wsState"
-          ></ws-state-marker>
+          
       </page-title>
     
       <div class="absolute w-full space-y-4 pb-5">
@@ -111,20 +109,20 @@
       v-model="message"
       @send="onSendMessage"
     >
-      <template v-slot:menu>
+      <template v-slot:menu style="font-size: 12px">
         <button
           @click="onAccept"
-          class="rounded border text-sm ">
+          class="rounded border text-xs">
           はい
         </button>
         <button
           @click="onDeny"
-          class="rounded border text-sm">
+          class="rounded border text-xs">
           いいえ
         </button>
         <button
           @click="sendMessage('承知しました')"
-          class="rounded border text-sm">
+          class="rounded border text-xs">
           承知しました
         </button>
       
@@ -200,17 +198,18 @@ import { IDoctor, IChatMessage, IMessageTemplate, IPrescript } from '@/types/Int
 import usePrescript from '@/types/Prescript';
 import useAuth from '@/types/Auth';
 
-import WsStateMarker from '@/components/WsStateMarker.vue';
+// import WsStateMarker from '@/components/WsStateMarker.vue';
 
 import moment from 'moment';
 
 import ChatDateLabel from './Chat/DateLabel.vue';
+import { debounce } from 'lodash';
 
 export default defineComponent({
   components: {
     ChatMessageCard,
     ChatForm,
-    WsStateMarker,
+    // WsStateMarker,
     ChatDateLabel
   },
   props: {
@@ -234,10 +233,6 @@ export default defineComponent({
       deletePrescriptProducts
     } = usePrescript();
 
-    const {
-      doctors,
-      fetchDoctors
-    } = useDoctor();
 
     const {
       chatLogs,
@@ -288,6 +283,14 @@ export default defineComponent({
       if (myPrescript.value.prescript_products?.length) {
         // accept
         const data = await acceptPrescriptProducts();
+        if (connection.value == null) return;
+        if (connection.value.readyState == connection.value.OPEN) {
+          const endMessage: any = {
+            uuid: myPrescript.value.customer.uuid,
+            situation: 'end'
+          }
+          connection.value.send(JSON.stringify(endMessage))
+        }
       }
       myPrescript.value = await getPrescript();
 
@@ -317,7 +320,21 @@ export default defineComponent({
         // }
       }  
     };
-
+    
+    // const scrollHandler = debounce(async (e: Event) => {
+    //   console.log('handelr')
+    //   if (messageArea.value != null) {
+    //     if (messageArea.value.scrollTop == 0) {
+    //         try {
+    //         await fetchChatLogByPage(myPrescript.value?.prescript_no || '', chatLogPage.value);
+    //       } catch (err) {
+    //         console.log(err)
+    //       }
+    //     }
+    //   }
+      
+    // }, 20)
+    
     onMounted(async () => {
       myPrescript.value = await getPrescript();
 
@@ -327,20 +344,15 @@ export default defineComponent({
       if (myPrescript.value.status != 3) {
         router.replace({ name: 'DiagnosticTop' })
       }
-      try {
-        const data = await fetchDoctorChatLogs(myPrescript.value.id);  
-        chatLogs.value = data;
-      } catch (err) {
-        console.error(err.response)
-        return;
-      }
+      chatLogs.value = await fetchDoctorChatLogs(myPrescript.value.prescript_no);
       const url = `${WS_BASE_URL}/chat/doctor/${myPrescript.value?.customer.uuid}/?token=${getToken()?.access}`;
     
       prepareWs(url, chatLogs, onMessageReceivedCallback);
       window.setTimeout(() => {
         scrollDown();
       }, 100)
-      
+      // if (messageArea.value == null) return;
+      // messageArea.value.onscroll = scrollHandler;
     });
 
     onBeforeUnmount(() => {
@@ -369,7 +381,7 @@ export default defineComponent({
       customerMessageTemplates,
       showMessageTemplates,
       onDeny,
-      onAccept
+      onAccept,
     };
   }
 })
