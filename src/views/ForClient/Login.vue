@@ -22,8 +22,8 @@
     <div class="" style="padding: 0px 20px">
       <div class="" style="margin-top: 40px">
         <img
-          class="mx-auto"
-          style="width: 100px"
+          class="mx-auto mb-12"
+          style="width: 60px"
           src="@/assets/img/pesod_logo_s.png"
           alt=""
           
@@ -43,9 +43,9 @@
           {{ loginError }}
         </div>
         <p-input
-          class="mb-5"
+          class="mb-10 leading-8"
           label="メールアドレス"
-          placeholder="sample@pesod.com"
+          placeholder="sample@pesod.co.jp"
           id="email"
           type="email"
           :required="true"
@@ -55,8 +55,9 @@
         >
         </p-input>
         <p-input
-          class="mb-12"
+          class="mb-12 leading-8"
           label="パスワード"
+          placeholder="英数字8文字以上で入力"
           autocomplete="current-password"
           id="password"
           type="password"
@@ -64,6 +65,17 @@
           :rules="[formRequired]"
         >
         </p-input>
+        <div class="w-100 text-right">
+          <button
+            :disabled="loading"
+            type="button"
+            class="image text-right relative"
+            style="top: -80px;"
+          >
+            <img
+              src="@/assets/img/pass_eye.png" alt=""> 
+            </button>
+        </div>
         <div
           class="text-center"
         >
@@ -72,14 +84,14 @@
           <button
             :disabled="loading"
             type="submit"
-            class="image"
+            class="image w-60 mb-8"
           >
             <img
               src="@/assets/img/top_login_btn.png" alt=""> 
               
             </button>
           <div>
-            <a class="cursor-pointer ">パスワードをお忘れの方は<u>こちら</u></a>
+            <a class="cursor-pointer text-sm"><u>パスワードをお忘れの方はこちら</u></a>
           </div>
         </div>
       </form>
