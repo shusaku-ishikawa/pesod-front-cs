@@ -104,7 +104,7 @@
         <template v-slot:menu>
           <button
             @click="showMessageTemplates = !showMessageTemplates"
-            class="border rounded-lg py-1 text-sm flex items-center"
+            class="border rounded-lg py-1 text-xs p-1 flex items-center"
           >
             <div>テンプレート</div>
             <svg
@@ -122,7 +122,7 @@
           </button>
           <button
             @click="showPrescribeProducts = !showprescribeProducts"
-            class="border rounded-lg py-1 text-sm flex items-center"
+            class="border rounded-lg py-1 text-xs flex items-center"
           >
             処方提案 
           </button>

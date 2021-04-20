@@ -1,6 +1,6 @@
 <template>
   
-  <div class="container h-screen w-screen table-cell align-middle">
+  <div class="bg-image h-screen w-screen table-cell align-middle">
     <div class="mx-auto rounded p-5 w-80">
       <img
         src="@/assets/img/doctor/pesod_logo_doctor.png"
@@ -37,11 +37,29 @@
         label="パスワード"
         autocomplete="current-password"
         id="password"
-        type="password"
+        :type="isPasswordHidden ? 'password' : 'text'"
         v-model="formData.password"
         :rules="[formRequired]"
       >
       </p-input>
+      <div class="w-100 text-right">
+        <button
+          :disabled="loading"
+          type="button"
+          class="image text-right relative"
+          style="top: -80px;"
+        >
+          <img
+            v-if="!isPasswordHidden"
+            @click="isPasswordHidden = true"
+            src="@/assets/img/pass_eye.png" alt=""> 
+          <img
+            v-else
+            @click="isPasswordHidden = false"
+            src="@/assets/img/pass_eye_on.png" alt=""> 
+          
+          </button>
+      </div>
       
       <div
         class="text-center"
@@ -70,7 +88,7 @@
   </div>
 </template>
 <style scoped>
-  .container {
+  .bg-image {
     background-image: url(/img/top_bk_PC.png);
     background-size: contain;
   }
@@ -171,6 +189,7 @@ export default defineComponent({
       loading.value = false;
       
     };
+    const isPasswordHidden = ref(true);
     return {
       loading,
       form,
@@ -178,7 +197,8 @@ export default defineComponent({
       formData,
       loginError,
       // formValid,
-      onLogin
+      onLogin,
+      isPasswordHidden
     };
   }
 })

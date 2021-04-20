@@ -1,6 +1,6 @@
 <template>
   <div
-    class="min-h-full w-full px-2 py-3 text-sm"
+    class="flex flex-col min-h-full w-full px-2 py-3 text-sm"
   >
     <div class="relative mb-3 w-full ">
       <input
@@ -25,67 +25,68 @@
         {{ onlyActive ? '全て表示' : '対応中のみ表示' }}
       </button>
     </div>
-    <div>
-      <div
-        v-for="(p, i) in prescripts.filter(p => p.status > 2)"
-        :key="i"
-        class="py-2 flex items-center px-3 py-2 border-b  hover:bg-blue-100 text-sm"
-        @click="onSelectPrescript(p)"
-        :class="{ 'bg-primary-light': modelValue && modelValue.id === p.id, 'cursor-pointer': p.status == 3 }"
-      >
-        <div class="flex-shrink-0">
-          
-          <img
-            v-if="p.customer.icon_type == 0"
-            class="w-12"
-            src="@/assets/img/doctor/icon_man.png" alt=""
-          >
-          <img
-            v-if="p.customer.icon_type == 1"
-            class="w-12"
-            src="@/assets/img/doctor/icon_woman.png" alt=""
-          >
-          <img
-            v-if="p.customer.icon_type == 2"
-            class="w-12"
-            src="@/assets/img/doctor/icon_dog.png" alt=""
-          >
-          <img
-            v-if="p.customer.icon_type == 3"
-            class="w-12"
-            src="@/assets/img/doctor/icon_cat.png" alt=""
-          >
-          <img
-            v-if="p.customer.icon_type == 4"
-            class="w-12"
-            src="@/assets/img/doctor/icon_robot.png" alt=""
-          >
-          
-          
-        </div>
+    <div class="flex-grow w-full relative overflow-y-auto">
+      <div class="absolute">
         <div
-          class="ml-3 flex flex-col flex-grow text-left"
+          v-for="(p, i) in prescripts.filter(p => p.status > 2)"
+          :key="i"
+          class="py-2 flex items-center px-3 py-2 border-b border-gray-100  hover:bg-blue-100 text-sm"
+          @click="onSelectPrescript(p)"
+          :class="{ 'bg-primary-light': modelValue && modelValue.id === p.id, 'cursor-pointer': p.status == 3 }"
         >
-          <div class="flex items-center justify-between">
-            <div class="font-medium text-base ">
-              {{ p.customer.first_name }} {{ p.customer.last_name }}
-            </div>
+          <div class="flex-shrink-0">
+            
+            <img
+              v-if="p.customer.icon_type == 0"
+              class="w-12"
+              src="@/assets/img/doctor/icon_man.png" alt=""
+            >
+            <img
+              v-if="p.customer.icon_type == 1"
+              class="w-12"
+              src="@/assets/img/doctor/icon_woman.png" alt=""
+            >
+            <img
+              v-if="p.customer.icon_type == 2"
+              class="w-12"
+              src="@/assets/img/doctor/icon_dog.png" alt=""
+            >
+            <img
+              v-if="p.customer.icon_type == 3"
+              class="w-12"
+              src="@/assets/img/doctor/icon_cat.png" alt=""
+            >
+            <img
+              v-if="p.customer.icon_type == 4"
+              class="w-12"
+              src="@/assets/img/doctor/icon_robot.png" alt=""
+            >
+            
             
           </div>
-          <div>
-            ID: {{ p.customer.id }}
+          <div
+            class="ml-3 flex flex-col flex-grow text-left"
+          >
+            <div class="flex items-center justify-between">
+              <div class="font-medium text-base ">
+                {{ p.customer.first_name }} {{ p.customer.last_name }}
+              </div>
+              
+            </div>
+            <div>
+              ID: {{ p.customer.id }}
+            </div>
           </div>
+          <!-- <div class="ml-2">
+            <svg
+              class="w-6"
+              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+            </svg>
+          </div> -->
         </div>
-        <!-- <div class="ml-2">
-          <svg
-            class="w-6"
-            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-          </svg>
-        </div> -->
       </div>
-    </div>
-   
+   </div>
   </div>
 </template>
 <script lang="ts">

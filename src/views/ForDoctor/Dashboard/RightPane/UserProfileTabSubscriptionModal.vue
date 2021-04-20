@@ -1,77 +1,89 @@
 <template>
   <div class="inline-block shadow-xl transform align-middle" >
     <div class=" rounded bg-white px-6 py-4 sm:pb-4">
-      <div class="text-left">注文詳細</div>
+      <div class="text-left">定期購入</div>
       <div class="mb-2">
-        <table class="border-collapse w-full border">
+        <div
+          v-if="loading"
+          style="width: 600px"
+          class="border shadow rounded-tr rouned-br rounded-bl p-2 w-full mx-auto"
+        >
+          <div class="animate-pulse flex space-x-4">
+              <div class="flex-1 space-y-4 py-1">
+                <div class="space-y-2">
+                  <div class="h-4 bg-blue-100 rounded"></div>
+                  <div class="h-4 bg-blue-100 rounded"></div>
+                  <div class="h-4 bg-blue-100 rounded"></div>
+                  
+                </div>
+
+            </div>
+          </div>
+        </div>
+        <table v-else class="border-collapse w-full border">
           <tbody>
             <tr>
-              <th>注文ID</th>
-              <td>{{ order.id }}</td>
-              <th>注文日</th>
-              <td>{{ order.order_date }}</td>
+              <th>定期ID</th>
+              <td>{{ data.id }}</td>
+              <th>定期ステータス</th>
+              <td>{{ subscStatus[data.subsc_status] }}</td>
               
             </tr>
             <tr>
-              <th>注文ステータス</th>
-              <td>{{ orderStatus[order.order_status] }}</td>
-              <th>定期ID</th>
+              <th>定期購入回数</th>
+              <td>{{ data.purchase_times }}回</td>
+              <th>定期申込日</th>
               <td>？？？</td>
               
             </tr>
             <tr>
               <th>顧客名(id)</th>
-              <td>{{ order.customer.first_name }} {{ order.customer.last_name }}({{ order.customer.id }})</td>
+              <td>{{ data.prescript.customer.first_name }} {{ data.prescript.customer.last_name }}({{ data.prescript.customer.id }})</td>
               <th>顧客名かな</th>
-              <td>{{ order.customer.first_kana }} {{ order.customer.last_kana }}</td>
+              <td>{{ data.prescript.customer.first_kana }} {{ data.prescript.customer.last_kana }}</td>
               
             </tr>
             <tr>
               <th>メールアドレス</th>
-              <td>{{ order.customer.email }}</td>
+              <td>{{ data.prescript.customer.email }}</td>
               <th>電話番号</th>
-              <td>{{ order.customer.phone_number }}</td>
+              <td>{{ data.prescript.customer.phone_number }}</td>
               
             </tr>
             <tr>
               <th>住所</th>
               <td colspan="3">
                 <div>
-                  {{ order.customer.zip_code }}
+                  {{ data.prescript.customer.zip_code }}
                 </div>
                 <div>
-                  {{ order.customer.prefecture }}{{ order.customer.city }}{{ order.customer.address }}
+                  {{ data.prescript.customer.prefecture }}{{ data.prescript.customer.city }}{{ data.prescript.customer.address }}
                 </div>
               </td>
               
             </tr>
             <tr>
               <th>お支払い方法</th>
-              <td>{{ payMethods[order.pay_method] }}</td>
-              <th>決済ステータス</th>
-              <td>{{ payStatus[order.pay_status] }}</td>
+              <td>{{ payMethods[data.pay_method] }}</td>
+              <th>配送間隔</th>
+              <td>{{ data.delivery_interval }}日</td>
             </tr>
             <tr>
-              <th>配送日指定</th>
-              <td>{{ order.deliv_date }}</td>
+              <th>次回お届け日</th>
+              <td>{{ data.next_delivery_date }}</td>
               <th>配送時間指定</th>
-              <td>{{ delivTimes[order.deliv_time] }}</td>
+              <td>{{ delivTimes[data.deliv_time] }}</td>
               
             </tr>
-            <tr>
-              <th>配送伝票番号</th>
-              <td>{{ order.deliv_no }}</td>
-              <th>申し込み日</th>
-              <td>{{ order.order_date }}</td>
-            </tr>
+            
             <tr>
               <th>注文メモ</th>
               <td colspan="3">
-                {{ order.memo }}
+                {{ data.memo }}
               </td>
             </tr>
             <tr
-              v-for="(op, i) in order.products"
+              v-for="(op, i) in data.products"
               :key="i"
             >
               <td colspan="3">
@@ -90,19 +102,19 @@
             </tr>
             <tr>
               <th class="no-justify" colspan="3">手数料（税込）</th>
-              <td style="text-align: right">{{ order.charge.toLocaleString() }}円</td>
+              <td style="text-align: right">{{ data.charge.toLocaleString() }}円</td>
             </tr>
             <tr>
               <th class="no-justify" colspan="3">送料（税込）</th>
-              <td style="text-align: right">{{ order.deliv_fee.toLocaleString() }}円</td>
+              <td style="text-align: right">{{ data.deliv_fee.toLocaleString() }}円</td>
             </tr>
             <tr>
               <th class="no-justify"  colspan="3">離島手数料（税込）</th>
-              <td style="text-align: right">{{ order.relay_fee.toLocaleString() }}円</td>
+              <td style="text-align: right">{{ data.relay_fee.toLocaleString() }}円</td>
             </tr>
             <tr>
               <th class="no-justify"  colspan="3">合計（税込）</th>
-              <td style="text-align: right">{{ (order.total_amount + order.tax_amount).toLocaleString() }}円</td>
+              <td style="text-align: right">{{ (data.total_amount + data.tax_amount).toLocaleString() }}円</td>
             </tr>
             
           </tbody>
@@ -148,22 +160,32 @@
   }
 </style>
 <script lang="ts">
-import { defineComponent, ref, onMounted, SetupContext } from "vue";
-import { IMessageTemplate, IOrder } from '@/types/Interfaces';
+import { defineComponent, computed, ref, onMounted, SetupContext } from "vue";
+import { IMessageTemplate, IOrder, ISignup, ISubscription } from '@/types/Interfaces';
+import useSubscription from "@/types/Subscription";
 
 export default defineComponent({
   components: {
     
   },
   props: {
-    order: {
-      type: Object as () => IOrder[]
+    subscription: {
+      type: Object as () => ISubscription[]
     }
   },
   emits: [
     'close',
   ],
-  setup(_, context: SetupContext) {
+  setup(props: any, context: SetupContext) {
+    const {
+      getSubscription
+    } = useSubscription('doctor');
+
+    const subscStatus = {
+      0: '継続中',
+      1: '休止中',
+      2: '解約'
+    }
     const payStatus = {
       0: '支払い未処理',
       1: '支払い作成成功 未確定',
@@ -202,12 +224,26 @@ export default defineComponent({
     const onClose = () => {
       context.emit('close')  
     };
+    const data = ref<ISubscription | null>(null);
+    const userId = computed(() => {
+      return props.prescript.doctor.id
+    })
+    const loading = ref(true);
+    onMounted(async () => {
+      // loading.value = true;
+      data.value = await getSubscription(props.subscription.id);
+      loading.value = false
+    })
     return {
       onClose,
+      userId,
       payStatus,
+      subscStatus,
       payMethods,
       delivTimes,
-      orderStatus
+      orderStatus,
+      data,
+      loading
     }
   }
 })

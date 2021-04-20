@@ -21,6 +21,8 @@
         class="absolute"
         v-if="tab === 'answer'"
         :prescript="prescript"
+        :answers="answers"
+        :loadingAnswers="loadingAnswers"
       ></answer-tab>
       <user-profile-tab
         class="absolute"
@@ -29,6 +31,9 @@
         :subscriptions="subscriptions"
         :prescripts="prescripts"
         :orders="orders"
+        :loadingSubscriptions="loadingSubscriptions"
+        :loadingOrders="loadingOrders"
+        :loadingPrescripts="loadingPrescripts"
       ></user-profile-tab>
         
     </div>
@@ -36,7 +41,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, SetupContext, ref } from "vue";
+import { defineComponent, onMounted, SetupContext, ref, watch } from "vue";
 import AnswerTab from './RightPane/AnswerTab.vue';
 import UserProfileTab from './RightPane/UserProfileTab.vue';
 import useSubscription from '@/types/Subscription';
@@ -44,7 +49,7 @@ import usePrescript from '@/types/Prescript';
 import useOrder from '@/types/Order';
 
 import { IAnswer, ISubscription, IAnswerOption, IPrescript, IOrder } from "@/types/Interfaces";
-import { useRoute } from "vue-router";
+import useAnswer from '@/types/Answer';
 
 export default defineComponent({
   components: {
@@ -74,6 +79,21 @@ export default defineComponent({
     ]
     const tab = ref<string>('answer')
 
+    const {
+      answers,
+      fetchAnswers
+    } = useAnswer('doctor');
+    const loadingAnswers = ref(false);
+    const setAnswers = async () => {
+      loadingAnswers.value = true;
+      const data = await fetchAnswers(props.prescript.customer.uuid);
+      console.log(data)
+      loadingAnswers.value = false
+      answers.value = data;
+      // fetchLogs();
+    }
+    
+
     const subscriptions = ref<ISubscription[]>([]);
     const {
       fetchSubscriptions
@@ -88,11 +108,30 @@ export default defineComponent({
       fetchUserOrders
     } = useOrder('doctor');
     
+    const loadingSubscriptions = ref(false)
+    const loadingOrders = ref(false)
+    const loadingPrescripts = ref(false);
+    
+    const updateData = async () => {
+      loadingSubscriptions.value = true;
+      loadingOrders.value = true;
+      loadingPrescripts.value = true;
+      prescripts.value = await fetchUserPrescripts(props.prescript.customer.uuid);
+      loadingPrescripts.value = false;
+      subscriptions.value = await fetchSubscriptions(props.prescript.customer.uuid)
+      loadingSubscriptions.value = false;
+      orders.value = await fetchUserOrders(props.prescript.customer.uuid);
+      loadingOrders.value = false;
+
+    }
+    watch(() => props.prescript, () => {
+      updateData();
+      setAnswers();
+    })
     onMounted(async () => {
       // fetchLogs();
-      prescripts.value = await fetchUserPrescripts(props.prescript.customer.uuid);
-      subscriptions.value = await fetchSubscriptions(props.prescript.customer.uuid)
-      orders.value = await fetchUserOrders(props.prescript.customer.uuid);
+      updateData();
+      setAnswers();
     });
 
     const onPage = (page: string) => {
@@ -105,9 +144,14 @@ export default defineComponent({
       onPage,
       tabs,
       tab,
+      answers,
       subscriptions,
       prescripts,
       orders,
+      loadingSubscriptions,
+      loadingPrescripts,
+      loadingOrders,
+      loadingAnswers
     };
   }
 })

@@ -60,7 +60,7 @@
           placeholder="英数字8文字以上で入力"
           autocomplete="current-password"
           id="password"
-          type="password"
+          :type="isPasswordHidden ? 'password' : 'text'"
           v-model="formData.password"
           :rules="[formRequired]"
         >
@@ -73,7 +73,14 @@
             style="top: -80px;"
           >
             <img
+              v-if="!isPasswordHidden"
+              @click="isPasswordHidden = true"
               src="@/assets/img/pass_eye.png" alt=""> 
+            <img
+              v-else
+              @click="isPasswordHidden = false"
+              src="@/assets/img/pass_eye_on.png" alt=""> 
+            
             </button>
         </div>
         <div
@@ -181,8 +188,9 @@ export default defineComponent({
         
       }
       loading.value = false;
-      
     };
+    const isPasswordHidden = ref(true);
+    
     return {
       loading,
       form,
@@ -190,7 +198,8 @@ export default defineComponent({
       formData,
       loginError,
       // formValid,
-      onLogin
+      onLogin,
+      isPasswordHidden
     };
   }
 })
