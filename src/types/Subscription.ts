@@ -5,6 +5,12 @@ import useAxios from '@/types/Axios';
 export default function useSubscription(userType = 'customer') {
   const subscription = ref<ISubscription | null>(null);
   const {client} = useAxios(userType);
+
+  const fetchSubscriptions = async (uuid: string) => {
+    const {data} = await client.get(`/subscriptions/${uuid}`);
+    console.log(data)
+    return data;
+  }
   const createSubscription = async (formData: ISubscription) => {
     const {data} = await client.post('/subscription/', formData);
     return data;
@@ -12,6 +18,7 @@ export default function useSubscription(userType = 'customer') {
   
   return {
     subscription,
-    createSubscription
+    createSubscription,
+    fetchSubscriptions
   }
 }

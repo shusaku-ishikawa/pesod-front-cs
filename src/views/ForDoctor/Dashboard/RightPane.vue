@@ -1,9 +1,9 @@
 <template>
   <div
-    class="min-h-full w-full sm:px-3 sm:py-5"
+    class="h-full flex flex-col w-full sm:px-3 sm:py-5 "
   >
     <div>
-      <ul class='flex cursor-pointer text-base justify-center'>
+      <ul class='flex  cursor-pointer text-sm justify-center'>
         <li
           
           v-for="(t, i) in tabs"
@@ -16,15 +16,22 @@
         </li>
       </ul>
     </div>
-    
-    <answer-tab
-      v-if="tab === 'answer'"
-      :prescript="prescript"
-    ></answer-tab>
-    <user-profile-tab
-      v-if="tab === 'profile'"
-      :prescript="prescript"
-    ></user-profile-tab>
+    <div class="w-full relative flex-grow overflow-y-auto">
+      <answer-tab
+        class="absolute"
+        v-if="tab === 'answer'"
+        :prescript="prescript"
+      ></answer-tab>
+      <user-profile-tab
+        class="absolute"
+        v-if="tab === 'profile'"
+        :prescript="prescript"
+        :subscriptions="subscriptions"
+        :prescripts="prescripts"
+        :orders="orders"
+      ></user-profile-tab>
+        
+    </div>
     
   </div>
 </template>
@@ -32,8 +39,12 @@
 import { defineComponent, onMounted, SetupContext, ref } from "vue";
 import AnswerTab from './RightPane/AnswerTab.vue';
 import UserProfileTab from './RightPane/UserProfileTab.vue';
+import useSubscription from '@/types/Subscription';
+import usePrescript from '@/types/Prescript';
+import useOrder from '@/types/Order';
 
-import { IAnswer, IAnswerOption, IPrescript } from "@/types/Interfaces";
+import { IAnswer, ISubscription, IAnswerOption, IPrescript, IOrder } from "@/types/Interfaces";
+import { useRoute } from "vue-router";
 
 export default defineComponent({
   components: {
@@ -45,7 +56,7 @@ export default defineComponent({
       type: Object as () => IPrescript
     }
   },
-  setup(_, context: SetupContext) {
+  setup(props: any, context: SetupContext) {
     const tabs = [
       {
         value: 'answer',
@@ -62,8 +73,26 @@ export default defineComponent({
       
     ]
     const tab = ref<string>('answer')
+
+    const subscriptions = ref<ISubscription[]>([]);
+    const {
+      fetchSubscriptions
+    } = useSubscription('doctor');
+
+    const prescripts = ref<IPrescript[]>([]);
+    const {
+      fetchUserPrescripts   
+    } = usePrescript('doctor');
+    const orders = ref<IOrder[]>([]);
+    const {
+      fetchUserOrders
+    } = useOrder('doctor');
+    
     onMounted(async () => {
       // fetchLogs();
+      prescripts.value = await fetchUserPrescripts(props.prescript.customer.uuid);
+      subscriptions.value = await fetchSubscriptions(props.prescript.customer.uuid)
+      orders.value = await fetchUserOrders(props.prescript.customer.uuid);
     });
 
     const onPage = (page: string) => {
@@ -75,8 +104,10 @@ export default defineComponent({
     return {
       onPage,
       tabs,
-      tab
-      
+      tab,
+      subscriptions,
+      prescripts,
+      orders,
     };
   }
 })

@@ -10,10 +10,10 @@ input:focus::-webkit-input-placeholder {
   color: transparent;
 }
 input:focus::-moz-placeholder {
-color: transparent;
+  color: transparent;
 }
 input:focus::-ms-input-placeholder {
-color: transparent;
+  color: transparent;
 }
 input:focus::placeholder {
 color: transparent;

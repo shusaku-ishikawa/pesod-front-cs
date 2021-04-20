@@ -51,6 +51,11 @@ export default function usePrescript (userType = 'customer') {
     console.log(data)
     return data;
   }
+  const fetchUserPrescripts = async (uuid: string) => {
+    const {data} = await client.get(`/prescripts/${uuid}`);
+    console.log(data)
+    return data
+  }
 
   const setPrescriptProducts = async (prescriptNo: string, products: IProduct[]) => {
     const prescriptProducts = products.map((p: IProduct) => ({ product: p.id }));
@@ -81,6 +86,7 @@ export default function usePrescript (userType = 'customer') {
     fixInterview,
     selectDoctor,
     fetchPrescripts,
+    fetchUserPrescripts,
     setPrescriptProducts,
     acceptPrescriptProducts,
     deletePrescriptProducts

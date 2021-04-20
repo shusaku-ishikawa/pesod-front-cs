@@ -39,7 +39,7 @@
 
   </div>
 </template>
-<style lang="scss">
+<style lang="scss" scoped>
   .lp-back {
     background-image: url(/img/top_bk.png);
     background-size: contain;

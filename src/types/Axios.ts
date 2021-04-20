@@ -59,7 +59,8 @@ export default function useAxios(userType = 'customer') {
       const { status } = error.response;
       // alert(error.config.url)
       if (!isAuthUrl(error.config.url) && status === 401) {
-        // alert('goto login')
+        alert('goto login')
+        alert(loginRouteName)
         console.log(error.config)
 
         router.push({ name: loginRouteName, query: { next: route.path }});
