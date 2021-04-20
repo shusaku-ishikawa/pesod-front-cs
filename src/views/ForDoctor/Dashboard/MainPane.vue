@@ -65,11 +65,36 @@
       </svg>
     </div>
     <div
+    
       ref="messageArea" 
       class="flex-grow overflow-auto relative pt-5"
     >
 
       <div
+        v-if="loading"
+        class="absolute w-full space-y-4"
+      
+      >
+        <div
+          v-for="i in 5"
+          :key="i"
+          :class="{ 'ml-auto': i % 2, 'mr-auto': (i+1) % 2 }"
+          class=" shadow rounded-tr rouned-br rounded-bl p-2 w-3/5 ">
+          <div class="animate-pulse flex space-x-4">
+              <div class="flex-1 space-y-4 py-1">
+                <div class="space-y-2">
+                  <div class="h-4 bg-blue-100 rounded"></div>
+                  <div class="h-4 bg-blue-100 rounded"></div>
+                  <div class="h-4 bg-blue-100 rounded"></div>
+                  
+                </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        v-else
         class="absolute w-full space-y-4"
       >
         
@@ -102,6 +127,7 @@
         @send="onSendMessage"
       >
         <template v-slot:menu>
+      
           <button
             @click="showMessageTemplates = !showMessageTemplates"
             class="border rounded-lg py-1 text-xs p-1 flex items-center"
@@ -207,6 +233,7 @@ export default defineComponent({
       setPrescriptProducts
     } = usePrescript('doctor');
 
+    const loading = ref(false);
     const {
       chatLogs,
       fetchDoctorChatLogs,
@@ -263,13 +290,10 @@ export default defineComponent({
 
     const showPrescribeProducts = ref(false);
     
-    onMounted(async () => {
-      const uuidData = await getUUID();
-      userId.value = await getUserId();
-      uuid.value = uuidData.uuid;
-      console.log(uuidData)
+    const setupWebsocket = async () => {
+      loading.value = true;
       doctorMessageTemplates.value = await fetchDoctorMessageTemplates();
-
+      console.log(doctorMessageTemplates.value)
       if (props.prescript == null) return;
       
       url = `${WS_BASE_URL}/chat/doctor/${props.prescript.customer.uuid}/?token=${getToken()?.access}`;
@@ -285,15 +309,19 @@ export default defineComponent({
       window.setTimeout(() => {
         scrollDown();
       }, 100)
-      
+      loading.value = false;
+    }
+    onMounted(async () => {
+      const uuidData = await getUUID();
+      userId.value = await getUserId();
+      uuid.value = uuidData.uuid;
+      await setupWebsocket();
     });
 
     watch(() => props.prescript, async () => {
       
-      chatLogs.value = await fetchDoctorChatLogs(props.prescript.id);
-      window.setTimeout(() => {
-        scrollDown();
-      }, 100)
+      await setupWebsocket();
+
     });
     onBeforeUnmount(() => {
       // alert('closing socket')
@@ -383,6 +411,7 @@ export default defineComponent({
       onSelectTemplate,
       showPrescribeProducts,
       onPrescribe,
+      loading 
     }
   }
 })

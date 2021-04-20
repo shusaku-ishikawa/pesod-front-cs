@@ -24,12 +24,12 @@ export default function useChatLog(userType = 'customer') {
   const fetchCustomerMessageTemplates = async () => {
     const {data} = await client.get(`/customer_tpl_msg/`);
     console.log(data)
-    return data.results
+    return data
   }
   const fetchDoctorMessageTemplates = async () => {
     const {data} = await client.get(`/doctor_tpl_msg/`);
     console.log(data)
-    return data.results
+    return data
   }
   return {
     chatLogs,

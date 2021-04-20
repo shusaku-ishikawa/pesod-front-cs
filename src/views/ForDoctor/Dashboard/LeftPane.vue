@@ -26,11 +26,11 @@
       </button>
     </div>
     <div class="flex-grow w-full relative overflow-y-auto">
-      <div class="absolute">
+      <div class="absolute w-full">
         <div
           v-for="(p, i) in prescripts.filter(p => p.status > 2)"
           :key="i"
-          class="py-2 flex items-center px-3 py-2 border-b border-gray-100  hover:bg-blue-100 text-sm"
+          class="py-4 flex items-center px-3 py-2 border-b border-gray-100  hover:bg-blue-100 text-sm w-full"
           @click="onSelectPrescript(p)"
           :class="{ 'bg-primary-light': modelValue && modelValue.id === p.id, 'cursor-pointer': p.status == 3 }"
         >
@@ -38,27 +38,27 @@
             
             <img
               v-if="p.customer.icon_type == 0"
-              class="w-12"
+              class="w-10"
               src="@/assets/img/doctor/icon_man.png" alt=""
             >
             <img
               v-if="p.customer.icon_type == 1"
-              class="w-12"
+              class="w-10"
               src="@/assets/img/doctor/icon_woman.png" alt=""
             >
             <img
               v-if="p.customer.icon_type == 2"
-              class="w-12"
+              class="w-10"
               src="@/assets/img/doctor/icon_dog.png" alt=""
             >
             <img
               v-if="p.customer.icon_type == 3"
-              class="w-12"
+              class="w-10"
               src="@/assets/img/doctor/icon_cat.png" alt=""
             >
             <img
               v-if="p.customer.icon_type == 4"
-              class="w-12"
+              class="w-10"
               src="@/assets/img/doctor/icon_robot.png" alt=""
             >
             
@@ -68,7 +68,7 @@
             class="ml-3 flex flex-col flex-grow text-left"
           >
             <div class="flex items-center justify-between">
-              <div class="font-medium text-base ">
+              <div class="font-medium text-sm ">
                 {{ p.customer.first_name }} {{ p.customer.last_name }}
               </div>
               

@@ -1,7 +1,7 @@
 <template>
   <div
     :class="{ 'bg-primary-light': toPrescribe }"
-    class="flex h-full items-center px-3 py-2 hover:bg-gray-100 border rounded">
+    class="text-sm flex h-full items-center px-3 py-2 hover:bg-gray-100 border rounded">
     <div>
       <p-checkbox
         :modelValue="toPrescribe"

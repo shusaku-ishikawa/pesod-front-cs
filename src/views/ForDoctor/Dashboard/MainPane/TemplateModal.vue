@@ -1,5 +1,5 @@
 <template>
-  <div class="inline-block shadow-xl transform align-middle" >
+  <div class="inline-block shadow-xl transform align-middle text-sm" >
     <div class="my-20 rounded bg-white px-6 py-4 sm:pb-4">
       <div class="text-left">テンプレート選択</div>
       <div class="mb-2">
