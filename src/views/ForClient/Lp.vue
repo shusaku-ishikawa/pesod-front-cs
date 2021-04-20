@@ -3,7 +3,7 @@
     ref="contentArea"
     class="lp-back h-screen table-cell align-middle w-screen"
   >
-    
+  
     <div class="" style="padding: 0px 40px">
       <div class="mb-10">
         <img
@@ -18,7 +18,7 @@
         <button
           :href="href"
           @click="navigate"
-          class="image mb-10"
+          class="image mb-9 w-60 mt-5"
         >
           <img src="@/assets/img/top_login_btn.png" alt="">
         </button>
@@ -30,7 +30,7 @@
         <button
           :href="href"
           @click="navigate"
-          class="image"
+          class="image w-60"
         >
           <img src="@/assets/img/top_regist_btn.png" alt="">
         </button>
