@@ -13,6 +13,10 @@ module.exports = {
         gray: {
           100: '#DADADA',
           200: '#B4B4B4',
+        },
+        blue: {
+          100: '#C4E2FF',
+          200: '#0AA2E8'
         }
       },
       transformOrigin: {

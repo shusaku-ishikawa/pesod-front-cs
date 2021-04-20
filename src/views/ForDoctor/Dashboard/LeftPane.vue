@@ -1,6 +1,6 @@
 <template>
   <div
-    class="min-h-full w-full px-2 py-3"
+    class="min-h-full w-full px-2 py-3 text-sm"
   >
     <div class="relative mb-3 w-full ">
       <input
@@ -29,7 +29,7 @@
       <div
         v-for="(p, i) in prescripts.filter(p => p.status > 2)"
         :key="i"
-        class="py-2 flex items-center px-3 py-2 border-b  hover:bg-blue-200 text-sm"
+        class="py-2 flex items-center px-3 py-2 border-b  hover:bg-blue-100 text-sm"
         @click="onSelectPrescript(p)"
         :class="{ 'bg-primary-light': modelValue && modelValue.id === p.id, 'cursor-pointer': p.status == 3 }"
       >

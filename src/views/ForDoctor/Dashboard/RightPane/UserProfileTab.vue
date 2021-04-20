@@ -1,11 +1,11 @@
 <template>
-  <div class="w-full sm:py-5">
+  <div class="w-full sm:py-5 text-xs">
     <div class="text-left mb-5">
-      <div class="inline-block border border-b-0 bg-primary-light py-1 px-5 w-36 text-sm rounded-tl-lg rounded-tr-full">
+      <div class="inline-block border border-b-0 bg-primary-light py-1 px-5 w-36  rounded-tl-lg rounded-tr-full">
         顧客情報詳細
       </div>
-      <div class="border p-2 px-4">
-        <table class="border-collapsed w-full text-sm">
+      <div class="border p-2 px-4 rounded-tr rounded-br rounded-bl">
+        <table class="border-collapsed w-full ">
           <tbody class="border-b ">
             <tr>
               <th>顧客ID</th>
@@ -15,15 +15,15 @@
           <tbody class="border-b">
             <tr>
               <th>お名前</th>
-              <td>{{ `${prescript.customer.first_name} ${prescript.customer.last_name}` }}</td>
+              <td class="text-left">{{ `${prescript.customer.first_name} ${prescript.customer.last_name}` }}</td>
             </tr>
             <tr>
               <th>性別</th>
-              <td>{{ prescript.customer.gender }}</td>
+              <td class="text-left">{{ prescript.customer.gender }}</td>
             </tr>
             <tr>
               <th>生年月日</th>
-              <td>{{ prescript.customer.birthday }}</td>
+              <td class="text-left">{{ prescript.customer.birthday }}</td>
             </tr>
             
           </tbody>
@@ -54,88 +54,192 @@
       </div>
     </div>
     <div class="text-left mb-5">
-      <div class="inline-block border border-b-0 bg-primary-light py-1 px-5 w-36 text-sm rounded-tl-lg rounded-tr-full">
+      <div class="inline-block border border-b-0 bg-primary-light py-1 px-5 w-36  rounded-tl-lg rounded-tr-full">
         診察履歴
       </div>
-      <div class="border p-2 px-4">
-        <table class="border-collapsed w-full text-sm">
-          <tbody class=" ">
+      <div v-if="prescripts.length == 0" class=" px-2">診察履歴がありません</div>
+      <div
+        v-for="(p, i) in prescripts"
+        :key="i"
+        
+        class="mb-1 cursor-pointer border hover:bg-blue-100 flex items-center p-2 px-4 rounded-tr rounded-br rounded-bl">
+        <table
+          class="border-collapsed w-full ">
+          <tbody
+          >
             <tr
-
+              
             >
               <th>診察ID</th>
-              <td>{{ prescript.customer.id }}</td>
+              <td>{{ p.id }}</td>
             </tr>
             <tr
 
             >
               <th>診察日</th>
-              <td>{{ prescript.customer.id }}</td>
+              <td>{{ p.prescript_date }}</td>
             </tr>
             
           </tbody>
         
+        </table>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="text-left mb-5">
+      <div class="inline-block border border-b-0 bg-primary-light py-1 px-5 w-36  rounded-tl-lg rounded-tr-full">
+        定期購入
+      </div>
+      <div
+        v-for="(s, i) in subscriptions"
+        :key="i"
+        class="mb-1 border p-2 px-4 rounded-tr rounded-br rounded-bl">
+        <table class="border-collapsed w-full ">
+          <tbody class="border-b">
+            <tr
+
+            >
+              <th>定期ID</th>
+              <td>{{ s.id }}</td>
+            </tr>
+            <tr
+
+            >
+              <th>定期ステータス</th>
+              <td>{{ subscStatus[s.subsc_status] }}</td>
+            </tr>
+            
+          </tbody>
+          <tbody>
+            <tr>
+              <th>
+                次回お届け日
+              </th>
+              <td>
+                {{ s.next_delivery_date }}
+              </td>
+            </tr>
+            <tr>
+              <th>お届け日配送間隔</th>
+              <td>{{ s.delivery_interval }}日</td>
+            </tr>
+          </tbody>
         </table>
       </div>
     </div>
     <div class="text-left ">
-      <div class="inline-block border border-b-0 bg-primary-light py-1 px-5 w-36 text-sm rounded-tl-lg rounded-tr-full">
-        定期購入
+      <div class="inline-block border border-b-0 bg-primary-light py-1 px-5 w-36  rounded-tl-lg rounded-tr-full">
+        注文履歴
       </div>
-      <div class="border p-2 px-4">
-        <table class="border-collapsed w-full text-sm">
-          <tbody class=" ">
+      <div
+        v-for="(o, i) in orders"
+        :key="i"
+        @click="modalOrder = o"
+        class="cursor-pointer hover:bg-blue-100 flex items-center mb-1 border p-2 px-4 rounded-tr rounded-br rounded-bl">
+        <table class="flex-grow border-collapsed w-full ">
+          <tbody class="border-b">
             <tr
 
             >
-              <th>診察ID</th>
-              <td>{{ prescript.customer.id }}</td>
+              <th>注文ID</th>
+              <td>{{ o.id }}</td>
             </tr>
-            <tr
-
-            >
-              <th>診察日</th>
-              <td>{{ prescript.customer.id }}</td>
-            </tr>
+           
             
           </tbody>
-        
+          <tbody>
+            <tr>
+              <th>
+                購入金額
+              </th>
+              <td>
+                {{ o.total_amount.toLocaleString() }}円
+              </td>
+            </tr>
+            <tr>
+              <th>定期購入</th>
+              <td>{{ o.purchase_times }}回</td>
+            </tr>
+          </tbody>
         </table>
+        <div class="pl-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+          </svg>
+        </div>
       </div>
     </div>
-   
+    <frame-modal
+      v-if="modalOrder != null || modalSubscription != null"
+      @close="modalOrder = null; modalSubscription = null"
+    >
+      <order-modal
+        v-if="modalOrder != null"
+        :order="modalOrder"
+        @close="modalOrder = null"
+      ></order-modal>
+    </frame-modal>
   </div>
 </template>
 <style lang="scss" scoped>
-  // table {
-  //   tr {
-  //     border-bottom: solid gray 1px;
-  //     th {
-  //       white-space: nowrap;
-  //     }
-  //     th, td {
-  //       text-align: left;
-  //       padding: 3px 5px;;
-  //     }
-  //   }
-  // }
+  table {
+    tr {
+      th {
+        white-space: nowrap;
+        font-weight: 500;
+        text-align-last: justify;
+        text-justify: inter-ideograph;
+      }
+      td {
+        padding: 0px 10px;
+      }
+    }
+  }
 </style>
 <script lang="ts">
-import { defineComponent, onMounted, SetupContext } from "vue";
+import { defineComponent, ref, onMounted, SetupContext } from "vue";
 
-import { IAnswer, IAnswerOption, IPrescript } from "@/types/Interfaces";
+import { IAnswer, IAnswerOption, IOrder, IPrescript } from "@/types/Interfaces";
+
+import { ISubscription } from '@/types/Interfaces'
+import OrderModal from './UserProfileTabOrderModal.vue'
 
 export default defineComponent({
   components: {
+    OrderModal
   },
   props: {
     prescript: {
       type: Object as () => IPrescript
+    },
+    subscriptions: {
+      type: Object as () => ISubscription[]
+    },
+    prescripts: {
+      type: Object as () => IPrescript[]
+    },
+    orders: {
+      type: Object as () => IOrder[]
     }
   },
-  setup(_, context: SetupContext) {
-  
+  setup(props: any, context: SetupContext) {
+    const subscStatus = {
+      0: '継続中',
+      1: '休止中',
+      2: '解約'
+    }
+
+    const modalOrder = ref<IOrder | null>(null);
+    const modalSubscription = ref<ISubscription | null>(null)
+    
     return {
+      subscStatus,
+      modalOrder,
+      modalSubscription,
     };
   }
 })

@@ -1,8 +1,8 @@
 <template>
-  <div class="w-full sm:py-5">
+  <div class="w-full sm:py-5 text-xs">
     <!-- <div
       class="sm:hidden py-1 bg-gray-200 mb-5">
-      <div class="absolute left-0 flex text-sm items-center">
+      <div class="absolute left-0 flex  items-center">
         <svg
           @click="onPage('main')"
           class="w-6 cursor-pointer"
@@ -17,45 +17,42 @@
     </div> -->
     <div class="px-1">
       <div class="mb-5">
-        <div class="text-left">顧客基本情報</div>
-        <table class="w-full border-collapsed border">
+        <div class="text-left  font-semibold">顧客基本情報</div>
+        <table class="w-full border-collapsed border ">
           <tbody>
             <tr class="border">
               <th class=" bg-primary-light">お名前</th>
-              <td>{{ prescript.customer.first_name }}{{ prescript.customer.last_name }}</td>
+              <td class="">{{ prescript.customer.first_name }}{{ prescript.customer.last_name }}</td>
             </tr>
             <tr class="border">
               <th class=" bg-primary-light">性別</th>
-              <td>{{ prescript.customer.gender }}</td>
+              <td class="">{{ genders[prescript.customer.gender] }}</td>
             </tr>
             <tr class="border">
               <th class=" bg-primary-light">生年月日</th>
-              <td>{{ prescript.customer.birthday }}</td>
+              <td class="">{{ prescript.customer.birthday }}</td>
             </tr>
             
             
           </tbody>
         </table>
       </div>
-      <div>
-        <div class="text-left">過去のPesod利用状況</div>
-        <table class="w-full border-collapsed border">
+      <div class="mb-5">
+        <div class="text-left  font-semibold">過去のPesod利用状況</div>
+        <table class="w-full border-collapsed border ">
           <tbody>
             <tr class="border">
               <th class="bg-primary-light">診療回数</th>
-              <td>{{ prescript.customer.first_name }}{{ prescript.customer.last_name }}</td>
+              <td>{{ prescript.customer.prescription_times }}回</td>
             </tr>
             <tr class="border">
               <th class=" bg-primary-light">定期購入</th>
-              <td>{{ prescript.customer.gender }}</td>
+              <td>{{ prescript.customer.has_subscribing ? 'あり' : 'なし' }}</td>
             </tr>
+           
             <tr class="border">
-              <th class=" bg-primary-light">定期注文回数</th>
-              <td>{{ prescript.customer.birthday }}</td>
-            </tr>
-            <tr class="border">
-              <th class=" bg-primary-light">定期ステータス</th>
-              <td>{{ prescript.customer.birthday }}</td>
+              <th class=" bg-primary-light">注文回数</th>
+              <td>{{ prescript.customer.order_times }}回</td>
             </tr>
             
             
@@ -75,7 +72,7 @@
         />
         <div class="w-full ">
           <div
-            class="bg-gray-400 pb-1 text-sm"
+            class="bg-gray-400 pb-1 "
             v-if="a.descriptive_answer"
           >
             {{ a.descriptive_answer }}
@@ -87,8 +84,10 @@
               <li
                 v-for="(o, i) in a.answer_options"
                 :key="i"
+                class="bg-primary-light py-1 px-2 rounded w-full "
               >
-                {{ o.answer }}
+              
+                {{ a.question.qa_options.find(q => q.id == o.option).option }}
               </li>
             </ul>
           </div>
@@ -108,12 +107,25 @@
     </div>
   </div>
 </template>
+<style scoped>
+  table th {
+    text-align-last: justify;
+    text-justify: inter-ideograph;
+    padding: 3px 10px;
+    font-weight: 400;
+  }
+  table td {
+    text-align: left;
+    padding: 0px 10px;
+
+  }
+</style>
 <script lang="ts">
-import { defineComponent, onMounted, onUpdated, SetupContext, watch } from "vue";
+import { defineComponent, ref, onMounted, onUpdated, SetupContext, watch } from "vue";
 import ClientProfile from '../ClientProfile.vue';
 import Question from '@/views/ForClient/Diagnostic/Questionaires/Question.vue';
+import useCustomer from '@/types/Customer'
 
-import useQuestionaire from '@/types/Questionaire';
 import useAnswer from '@/types/Answer';
 import { IAnswer, IAnswerOption, IPrescript } from "@/types/Interfaces";
 import { onBeforeRouteUpdate } from "vue-router";
@@ -128,12 +140,18 @@ export default defineComponent({
     }
   },
   setup(props: any, context: SetupContext) {
+    const customerData = ref(null);
+    // const {
+    //   // getCustomer  
+    // } = useCustomer();
 
     const {
       answers,
       fetchAnswers
     } = useAnswer('doctor');
 
+    
+    
     const setAnswers = async () => {
       const data = await fetchAnswers(props.prescript.customer.uuid);
       console.log(data)
@@ -150,10 +168,19 @@ export default defineComponent({
     onMounted(async () => {
       if (props.prescript == null ) return;
       setAnswers();
+      console.log(props.prescript.customer)
+      // customerData.value = await getCustomer(props.prescript.customer.uuid);
+
     });
 
+    const genders = {
+      0: '男性',
+      1: '女性',
+      2: 'その他'
+    }
   
     return {
+      genders,
       answers,
     };
   }

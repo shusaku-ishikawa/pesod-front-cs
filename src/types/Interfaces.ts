@@ -193,6 +193,17 @@ interface ISubscription{
   deliv_method: string;
   pay_method: number;
   product_ids: ISubscriptionProduct[];
+  next_delivery_date?: string;
+  subsc_status?: string; 
+}
+
+interface IOrder{
+  id?: string;
+  order_status: number;
+  customer: ICustomer;
+  purchase_times: number;
+  total_amount: number;
+  order_date: string;
 }
 export {
   IToken,
@@ -214,5 +225,6 @@ export {
   IProduct,
   IDelivery,
   IDeliveryValidator,
-  ISubscription
+  ISubscription,
+  IOrder
 }
