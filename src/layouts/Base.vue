@@ -3,7 +3,7 @@
     ref="contentArea"
     class="min-h-screen flex flex-col bg-white"
   >
-    <div class="  font-extrabold " style="font-size: 1rem; height:40px; padding: 6px 0">
+    <div class="  font-extrabold text-sm py-2 inline-block align-middle leading-7" style="height:40px;">
       <slot name="title">
       </slot>
     </div>

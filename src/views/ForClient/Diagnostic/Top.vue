@@ -21,15 +21,15 @@
       v-else
       class="flex-grow flex flex-col pt-5" style="margin: 0 20px;">
       <div>
-        <div class="mb-5 font-bold text-sm">
+        <div class="mb-5 mt-4 font-bold text-sm">
           診察・処方に必要なお手続きをお願いたします
         </div>
-        <div class="text-xs text-left mb-3 " style="margin: 0px 10px 12px">
-          Pesodでは、問診と医師の診察から、あなたに最適な<br>
-          育毛対策方針・処方を提案します。下記のお手続きを上<br>
+        <div class="text-sm text-left mb-3 leading-5 mt-0 mx-2 mb-4">
+          Pesodでは、問診と医師の診察から、あなたに最適な
+          育毛対策方針・処方を提案します。下記のお手続きを上
           から順にご対応ください。
         </div>
-        <div style="font-size: 0.5rem; margin: 0px 10px 20px; padding: 8px 4px" class=" bg-gray-100 py-2 text-left">
+        <div style="font-size: 0.5rem;" class="px-3 py-3 mx-2 mb-5 bg-gray-100 py-2 text-left">
           医師の判断により、医薬品の提供ができない場合がございます。<br>
           あらかじめご了承ください。
         </div>
@@ -97,7 +97,7 @@
           class="block w-full"
         >
       </div>
-      <div>
+      <div class="mb-5">
         <img
           v-if="prescriptStatus < 4"
           src="@/assets/img/taisaku_menu_04.png"
