@@ -6,9 +6,10 @@
         <div
           v-for="(t, i) in templates"
           :key="i"
-          class="border rounded mb-1 py-2 px-4 text-left cursor-pointer"
+          class="border rounded mb-1 py-2 px-4 text-left cursor-pointer hover:bg-blue-100"
           @click="selectedTemplate = t"
           :class="{ 'bg-blue-100': selectedTemplate && selectedTemplate.id == t.id }"
+          style="min-height: 5rem;"
         >
           {{ t.message }}
         </div>

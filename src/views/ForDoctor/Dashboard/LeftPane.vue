@@ -22,7 +22,7 @@
         @click="onlyActive = !onlyActive"
         :class="{ 'bg-green-600 text-white': !onlyActive }"
         class="block w-full shadow bg-gray-200 text-black">
-        {{ onlyActive ? '全て表示' : '対応中のみ表示' }}
+        {{ onlyActive ? '全て表示' : '要対応のみ表示' }}
       </button>
     </div>
     <div class="flex-grow w-full relative overflow-y-auto">
