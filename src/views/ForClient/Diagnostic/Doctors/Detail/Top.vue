@@ -5,7 +5,7 @@
         <svg
           @click="() => { router.push({ name: 'DiagnosticDoctorList' }) }"
           class="left-1 h-8 w-8 cursor-pointer absolute "
-          xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20" fill="currentColor">
+          xmlns="http://www.w3.org/2000/svg"  viewBox="2 2 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
         </svg>
         <div>
@@ -28,7 +28,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <div class="mb-5 font-bold text-lg">
+          <div class="mb-7 font-bold text-2xl">
             {{ doctor.first_name }} {{ doctor.last_name }} 医師
           </div>
           <div class="mb-10">
@@ -50,45 +50,45 @@
           </div>
           <div>
             <div class="border-b text-left mb-5">
-              <div class="text-sm">
+              <div class="text-xs font-semibold">
                 クリニック名
               </div>
-              <div class="py-2 text-lg">
+              <div class="py-2 text-base">
                 {{ doctor.clinic_name }}
               </div>
             </div>
             <div class="border-b text-left mb-5">
-              <div class="text-sm">
+              <div class="text-xs font-semibold">
                 診療時間
               </div>
               <div
                 v-html="doctor.medical_time"
-                class="py-2 text-lg">
+                class="py-2 text-base">
               </div>
             </div>
             <div class="border-b text-left mb-5">
-              <div class="text-sm">
+              <div class="text-xs font-semibold">
                 休診日
               </div>
-              <div class="py-2 text-lg">
+              <div class="py-2 text-base">
                 {{ doctor.closed_date }}
               </div>
             </div>
             <div class="border-b text-left mb-5">
-              <div class="text-sm">
+              <div class="text-xs font-semibold">
                 所在地
               </div>
-              <div class="py-2 text-lg">
+              <div class="py-2 text-base">
                 {{ doctor.prefecture }} {{ doctor.city }}
               </div>
             </div>
             <div class="border-b text-left mb-5">
-              <div class="text-sm">
+              <div class="text-xs font-semibold">
                 クリニック概要
               </div>
               <div
                 v-html="doctor.description"
-                class="py-2 text-lg">
+                class="py-2 text-base">
               </div>
             </div>
           </div>

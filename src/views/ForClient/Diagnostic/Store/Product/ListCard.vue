@@ -1,10 +1,10 @@
 <template>
   <div 
-    class="relative flex items-center px-3 py-2 "
+    class="relative flex px-3 py-2 "
     :class="{ 'shadow border rounded mb-2': isSelectable, 'bg-primary-light': inCart }"
   >
    
-    <div v-if="isSelectable">
+    <div class="flex items-center" v-if="isSelectable">
       <p-checkbox
         :modelValue="inCart"
         @update:modelValue="onCheck($event)"
@@ -19,8 +19,8 @@
         style="width: 80px; height: auto"
       >
     </div>
-    <div class="flex-grow text-left " style="margin: 0px 15px">
-      <div class="" style="font-size: 14px">
+    <div class="flex-grow text-left mx-2 mt-1">
+      <div class="h-12" style="font-size: 14px">
         <u
           @click="onClick"
         >{{ product.name }}</u>

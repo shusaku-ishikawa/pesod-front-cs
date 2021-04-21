@@ -2,7 +2,7 @@
   <div
     class="px-6 pt-5 flex-grow flex flex-col"
   >
-    <div class=" w-ful " style="min-height: 150px; margin-bottom: 50px">
+    <div class=" w-ful " style="min-height: 100px;">
       <question
         class=" w-full"
         :index="questionIndex + 1"
@@ -15,7 +15,7 @@
       </div>
       <div
         v-if="currentQuestion.question_types.includes('アップロード')"
-        class="mb-10 "
+        class="mb-5 "
       >
       
         <image-selector
@@ -31,9 +31,9 @@
           v-for="(o, i) in currentQuestion.qa_options"
           :key="i"
           @click="onSelectAnswer(i)"
-          class="flex items-center text-left border rounded shadow-xl text-sm cursor-pointer p-2 leading-5"
+          class="flex items-center text-left border rounded shadow-xl cursor-pointer p-2 leading-5"
           style="margin-bottom: 6px"
-          :class="{ 'hilight ': isOptionSelected(o.id), 'h-10': currentQuestion.question_layout == 1, 'h-16': currentQuestion.question_layout == 2 || currentQuestion.question_layout == 3, 'h-24': currentQuestion.question_layout == 4 }"
+          :class="{ 'hilight ': isOptionSelected(o.id), 'h-12 text-base': currentQuestion.question_layout == 1, 'h-16 text-base': currentQuestion.question_layout == 2 || currentQuestion.question_layout == 3, 'h-24 text-sm': currentQuestion.question_layout == 4 }"
         > 
           <p-checkbox
             v-if="currentQuestion.question_layout >= 3"
@@ -44,12 +44,12 @@
           </div>
           <div
             :class="{ 'text-center flex-grow': currentQuestion.question_layout == 1 }"
-            class="font-bold ml-2">{{ o.option }}</div>
+            class="font-bold mx-2">{{ o.option }}</div>
         </div>
       </div>
       <div
         v-if="currentQuestion.question_types.includes('記述式') && currentAnswer"
-        class="mb-10 mt-5"
+        class="mb-3 mt-3 leading-10"
       >
         <p-input
           v-model="currentAnswer.descriptive_answer"
@@ -58,7 +58,7 @@
           label=""
         ></p-input>
       </div>
-      <div class="grid grid-cols-2 gap-1 mt-3 mb-3">
+      <div class="grid grid-cols-2 gap-1 mt-3 mb-8">
         <div
           v-if="hasPrevious"
           :class="{ 'col-span-1': true }"

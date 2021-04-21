@@ -15,9 +15,9 @@
       </div>
     </template>
     <div class="flex flex-col flex-grow bg-white px-3 pt-5">
-      <div class="bg-gray-100 py-2 px-1 mb-5" style="font-size: 12px">
+        <div class="mb-5 mt-2 font-bold text-sm">
         申し込みをご希望の商品にチェックを入れてください
-      </div>
+        </div>
       <div class=" flex-grow flex flex-col ">
         <template v-for="(p , i) in products.filter(p => p.is_sales)" :key="i">
           <store-product-list-card

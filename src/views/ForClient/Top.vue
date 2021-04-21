@@ -42,7 +42,7 @@
               
         </button>
       </div>
-      <div>
+      <div class="mb-10">
         <div class="mt-5 mb-5">
           <img
             class="mx-auto w-80"
