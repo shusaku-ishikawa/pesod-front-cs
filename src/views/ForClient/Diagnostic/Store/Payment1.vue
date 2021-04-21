@@ -45,12 +45,11 @@
              <div class="mb-7 text-left">
               <label class="text-sm font-semibold" for="atena">お宛名</label>
               <input
-                class="block w-full border-b"
+                class="block w-full border-b text-base leading-10"
                 id="atena"
                 :value="delivery.receiver"
                 type="text"
                 disabled
-                style="line-height: 40px; font-size: 20px"
               >
              
             </div>
@@ -63,6 +62,7 @@
                 :modelValue="delivery.zip_code"
                 @update:modelValue="updateValue('zip_code', $event)"
                 :error="errors.zip_code"
+                class="leading-7 text-lg"
               ></p-input>
             </div>
             <div class="mb-7">
@@ -74,6 +74,7 @@
                 :modelValue="delivery.prefecture"
                 @update:modelValue="updateValue('prefecture', $event)"
                 :error="errors.prefecture"
+                class="leading-7 text-lg"
               ></p-input>
             </div>
             <div class="mb-7">
@@ -85,6 +86,7 @@
                 :modelValue="delivery.city"
                 @update:modelValue="updateValue('city', $event)"
                 :error="errors.city"
+                class="leading-7 text-lg"
               ></p-input>
             </div>
             <div class="mb-7">
@@ -96,6 +98,7 @@
                 :modelValue="delivery.address"
                 @update:modelValue="updateValue('address', $event)"
                 :error="errors.address"
+                class="leading-7 text-lg"
               ></p-input>
             </div>
             <div class="mb-7">
@@ -106,6 +109,7 @@
                 :modelValue="delivery.phone_number"
                 @update:modelValue="updateValue('phone_number', $event)"
                 :error="errors.phone_number"
+                class="leading-7 text-lg"
               ></p-input>
             </div>
             <div class="mb-7 text-left">
@@ -115,6 +119,7 @@
                 @update:modelValue="updateValue('deliv_time', $event)"
                 :error="errors.deliv_time"
                 :options="delivTimes"
+                class="leading-7 text-lg"
               ></p-select>
               
             </div>

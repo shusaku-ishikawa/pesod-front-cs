@@ -26,7 +26,7 @@
         >{{ product.name }}</u>
       </div>
       <div class="text-2xl text-right" style="line-height: 25px">
-        {{ (product.price || 0).toLocaleString() }}円
+        {{ (product.price || 0).toLocaleString() }}円<span class="text-xs">（税込）</span>
       </div>
     </div>
     
