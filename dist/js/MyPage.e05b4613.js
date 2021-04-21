@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["MyPage"],{3825:function(e,n,o){"use strict";o.r(n);var t=o("7a23");function r(e,n,o,r,c,p){var u=Object(t["resolveComponent"])("router-view");return Object(t["openBlock"])(),Object(t["createBlock"])(u)}var c=Object(t["defineComponent"])({components:{},setup:function(){return{}}});c.render=r;n["default"]=c}}]);
+//# sourceMappingURL=MyPage.e05b4613.js.map

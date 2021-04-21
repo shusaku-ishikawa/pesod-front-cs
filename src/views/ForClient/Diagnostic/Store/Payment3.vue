@@ -209,6 +209,11 @@ export default defineComponent({
       })
       return total;
     })
+    onMounted(() => {
+      window.scrollTo({
+        top: 0
+      })
+    })
     return {
       delivTimes,
       route,

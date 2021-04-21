@@ -1,6 +1,7 @@
 <template>
   <div
     class="px-6 pt-5 flex-grow flex flex-col"
+    v-if="currentAnswer"
   >
     <div class=" w-ful " style="min-height: 150px; margin-bottom: 50px">
       <question
@@ -20,7 +21,7 @@
       
         <image-selector
           :photoType="currentQuestion.question_types.includes('前頭部') ? 'A' : 'B'" 
-          v-model="uploadingImage"
+          v-model="currentAnswer.hair_image"
         ></image-selector>
       </div>
       <div
@@ -153,7 +154,7 @@ export default defineComponent({
     // const question = props.questions.find((q: IQuestion) => q.id === qId);
     // const questionIndex = props.questions.findIndex((q: IQuestion) => q.id === qId);
     
-    const uploadingImage = ref<string | null>(null);
+    // const uploadingImage = ref<string | null>(null);
     const currentAnswer = ref<IAnswer | null>(null);
     
 
@@ -194,7 +195,7 @@ export default defineComponent({
       if (props.currentQuestion == null) return false;
       if (currentAnswer.value == null) return false;
       if (props.currentQuestion.question_types.includes('アップロード')) {
-        return uploadingImage.value != null;
+        return currentAnswer.value.hair_image != null;
       } else if (props.currentQuestion.question_types.includes('選択式')) {
         
         if (props.currentQuestion.question_types.includes('記述式')) {
@@ -213,16 +214,14 @@ export default defineComponent({
       // if (currentIndex > 0) {
       //   router.push({ params: { id: props.questions[currentIndex - 1].id } })
       // }
+      // if (currentAnswer.value && currentAnswer..value != null) {
+      //   currentAnswer.value.hair_image = uploadingImage.value;
+      // }
       context.emit('previous', currentAnswer.value)
     };
     const onClickNext = async () => {
       if (props.currentQuestion == null || currentAnswer.value == null) return;
-      if (props.currentQuestion.question_types.includes('アップロード')) {
-        // create hair record
-        if (uploadingImage.value == null) return;
-        currentAnswer.value.hair_image = uploadingImage.value;
-        
-      }
+      
       context.emit('next', currentAnswer.value)
       // const data = await createAnswer(currentAnswer.value);
       
@@ -255,8 +254,8 @@ export default defineComponent({
         imageReader.onload = function() {
           const data = imageReader.result;
           
-          if (typeof data === 'string') {
-            uploadingImage.value = data;    
+          if (typeof data === 'string' && currentAnswer.value) {
+            currentAnswer.value.hair_image = data;    
           }
         }
         imageReader.readAsDataURL(request.response); 
@@ -276,7 +275,7 @@ export default defineComponent({
       if (props.existingAnswer != null) {
         currentAnswer.value = cloneDeep(props.existingAnswer);
         
-        if (currentAnswer.value?.hair_record != null, typeof currentAnswer.value?.hair_record == 'object') {
+        if (currentAnswer.value?.hair_record != null && currentAnswer.value.hair_image == null) {
           const url = currentAnswer.value?.hair_record?.image;
           if (url == null) return;
           fetchFileFromUrl(currentAnswer.value?.hair_record?.image || '');
@@ -306,7 +305,7 @@ export default defineComponent({
     
     return {
       currentAnswer,
-      uploadingImage,
+      // upfloadingImage,
       isOptionSelected,
       onSelectAnswer,
       hasAnswers,

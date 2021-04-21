@@ -1,7 +1,7 @@
 <template>
   <div class="inline-block shadow-xl transform align-middle" >
     <div class=" rounded bg-white px-6 py-4 sm:pb-4">
-      <div class="text-left">定期購入</div>
+      <div class="text-left text-base">定期購入詳細</div>
       <div class="mb-2">
         <div
           v-if="loading"
@@ -33,7 +33,9 @@
               <th>定期購入回数</th>
               <td>{{ data.purchase_times }}回</td>
               <th>定期申込日</th>
-              <td>？？？</td>
+              <td>
+                {{ formatDate(data.created_at, 'YYYY/M/D') }}
+              </td>
               
             </tr>
             <tr>
@@ -92,29 +94,29 @@
                     <img style="width: 150px" :src="op.product.image" alt="">
                   </div>
                   <div>
-                    {{ op.product.name }}
+                    {{ op.product.name }} x {{ op.item_count }}
                   </div>
                 </div>
               </td>
               <td style="text-align: right">
-                {{ op.sub_amount.toLocaleString() }}円
+                {{ (op.item_count * op.product.price || 0).toLocaleString() }}円
               </td>
             </tr>
             <tr>
               <th class="no-justify" colspan="3">手数料（税込）</th>
-              <td style="text-align: right">{{ data.charge.toLocaleString() }}円</td>
+              <td style="text-align: right">{{ (data.charge || 0).toLocaleString() }}円</td>
             </tr>
             <tr>
               <th class="no-justify" colspan="3">送料（税込）</th>
-              <td style="text-align: right">{{ data.deliv_fee.toLocaleString() }}円</td>
+              <td style="text-align: right">{{ (data.deliv_fee || 0).toLocaleString() }}円</td>
             </tr>
             <tr>
               <th class="no-justify"  colspan="3">離島手数料（税込）</th>
-              <td style="text-align: right">{{ data.relay_fee.toLocaleString() }}円</td>
+              <td style="text-align: right">{{ (data.relay_fee || 0).toLocaleString() }}円</td>
             </tr>
             <tr>
               <th class="no-justify"  colspan="3">合計（税込）</th>
-              <td style="text-align: right">{{ (data.total_amount + data.tax_amount).toLocaleString() }}円</td>
+              <td style="text-align: right">{{ (calcTotal(data.products) || 0).toLocaleString() }}円</td>
             </tr>
             
           </tbody>
@@ -151,7 +153,7 @@
       }
       td {
         text-align: left;
-        padding: 0px 10px;
+        padding: 3px 10px;
       }
       th, td {
         border: lightgray solid 1px;
@@ -161,8 +163,9 @@
 </style>
 <script lang="ts">
 import { defineComponent, computed, ref, onMounted, SetupContext } from "vue";
-import { IMessageTemplate, IOrder, ISignup, ISubscription } from '@/types/Interfaces';
+import { IMessageTemplate, IOrder, IProduct, ISignup, ISubscription } from '@/types/Interfaces';
 import useSubscription from "@/types/Subscription";
+import moment from "moment";
 
 export default defineComponent({
   components: {
@@ -221,6 +224,13 @@ export default defineComponent({
       4: "発送待ち",
       5: "発送済み",
     }
+    const calcTotal = (products: IProduct[]) => {
+      let total = 0;
+      products.map((p: any) => {
+        total += p.item_count * p.product.price;
+      })
+      return total;
+    }
     const onClose = () => {
       context.emit('close')  
     };
@@ -234,7 +244,12 @@ export default defineComponent({
       data.value = await getSubscription(props.subscription.id);
       loading.value = false
     })
+
+    const formatDate = (strDate: string, format: string) => {
+      return moment(strDate).format(format);
+    }
     return {
+      
       onClose,
       userId,
       payStatus,
@@ -243,7 +258,9 @@ export default defineComponent({
       delivTimes,
       orderStatus,
       data,
-      loading
+      loading,
+      calcTotal,
+      formatDate,
     }
   }
 })

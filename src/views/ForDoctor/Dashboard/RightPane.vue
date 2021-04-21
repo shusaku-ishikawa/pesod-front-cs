@@ -35,7 +35,13 @@
         :loadingOrders="loadingOrders"
         :loadingPrescripts="loadingPrescripts"
       ></user-profile-tab>
-        
+      <hair-record-tab
+        class="absolute "
+        :prescript="prescript"
+        :loadingHairRecords="loadingHairRecords"
+        :hairRecords="hairRecords"
+        v-if="tab == 'hairRecord'"
+      ></hair-record-tab>
     </div>
     
   </div>
@@ -44,17 +50,21 @@
 import { defineComponent, onMounted, SetupContext, ref, watch } from "vue";
 import AnswerTab from './RightPane/AnswerTab.vue';
 import UserProfileTab from './RightPane/UserProfileTab.vue';
+import HairRecordTab from './RightPane/HairRecordTab.vue';
+
 import useSubscription from '@/types/Subscription';
 import usePrescript from '@/types/Prescript';
 import useOrder from '@/types/Order';
+import useHairRecord from '@/types/HairRecord';
 
-import { IAnswer, ISubscription, IAnswerOption, IPrescript, IOrder } from "@/types/Interfaces";
+import { IAnswer, ISubscription, IAnswerOption, IPrescript, IOrder, IHairRecord } from "@/types/Interfaces";
 import useAnswer from '@/types/Answer';
 
 export default defineComponent({
   components: {
     AnswerTab,
-    UserProfileTab
+    UserProfileTab,
+    HairRecordTab
   },
   props: {
     prescript: {
@@ -78,13 +88,25 @@ export default defineComponent({
       
     ]
     const tab = ref<string>('answer')
-
+    
+    const hairRecords = ref<IHairRecord[]>([]);
+    const loadingHairRecords = ref(false);
+    const {
+      fetchUserHairRecords  
+    } = useHairRecord('doctor');
+    const loadHairRecordData = async () => {
+      loadingHairRecords.value = true;
+      hairRecords.value = await fetchUserHairRecords(props.prescript.customer.uuid);
+      loadingHairRecords.value = false;
+      console.log(hairRecords.value)
+    }
     const {
       answers,
       fetchAnswers
     } = useAnswer('doctor');
+
     const loadingAnswers = ref(false);
-    const setAnswers = async () => {
+    const loadAnswerData = async () => {
       loadingAnswers.value = true;
       const data = await fetchAnswers(props.prescript.customer.uuid);
       console.log(data)
@@ -112,7 +134,7 @@ export default defineComponent({
     const loadingOrders = ref(false)
     const loadingPrescripts = ref(false);
     
-    const updateData = async () => {
+    const loadCustomerData = async () => {
       loadingSubscriptions.value = true;
       loadingOrders.value = true;
       loadingPrescripts.value = true;
@@ -125,13 +147,15 @@ export default defineComponent({
 
     }
     watch(() => props.prescript, () => {
-      updateData();
-      setAnswers();
+      loadCustomerData();
+      loadAnswerData();
+      loadHairRecordData();
     })
     onMounted(async () => {
       // fetchLogs();
-      updateData();
-      setAnswers();
+      loadCustomerData();
+      loadAnswerData();
+      loadHairRecordData();
     });
 
     const onPage = (page: string) => {
@@ -148,10 +172,12 @@ export default defineComponent({
       subscriptions,
       prescripts,
       orders,
+      hairRecords,
       loadingSubscriptions,
       loadingPrescripts,
       loadingOrders,
-      loadingAnswers
+      loadingAnswers,
+      loadingHairRecords
     };
   }
 })

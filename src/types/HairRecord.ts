@@ -9,7 +9,14 @@ export default function useHairRecord(userType = 'customer') {
   } = useAxios(userType);
   
   const fetchHairRecord = async () => {
-    return null;
+    return [];
+  }
+  const fetchUserHairRecords = async (uuid: string) => {
+    
+    const {data} = await client.get(`/hairrecords/?uuid=${uuid}`);
+    console.log(data)
+    return data;
+
   }
   
   const addHairRecord = async (postData: FormData) => {
@@ -19,6 +26,7 @@ export default function useHairRecord(userType = 'customer') {
   }
   return {
     fetchHairRecord,
-    addHairRecord
+    addHairRecord,
+    fetchUserHairRecords
   }
 }

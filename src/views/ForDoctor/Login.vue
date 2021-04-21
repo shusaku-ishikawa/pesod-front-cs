@@ -118,7 +118,7 @@ export default defineComponent({
       getProfile,
       storeProfile,
       removeProfile,
-      getProfileFromStorage
+      getProfileFromLS
     } = useAuth('doctor');
     
     const {

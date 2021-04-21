@@ -89,6 +89,7 @@ export default defineComponent({
       myPrescript.value = await getPrescript();
       questions.value = await fetchQuestions();
       answers.value = await fetchAnswers();
+      console.log(answers.value)
       dataReady.value = true;
     });
     

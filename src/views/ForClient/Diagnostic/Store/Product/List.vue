@@ -129,21 +129,14 @@ export default defineComponent({
     };
    
     onMounted(async () => {
-      // try {
-      //   products.value = await fetchProducts();
-      //   console.log(products.value)
-      //   products.value.map((p: IProduct) => {
-      //     if (p.is_doctor_recommend) {
-      //       cart.value.push(p);
-      //     }
-      //   })
-      // } catch (err) {
-      //   const { response } = err;
-      //   if (response) {
-      //     const { status, data } = response;
-      //     console.error(data);
-      //   }
-      // }
+      const defaultCart: IProduct[] = []
+      props.products.map((p: IProduct) => {
+        if (p.is_doctor_recommend) {
+          defaultCart.push(p);
+        }
+      })
+      context.emit('update:cart', defaultCart)
+      
     });
 
     const checkAll = (checked: boolean) => {

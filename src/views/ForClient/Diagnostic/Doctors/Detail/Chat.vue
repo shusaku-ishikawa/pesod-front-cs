@@ -68,32 +68,33 @@
           
         </template>
         
-        <!-- <div
+        <div
           class="px-2"
-          v-if="myPrescript.prescript_products.length" 
+          v-if="myPrescript.prescript_products.length && myPrescript.status >= 4" 
         >
           <div
-            class="bg-blue-400 text-white"
+            class=" text-black text-sm py-2 rounded mb-1"
           >
-            処方提案を受けています
+            処方を承諾しますか？
           </div>
           <div
-            class="flex items-center"
+            class="flex justify-center items-center text-xs"
           >
             <button
-              @click="onAcceptPrescriptProducts"
-              class="bg-blue-400 text-white "
+              @click="onAccept"
+              class="bg-blue-400 text-white w-20 py-2"
             >
-              承諾
+              はい
             </button>
             <button
-              class="bg-gray-200 ml-2"
+              @click="onDeny"
+              class="bg-gray-200 ml-2 w-20 py-2"
             >
-              拒否
+              いいえ
             </button>
             
           </div>
-        </div> -->
+        </div>
       </div>
     </div>
     <!--  -->
@@ -112,7 +113,7 @@
       <template v-slot:menu style="font-size: 12px">
         <button
           @click="onAccept"
-          class="rounded border text-xs">
+          class="rounded border text-xs ">
           はい
         </button>
         <button
@@ -223,7 +224,7 @@ export default defineComponent({
     const router = useRouter();
 
     const {
-      getToken
+      token
     } = useAuth();
 
     const {
@@ -279,6 +280,8 @@ export default defineComponent({
     }
     
     const onAccept = async () => {
+      
+      sendMessage('はい')
       if (myPrescript.value == null) return;
       if (myPrescript.value.prescript_products?.length) {
         // accept
@@ -294,15 +297,16 @@ export default defineComponent({
       }
       myPrescript.value = await getPrescript();
 
-      sendMessage('はい')
+      
     };
     const onDeny = async () => {
+      sendMessage('いいえ')
       if (myPrescript.value == null) return;
       if (myPrescript.value.prescript_products?.length) {
         const data = await deletePrescriptProducts(myPrescript.value.prescript_no);
       }
       myPrescript.value = await getPrescript();
-      sendMessage('いいえ')
+      
     }
     
     const onSendMessage = () => {
@@ -312,8 +316,9 @@ export default defineComponent({
     };
 
     const onMessageReceivedCallback = async (messageJson: IChatMessage) => {
-      if (messageJson.message.includes('table')) {
-        
+      console.log(messageJson.message)
+      if (messageJson.message.includes('div')) {
+        // alert('処方受けた')
         myPrescript.value = await getPrescript();
         // if (data.prescript_products.length > 0) {
           
@@ -345,7 +350,7 @@ export default defineComponent({
         router.replace({ name: 'DiagnosticTop' })
       }
       chatLogs.value = await fetchDoctorChatLogs(myPrescript.value.prescript_no);
-      const url = `${WS_BASE_URL}/chat/doctor/${myPrescript.value?.customer.uuid}/?token=${getToken()?.access}`;
+      const url = `${WS_BASE_URL}/chat/doctor/${myPrescript.value?.customer.uuid}/?token=${token.value?.access}`;
     
       prepareWs(url, chatLogs, onMessageReceivedCallback);
       window.setTimeout(() => {

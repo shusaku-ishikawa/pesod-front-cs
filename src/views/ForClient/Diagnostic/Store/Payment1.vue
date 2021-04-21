@@ -289,8 +289,10 @@ export default defineComponent({
     watch(() => props.delivery, () => {
       validate();
     });
-
     onMounted(async () => {
+      window.scrollTo({
+        top: 0
+      })
       myPrescript.value = await getPrescript();
       if (myPrescript.value == null) return;
       console.log(myPrescript.value.customer)
@@ -302,6 +304,7 @@ export default defineComponent({
       if (!validate()) return;
       context.emit('commit:delivery')
     }
+    
     return {
       validate,
       onCommitDelivery,

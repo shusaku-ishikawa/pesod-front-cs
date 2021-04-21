@@ -10,7 +10,7 @@
       <tr>
         <th class="text-left" style="font-size: 14px">小計</th>
         <td class="text-right">
-          {{ cartItemTotalPrice.toLocaleString() }}円
+          {{ cartItemSubTotalPrice.toLocaleString() }}円
         </td>
       </tr>
       <tr>
@@ -22,7 +22,7 @@
       <tr class="text-2xl font-bold" style="font-size: 22px; line-height: 40px">
         <th class="text-left">合計</th>
         <td class="text-right">
-          {{ (cartItemTotalPrice + cartItemTotalTax).toLocaleString() }}円
+          {{ (cartItemSubTotalPrice + cartItemTotalTax).toLocaleString() }}円
         </td>
       </tr>
       
@@ -40,22 +40,23 @@ export default defineComponent({
     }
   },
   setup(props: any, context: SetupContext) {
-    const cartItemTotalPrice = computed(() => {
+    const cartItemSubTotalPrice = computed(() => {
       let total = 0;
       props.cart.map((p: IProduct) => {
-        total += p.price;
+        total += p.price / (100 + p.tax_rate) * 100;
       })
-      return total;
+      return Math.round(total);
     });
     const cartItemTotalTax = computed(() => {
       let total = 0;
       props.cart.map((p: IProduct) => {
-        total += p.price * p.tax_rate / 100;
+        total += p.price;
       })
-      return total;
+      return Math.round(total - cartItemSubTotalPrice.value)
+
     })
     return {
-      cartItemTotalPrice,
+      cartItemSubTotalPrice,
       cartItemTotalTax
     }
   },

@@ -72,7 +72,6 @@ export default defineComponent({
     const router = useRouter();
     
     const {
-      getToken,
       removeToken,
       sendSignupEmail
     } = useAuth();

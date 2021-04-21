@@ -224,7 +224,7 @@ export default defineComponent({
   setup(props: any, context: SetupContext) {
     
     const {
-      getToken,
+      token,
       getUUID,
       getUserId,
     } = useAuth('doctor');
@@ -260,6 +260,9 @@ export default defineComponent({
 
     const sendMessage = (messageStr: string) => {
       if (connection.value == null) return;
+      if (connection.value.readyState != connection.value.OPEN) {
+        connect(url);
+      }
       if (connection.value.readyState === connection.value.OPEN) {
         // send message
         // messageJson
@@ -274,6 +277,8 @@ export default defineComponent({
         } catch (err) {
           console.error('errr')
         }
+      } else {
+        alert('接続に失敗しました。')
       }
     }
 
@@ -296,7 +301,7 @@ export default defineComponent({
       console.log(doctorMessageTemplates.value)
       if (props.prescript == null) return;
       
-      url = `${WS_BASE_URL}/chat/doctor/${props.prescript.customer.uuid}/?token=${getToken()?.access}`;
+      url = `${WS_BASE_URL}/chat/doctor/${props.prescript.customer.uuid}/?token=${token.value?.access}`;
       // alert(url)
       try {
         const data = await fetchDoctorChatLogs(props.prescript.id);  

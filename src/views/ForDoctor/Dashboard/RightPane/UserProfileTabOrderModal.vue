@@ -1,7 +1,7 @@
 <template>
   <div class="inline-block shadow-xl transform align-middle" >
     <div class=" rounded bg-white px-6 py-4 sm:pb-4">
-      <div class="text-left">注文詳細</div>
+      <div class="text-left text-base">注文詳細</div>
       <div class="mb-2">
         <table class="border-collapse w-full border">
           <tbody>
@@ -80,7 +80,7 @@
                     <img style="width: 150px" :src="op.product.image" alt="">
                   </div>
                   <div>
-                    {{ op.product.name }}
+                    {{ op.product.name }} x {{ op.item_count }}
                   </div>
                 </div>
               </td>
@@ -102,7 +102,7 @@
             </tr>
             <tr>
               <th class="no-justify"  colspan="3">合計（税込）</th>
-              <td style="text-align: right">{{ (order.total_amount + order.tax_amount).toLocaleString() }}円</td>
+              <td style="text-align: right">{{ (order.total_amount || 0).toLocaleString() }}円</td>
             </tr>
             
           </tbody>

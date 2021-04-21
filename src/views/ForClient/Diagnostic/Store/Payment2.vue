@@ -36,6 +36,21 @@
           v-if="defaultCard && useCurrentCard"
           :creditCard="defaultCard"
         ></credit-card>
+        <div
+          v-if="!formMounted"
+          class="shadow rounded-tr rouned-br rounded-bl py-3 px-2 w-full mx-auto">
+          <div class="animate-pulse flex">
+              <div class="flex-1 space-y-4 py-1">
+                <div class="flex items-center">
+                  <div class="h-6 bg-blue-100 rounded w-1/2"></div>
+                  <div class="h-6 bg-blue-100 rounded w-1/4 ml-1"></div>
+                  <div class="h-6 bg-blue-100 rounded w-1/4 ml-1"></div>
+                  
+                </div>
+
+            </div>
+          </div>
+        </div>
         <div v-show="!useCurrentCard" class="" style="padding-bottom: 50px">
           <div class="mb-5" ref="payjs" id="payjs">
             
@@ -112,7 +127,11 @@ export default defineComponent({
       const c = cards.value.cards.find(c => c.id == cards.value.default_card)
       return c;
     })
+    const formMounted = ref(false)
     onMounted(async () => {
+      window.scrollTo({
+        top: 0
+      })
       const pubkey = await getPublicKey();
       cards.value = await fetchCards();
       console.log(cards.value)
@@ -128,7 +147,7 @@ export default defineComponent({
         // element(入力フォームの単位)を生成します
         cardElement = elements.create('card')
         cardElement.mount('#payjs');
-
+        formMounted.value = true;
       });
       if (payjs.value == null) return;
       payjs.value.appendChild(scriptTag);
@@ -188,7 +207,8 @@ export default defineComponent({
       cardCreated,
       createAsDefault,
       defaultCard,
-      loading
+      loading,
+      formMounted
     };
   }
 })

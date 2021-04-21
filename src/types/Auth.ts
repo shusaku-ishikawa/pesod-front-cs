@@ -1,14 +1,20 @@
 import useAxios from '@/types/Axios';
 
 import { ILogin, ISignup, ICustomer, IPrescript, IToken, IRegistration } from '@/types/Interfaces';
-import { computed, ComputedRef, withDirectives, WritableComputedRef } from 'vue';
+import { ref, computed, ComputedRef, withDirectives, WritableComputedRef, Ref } from 'vue';
 import { cloneDeep, clone, runInContext, words } from "lodash";
 
-
+const token = ref<IToken | null>(null)
+const profile = ref<ICustomer | null>(null)
+  
 export default function useAuth (userType = 'customer') {
   const TOKEN_KEYS: { [key: string]: string } = {
     customer: 'customer_token',
     doctor: 'doctor_token'
+  }
+  const PROFILE_KEYS: { [key: string]: string } = {
+    customer: 'customer_profile',
+    doctor: 'doctor_profile'
   }
   const {
     client
@@ -41,12 +47,14 @@ export default function useAuth (userType = 'customer') {
     return data;
   }
   
-  const getToken = () => {
+  
+  const getTokenFromLS = () => {
     console.log('getting token from ' + TOKEN_KEYS[userType])
     const d = window.localStorage.getItem(TOKEN_KEYS[userType])
     if (d == null) return;
     return JSON.parse(d);
   }
+  
   const createToken = async (postData: ILogin) => {
     const {data} = await client.post('/auth/jwt/create/', postData);
     // console.log(data)
@@ -54,14 +62,17 @@ export default function useAuth (userType = 'customer') {
     // window.localStorage.setItem('token', JSON.stringify(data));    
   };
   
-  const storeToken = (token: IToken) => {
+  const storeToken = (data: IToken) => {
     console.log('storeing token' + TOKEN_KEYS[userType])
-    window.localStorage.setItem(TOKEN_KEYS[userType], JSON.stringify(token))
+    token.value = data;
+    window.localStorage.setItem(TOKEN_KEYS[userType], JSON.stringify(data))
   }
   
   const removeToken = () => {
+    token.value = null;
     window.localStorage.removeItem(TOKEN_KEYS[userType]);
   };
+  
   
   const getUserId = async () => {
     const {data} = await client.get('/auth/users/me/')
@@ -75,13 +86,17 @@ export default function useAuth (userType = 'customer') {
   };
   
   const storeProfile = (data: any) => {
-    window.localStorage.setItem('profile', JSON.stringify(data))
+    profile.value = data;
+    window.localStorage.setItem(PROFILE_KEYS[userType], JSON.stringify(data))
   }
-  const getProfileFromStorage = () => {
-    const data = window.localStorage.getItem('profile')
+  const getProfileFromLS = () => {
+    const data = window.localStorage.getItem(PROFILE_KEYS[userType])
+    return JSON.parse(data || '{}');
+
   }
   const removeProfile = () => {
-    window.localStorage.removeItem('profile')
+    profile.value = null;
+    window.localStorage.removeItem(PROFILE_KEYS[userType])
   }
   
   
@@ -96,11 +111,13 @@ export default function useAuth (userType = 'customer') {
     registerProfile,
     createToken,
     storeToken,
-    getToken,
+    token,
+    getTokenFromLS,
     removeToken,
     getUserId,
+    profile,
     getProfile,
-    getProfileFromStorage,
+    getProfileFromLS,
     removeProfile,
     storeProfile,
     signup,
