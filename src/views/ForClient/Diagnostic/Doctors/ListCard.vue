@@ -2,7 +2,7 @@
   <div
     @click="() => { router.push({ name: 'DiagnosticDoctorDetailTop', params: { id: doctor.id } }) }"
         
-    class="flex py-4 hover:bg-gray-50"
+    class="flex py-2 hover:bg-gray-50"
   >
     <div class="flex-shrink-0 my-auto mx-2 ">
       
@@ -21,14 +21,14 @@
       </svg>
     </div>
     <div
-      class="px-2 flex-grow flex flex-col"
+      class="flex-grow flex flex-col"
     >
        
        <div class="text-left mt-1">
          <div class="font-semibold text-lg mb-1">{{ doctor.first_name }} {{ doctor.last_name }} 医師</div>
          <div class="text-sm mb-1">
-           <div>クリニック名:</div>
-           <div>{{ doctor.clinic_name }}</div>
+           <div class="text-xs">クリニック名:</div>
+           <div class="font-semibold">{{ doctor.clinic_name }}</div>
          </div>
          <div class="text-sm">
            {{ doctor.prefecture }}{{ doctor.city }}

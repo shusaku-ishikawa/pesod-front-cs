@@ -2,25 +2,25 @@
   <table class="w-full mx-auto">
     <tbody>
       <tr>
-        <th class="text-left" style="font-size: 14px">商品数</th>
+        <th class="text-left text-sm">商品数</th>
         <td class="text-right">
           {{ cart.length }}個
         </td>
       </tr>
       <tr>
-        <th class="text-left" style="font-size: 14px">小計</th>
+        <th class="text-left text-sm">小計<span class="text-xs">（税別）</span></th>
         <td class="text-right">
           {{ cartItemSubTotalPrice.toLocaleString() }}円
         </td>
       </tr>
       <tr>
-        <th class="text-left" style="font-size: 14px">消費税</th>
+        <th class="text-left text-sm">消費税</th>
         <td class="text-right">
           {{ cartItemTotalTax.toLocaleString() }}円
         </td>
       </tr>
-      <tr class="text-2xl font-bold" style="font-size: 22px; line-height: 40px">
-        <th class="text-left">合計</th>
+      <tr class="text-2xl font-bold text-base leading-10">
+        <th class="text-left">合計<span class="text-xs">（税込）</span></th>
         <td class="text-right">
           {{ (cartItemSubTotalPrice + cartItemTotalTax).toLocaleString() }}円
         </td>

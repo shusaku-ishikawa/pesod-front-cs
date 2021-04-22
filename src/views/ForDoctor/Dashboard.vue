@@ -9,7 +9,8 @@
       
     >
       <pane
-        class="sm:block overflow-y-auto  w-full sm:w-1/4"
+        size="20"
+        class="sm:block overflow-y-auto  w-full sm:w-1/6"
         :class="{ 'block': activePage === 'left', 'hidden': activePage !== 'left' }"
       >
         <left-pane
@@ -19,7 +20,8 @@
         ></left-pane>
       </pane>
       <pane
-        class="sm:block flex-grow  w-full sm:w-1/2"
+        size="50"
+        class="sm:block flex-grow  w-full sm:w-3/6"
         :class="{ 'block': activePage === 'main', 'hidden': activePage !== 'main' }"
       >
         <div
@@ -35,7 +37,8 @@
         ></main-pane>
       </pane>
       <pane
-        class=" sm:block overflow-y-auto w-full sm:w-1/4"
+        size="30"
+        class=" sm:block overflow-y-auto w-full sm:w-2/6"
         :class="{ 'block': activePage === 'right', 'hidden': activePage !== 'right' }"
       >
         <div
