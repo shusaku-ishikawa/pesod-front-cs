@@ -93,7 +93,7 @@ export default defineComponent({
     const loadingHairRecords = ref(false);
     const {
       fetchUserHairRecords  
-    } = useHairRecord('doctor');
+    } = useHairRecord();
     const loadHairRecordData = async () => {
       loadingHairRecords.value = true;
       hairRecords.value = await fetchUserHairRecords(props.prescript.customer.uuid);
@@ -103,7 +103,7 @@ export default defineComponent({
     const {
       answers,
       fetchAnswers
-    } = useAnswer('doctor');
+    } = useAnswer();
 
     const loadingAnswers = ref(false);
     const loadAnswerData = async () => {
@@ -119,16 +119,16 @@ export default defineComponent({
     const subscriptions = ref<ISubscription[]>([]);
     const {
       fetchSubscriptions
-    } = useSubscription('doctor');
+    } = useSubscription();
 
     const prescripts = ref<IPrescript[]>([]);
     const {
       fetchUserPrescripts   
-    } = usePrescript('doctor');
+    } = usePrescript();
     const orders = ref<IOrder[]>([]);
     const {
       fetchUserOrders
-    } = useOrder('doctor');
+    } = useOrder();
     
     const loadingSubscriptions = ref(false)
     const loadingOrders = ref(false)

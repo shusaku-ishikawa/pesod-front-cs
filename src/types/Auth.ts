@@ -7,19 +7,22 @@ import { cloneDeep, clone, runInContext, words } from "lodash";
 const token = ref<IToken | null>(null)
 const profile = ref<ICustomer | null>(null)
   
-export default function useAuth (userType = 'customer') {
-  const TOKEN_KEYS: { [key: string]: string } = {
-    customer: 'customer_token',
-    doctor: 'doctor_token'
-  }
-  const PROFILE_KEYS: { [key: string]: string } = {
-    customer: 'customer_profile',
-    doctor: 'doctor_profile'
-  }
+export default function useAuth () {
+  const TOKEN_KEY = 'doctor_token'
+  const PROFILE_KEY = 'doctor_profile'
+  // const TOKEN_KEYS: { [key: string]: string } = {
+  //   customer: 'customer_token',
+  //   doctor: 'doctor_token'
+  // }
+  // const PROFILE_KEYS: { [key: string]: string } = {
+  //   customer: 'customer_profile',
+  //   doctor: 'doctor_profile'
+  // }
   const {
     client
-  } = useAxios(userType);
+  } = useAxios();
 
+  
   const getUUID = async () => {
     const {data} = await client.get('/uuid/')
     console.log(data)
@@ -48,12 +51,7 @@ export default function useAuth (userType = 'customer') {
   }
   
   
-  const getTokenFromLS = () => {
-    console.log('getting token from ' + TOKEN_KEYS[userType])
-    const d = window.localStorage.getItem(TOKEN_KEYS[userType])
-    if (d == null) return;
-    return JSON.parse(d);
-  }
+
   
   const createToken = async (postData: ILogin) => {
     const {data} = await client.post('/auth/jwt/create/', postData);
@@ -63,14 +61,13 @@ export default function useAuth (userType = 'customer') {
   };
   
   const storeToken = (data: IToken) => {
-    console.log('storeing token' + TOKEN_KEYS[userType])
     token.value = data;
-    window.localStorage.setItem(TOKEN_KEYS[userType], JSON.stringify(data))
+    window.localStorage.setItem(TOKEN_KEY, JSON.stringify(data))
   }
   
   const removeToken = () => {
     token.value = null;
-    window.localStorage.removeItem(TOKEN_KEYS[userType]);
+    window.localStorage.removeItem(TOKEN_KEY);
   };
   
   
@@ -87,16 +84,25 @@ export default function useAuth (userType = 'customer') {
   
   const storeProfile = (data: any) => {
     profile.value = data;
-    window.localStorage.setItem(PROFILE_KEYS[userType], JSON.stringify(data))
+    console.log('storing' + profile.value)
+    window.localStorage.setItem(PROFILE_KEY, JSON.stringify(data))
+  }
+  const getTokenFromLS = () => {
+    const d = window.localStorage.getItem(TOKEN_KEY)
+    //alert(d)
+    if (d == null) return null;
+    return JSON.parse(d);
   }
   const getProfileFromLS = () => {
-    const data = window.localStorage.getItem(PROFILE_KEYS[userType])
-    return JSON.parse(data || '{}');
+    const data = window.localStorage.getItem('doctor_profile')
+    console.log(data)
+    if (data == null) return null;
+    return JSON.parse(data);
 
   }
   const removeProfile = () => {
     profile.value = null;
-    window.localStorage.removeItem(PROFILE_KEYS[userType])
+    window.localStorage.removeItem(PROFILE_KEY)
   }
   
   

@@ -2,17 +2,17 @@ import { RouteRecordRaw } from 'vue-router'
 
 const doctorRoutes: Array<RouteRecordRaw> = [
   {
-    path: '/doctor/',
+    path: '/',
     name: 'DoctorLp',
     component: () => import(/* webpackChunkName "DoctorLp" */ '@/views/ForDoctor/Lp.vue'),
   },
   {
-    path: '/doctor/login',
+    path: '/login',
     name: 'DoctorLogin',
     component: () => import(/* webpackChunkName "DoctorLogin" */ '@/views/ForDoctor/Login.vue'),
   },
   {
-    path: '/doctor/dashboard',
+    path: '/dashboard',
     name: 'DoctorDashboard',
     component: () => import(/* webpackChunkName "DoctorDashboard" */ '@/views/ForDoctor/Dashboard.vue'),
   }

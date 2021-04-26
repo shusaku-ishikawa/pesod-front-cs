@@ -6,7 +6,8 @@
       <p-checkbox
         :modelValue="toPrescribe"
         @update:modelValue="onCheck($event)"
-      ></p-checkbox>
+      >
+      </p-checkbox>
     </div>
     <div class="ml-4 flex-shrink-0">
       
@@ -41,6 +42,21 @@
     </div>
   </div>
 </template>
+<style scoped lang="scss">
+  table {
+    tr {
+      th {
+        white-space: nowrap;
+        font-weight: 600;
+        text-align-last: justify;
+        text-justify: inter-ideograph;
+      }
+      td {
+        padding: 1px 10px;
+      }
+    }
+  }
+</style>
 <script lang="ts">
 import { IProduct } from '@/types/Interfaces';
 import { defineComponent, onMounted, SetupContext } from 'vue';

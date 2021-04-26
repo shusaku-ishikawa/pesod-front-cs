@@ -19,7 +19,9 @@
             </tr>
             <tr>
               <th>性別</th>
-              <td class="text-left">{{ prescript.customer.gender }}</td>
+              <td class="text-left">
+                {{ prescript.customer.gender != null ? genders[prescript.customer.gender] : 'ー' }}
+              </td>
             </tr>
             <tr>
               <th>生年月日</th>
@@ -332,7 +334,11 @@ export default defineComponent({
       1: '休止中',
       2: '解約'
     }
-
+    const genders = {
+      0: '男性',
+      1: '女性',
+      2: 'その他'
+    }
     const modalOrder = ref<IOrder | null>(null);
     const modalSubscription = ref<ISubscription | null>(null)
     const modalPrescript = ref<IPrescript | null>(null);
@@ -342,6 +348,7 @@ export default defineComponent({
       modalOrder,
       modalSubscription,
       modalPrescript,
+      genders
     };
   }
 })

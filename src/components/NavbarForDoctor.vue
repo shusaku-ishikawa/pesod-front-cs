@@ -6,7 +6,6 @@
         <img src="@/assets/img/doctor/pesod_logo_doctor_s.png" alt="">
         <!-- <pix-cardio-logo /> -->
       </div>
-      {{ profile }}
       
       <div v-if="profile != null" class="relative flex items-center ml-auto">
         <div>ようこそ {{ profile.first_name }} {{ profile.last_name }} 様</div>
@@ -52,7 +51,7 @@ export default defineComponent({
     const {
       profile,
       isLoggedIn
-    } = useAuth('doctor ');
+    } = useAuth('doctor');
 
     const showDrawer = ref(false);
 

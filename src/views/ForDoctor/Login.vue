@@ -28,7 +28,8 @@
         :required="true"
         autocomplete="email"
         v-model="formData.email"
-        :rules="[formRequired]"
+        placeholder="example@pesod.com"
+        :error="errors.email"
       >
       </p-input>
       
@@ -39,27 +40,13 @@
         id="password"
         :type="isPasswordHidden ? 'password' : 'text'"
         v-model="formData.password"
-        :rules="[formRequired]"
+        :hidable="true"
+        v-model:isHidden="isPasswordHidden"
+        placeholder="英数字8文字以上で入力"
+        :error="errors.password"
       >
       </p-input>
-      <div class="w-100 text-right">
-        <button
-          :disabled="loading"
-          type="button"
-          class="image text-right relative"
-          style="top: -80px;"
-        >
-          <img
-            v-if="!isPasswordHidden"
-            @click="isPasswordHidden = true"
-            src="@/assets/img/pass_eye.png" alt=""> 
-          <img
-            v-else
-            @click="isPasswordHidden = false"
-            src="@/assets/img/pass_eye_on.png" alt=""> 
-          
-          </button>
-      </div>
+      
       
       <div
         class="text-center"
@@ -94,11 +81,11 @@
   }
 </style>
 <script lang="ts">
-import { defineComponent, ref, onMounted, isProxy } from 'vue';
+import { defineComponent, ref, Ref, onMounted, isProxy } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ILogin } from '@/types/Interfaces';
 
-import {formRequired} from '@/mixins/FormValidator';
+import {formRequired, emailValidator, validate} from '@/mixins/FormValidator';
 
 import useAuth from '@/types/Auth';
 import useDoctor from '@/types/Doctor';
@@ -109,7 +96,7 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter();
-
+    
     const {
       createToken,
       storeToken,
@@ -119,16 +106,32 @@ export default defineComponent({
       storeProfile,
       removeProfile,
       getProfileFromLS
-    } = useAuth('doctor');
+    } = useAuth();
     
     const {
       getDoctor
-    } = useDoctor('doctor');
+    } = useDoctor();
 
     const formData = ref<ILogin>({
       email: '',
       password: '' 
     });
+    
+    const errors: Ref<{ [key: string]: string }> = ref({
+      email: '',
+      password: ''  
+    });
+
+    const validators: { [key: string]: Function[] } = {
+      email: [
+        formRequired,
+        emailValidator
+      ],
+      password: [
+        formRequired
+      ]
+    }
+    
     
     const form = ref<HTMLFormElement | null>(null);
 
@@ -149,22 +152,24 @@ export default defineComponent({
 
     const onLogin = async (event: Event) => {
       // validate
-      if (form.value) {
-        const isValid = form.value.checkValidity();
-        if (!isValid) {
-          alert('not vaida')
-          return;
-        }
-      }
+      // if (form.value) {
+      //   const isValid = form.value.checkValidity();
+      //   if (!isValid) {
+      //     alert('not vaida')
+      //     return;
+      //   }
+      // }
+      if (!validate(formData.value, validators, errors)) return;
+      
       try {
         loading.value = true;
         const token = await createToken(formData.value);
         storeToken(token);
+        console.log(token.access)
         const userId = await getUserId();
-        // const profile = await getPro(userId);
-        // console.log(profile)
-        // storeProfile(profile)
-
+        const profile = await getDoctor(userId)
+        console.log(profile)
+        storeProfile(profile)
         router.push({ name: 'DoctorDashboard' }) ;
       } catch (err) {
         console.log(err)
@@ -198,7 +203,8 @@ export default defineComponent({
       loginError,
       // formValid,
       onLogin,
-      isPasswordHidden
+      isPasswordHidden,
+      errors, 
     };
   }
 })

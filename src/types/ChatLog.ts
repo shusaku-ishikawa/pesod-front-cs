@@ -3,10 +3,10 @@ import { ICustomer, IChatLog } from './Interfaces';
 import useAxios from './Axios';
 
 
-export default function useChatLog(userType = 'customer') {
+export default function useChatLog() {
   const {
     client
-  } = useAxios(userType);
+  } = useAxios();
 
   const chatLogs = ref<IChatLog[]>([]);
   const chatLogPage = ref(1);
@@ -31,10 +31,22 @@ export default function useChatLog(userType = 'customer') {
     console.log(data)
     return data
   }
+  const updateChatLogCursor = async (owner: number, prescript: number, cursor: number) => {
+    const payload = {
+      room_type: 'doctor',
+      owner: owner,
+      prescript: prescript,
+      cursor: cursor
+    }
+    const {data} = await client.patch('/chatlog/cursor/', payload)
+    console.log(data)
+    return data
+  }
   return {
     chatLogs,
     fetchDoctorChatLogs,
     fetchDoctorMessageTemplates,
-    fetchCustomerMessageTemplates
+    fetchCustomerMessageTemplates,
+    updateChatLogCursor
   }
 }

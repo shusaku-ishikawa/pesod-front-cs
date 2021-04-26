@@ -8,12 +8,14 @@ import useAxios from './Axios';
 // const myDoctor = computed(() => {
 //   return doctors.value.find(d => d.id===1);
 // })
-export default function useDoctors(userType = 'customer') {
+export default function useDoctors() {
   const {
     client
-  } = useAxios(userType)
+  } = useAxios()
+
   const doctors = ref<IDoctor[]>([]);
   const doctor = ref<IDoctor | null>(null);
+  
   const fetchDoctors = async (): Promise<IDoctor[]> => {
     const { data } = await client.get('/doctors/');
     return data

@@ -28,8 +28,9 @@ export default function useSocket() {
       // close
       return 'Closed';
     }
+    return null
   });
-
+  
   const prepareWs = (url: string, chatLogRef: Ref<IChatLog[]>, onMessageCallback?: Function) => {
     connect(url);
     wsState.value == 0;

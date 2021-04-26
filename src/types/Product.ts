@@ -3,12 +3,12 @@ import { IProduct } from './Interfaces';
 import useAxios from '@/types/Axios';
 
 
-export default function useProducts(userType = 'customer') {
+export default function useProducts() {
   const product = ref<IProduct | null>(null);
   const products = ref<IProduct[]>([]);
   const {
     client  
-  } = useAxios(userType);
+  } = useAxios();
   const fetchProducts = async (): Promise<IProduct[]> => {
     const { data } = await client.get('/products/');
     console.log(data);

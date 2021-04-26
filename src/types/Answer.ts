@@ -13,10 +13,10 @@ interface ICreateAnswer{
 }
 
 
-export default function useAnswer(userType = 'customer') {
+export default function useAnswer() {
   const {
     client  
-  } = useAxios(userType);
+  } = useAxios();
   const fetchAnswers = async (uuid?: string): Promise<IAnswer[]> => {
     const url = uuid == null ? '/answers/' : `/answers/?uuid=${uuid}`;
     const { data } = await client.get(url);

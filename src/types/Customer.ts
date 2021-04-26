@@ -5,7 +5,7 @@ import useAxios from '@/types/Axios'
 export default function useCustomer() {
   const {
     client
-  } = useAxios('doctor');
+  } = useAxios();
   
   const getCustomer = async (uuid: string) => {
     const {data} = await client.get(`customer/${uuid}`)

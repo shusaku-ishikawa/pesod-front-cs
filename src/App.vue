@@ -34,26 +34,22 @@ export default defineComponent({
   setup(props: any, context: SetupContext) {
     const route = useRoute();
     const router = useRouter();
-    let userType;
-    if (route.path.startsWith('/doctor/')) {
-      userType = 'doctor'
-    } else {
-      userType = 'customer'
-    }
     const {
       token,
       getTokenFromLS,
       profile,
       getProfileFromLS
-    } = useAuth(userType);
+    } = useAuth();
     
     onMounted(() => {
       
       console.log(getTokenFromLS())
+      console.log(getProfileFromLS())
       token.value = getTokenFromLS()
-      profile.value = getProfileFromLS()
+      
+      profile.value = getProfileFromLS();
       if (token.value == null || profile.value == null) {
-        router.push({ name: 'Login' })
+        router.push({ name: 'DoctorLogin' })
       }
     })
 

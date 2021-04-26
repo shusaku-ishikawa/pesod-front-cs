@@ -23,10 +23,10 @@ import useAxios from '@/types/Axios';
 // });
 
 
-export default function usePrescript (userType = 'customer') {
+export default function usePrescript () {
   const {
     client
-  } = useAxios(userType);
+  } = useAxios();
   const myPrescript = ref<IPrescript | null>(null);
   const prescripts = ref<IPrescript[]>([]);
 

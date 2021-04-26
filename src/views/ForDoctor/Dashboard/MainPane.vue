@@ -71,15 +71,15 @@
     >
 
       <div
-        v-if="loading"
+        v-if="loadingChatLogs"
         class="absolute w-full space-y-4"
       
       >
         <div
-          v-for="i in 5"
+          v-for="i in 4"
           :key="i"
-          :class="{ 'ml-auto': i % 2, 'mr-auto': (i+1) % 2 }"
-          class=" shadow rounded-tr rouned-br rounded-bl p-2 w-3/5 ">
+          :class="{ 'ml-auto': i % 2, 'mr-auto': (i+1) % 2, 'w-3/5': true }"
+          class=" shadow rounded-tr rouned-br rounded-bl p-2 ">
           <div class="animate-pulse flex space-x-4">
               <div class="flex-1 space-y-4 py-1">
                 <div class="space-y-2">
@@ -189,9 +189,7 @@
 }
 </style>
 <script lang="ts">
-import { defineComponent, ref, onMounted, SetupContext, onBeforeUnmount, onBeforeMount, watch } from "vue";
-import ChatForm from '@/views/ForClient/Diagnostic/Doctors/Detail/Chat/Form.vue';
-import ChatMessageCard from '@/views/ForClient/Diagnostic/Doctors/Detail/Chat/MessageCard.vue';
+import { defineComponent, ref, onMounted, SetupContext, onBeforeUnmount, onBeforeMount, watch, onUpdated } from "vue";
 
 import prescribeProductsModal from './MainPane/PrescribeProductsModal.vue';
 
@@ -199,13 +197,16 @@ import useAuth from '@/types/Auth';
 import usePrescript from '@/types/Prescript';
 import useChatLog from '@/types/ChatLog';
 import useSocket from '@/types/Socket';
-import { IPrescript, IChatMessage, IMessageTemplate, IProduct } from '@/types/Interfaces'
+import { IPrescript, IChatMessage, IMessageTemplate, IProduct, IChatLog } from '@/types/Interfaces'
 
 import moment from 'moment';
 import WsStateMarker from '@/components/WsStateMarker.vue';
-import ChatDateLabel from '@/views/ForClient/Diagnostic/Doctors/Detail/Chat/DateLabel.vue'
-import FrameModal from "@/components/FrameModal.vue";
+
+import ChatForm from './MainPane/Chat/Form.vue';
+import ChatMessageCard from './MainPane/Chat/MessageCard.vue';
+import ChatDateLabel from './MainPane/Chat/DateLabel.vue'
 import TemplateModal from './MainPane/TemplateModal.vue';
+import { template } from "lodash";
 
 export default defineComponent({
   components: {
@@ -217,28 +218,37 @@ export default defineComponent({
     TemplateModal
   },
   props: {
+    
     prescript: {
       type: Object as () => IPrescript
-    }
+    },
+    chatLogs: {
+      type: Object as () => IChatLog[]
+    },
+    loadingChatLogs: Boolean
   },
+  emits: [
+    'sendMessage',
+    'connectionError'
+  ],
   setup(props: any, context: SetupContext) {
     
     const {
       token,
       getUUID,
       getUserId,
-    } = useAuth('doctor');
+    } = useAuth();
 
     const {
       setPrescriptProducts
-    } = usePrescript('doctor');
+    } = usePrescript();
 
     const loading = ref(false);
     const {
-      chatLogs,
+      // chatLogs,
       fetchDoctorChatLogs,
       fetchDoctorMessageTemplates
-    } = useChatLog('doctor')
+    } = useChatLog()
     
     const {
       WS_BASE_URL,
@@ -258,28 +268,44 @@ export default defineComponent({
     const uuid = ref<string>('');
     const userId = ref<string>('');
 
+     onMounted(async () => {
+      userId.value = await getUserId();
+      const uuidData = await getUUID();
+      uuid.value = uuidData.uuid;
+    })
+    
     const sendMessage = (messageStr: string) => {
-      if (connection.value == null) return;
-      if (connection.value.readyState != connection.value.OPEN) {
-        connect(url);
+      if (!props.prescript.connection) throw Error('No connection')
+      if (props.prescript.connection.readyState != props.prescript.connection.OPEN) {
+        // props.prescript.connection = getWsConnection(activePrescript.value)
+        context.emit('connectionError', 'connection not open')
+        throw new Error('connection not open');
+
       }
-      if (connection.value.readyState === connection.value.OPEN) {
-        // send message
+      
+      // if (connection.value == null) return;
+      // if (connection.value.readyState != connection.value.OPEN) {
+      //   connect(url);
+      // }
+      // if (connection.value.readyState === connection.value.OPEN) {
+      //   // send message
         // messageJson
         const messageJson: IChatMessage = {
           uuid: uuid.value,
           message: messageStr,
         };
+        context.emit('sendMessage', messageJson);
+        message.value = '';
         console.log(messageJson)
-        try {
-          connection.value.send(JSON.stringify(messageJson));
-          message.value = ''; // reset 
-        } catch (err) {
-          console.error('errr')
-        }
-      } else {
-        alert('接続に失敗しました。')
-      }
+      //   try {
+      //     connection.value.send(JSON.stringify(messageJson));
+      //     message.value = ''; // reset 
+      //   } catch (err) {
+      //     console.error('errr')
+      //   }
+      // } else {
+      //   alert('接続に失敗しました。')
+      // }
     }
 
     const doctorMessageTemplates = ref<IMessageTemplate[]>([]);
@@ -288,50 +314,67 @@ export default defineComponent({
     const onSelectTemplate = (t: IMessageTemplate) => {
       // message.value = m;
       // sendMessage(t.message);
+      console.log(t)
       message.value = t.message;
       showMessageTemplates.value = false;
       
     };
 
+    // watch(() => props.chatLogs, () => {
+    //   window.setTimeout(() => {
+    //     alert('hoge')
+    //     scrollDown()
+    //   }, 200)
+    // })
     const showPrescribeProducts = ref(false);
-    
-    const setupWebsocket = async () => {
-      loading.value = true;
+    onMounted(async () => {
       doctorMessageTemplates.value = await fetchDoctorMessageTemplates();
       console.log(doctorMessageTemplates.value)
-      if (props.prescript == null) return;
-      
-      url = `${WS_BASE_URL}/chat/doctor/${props.prescript.customer.uuid}/?token=${token.value?.access}`;
-      // alert(url)
-      try {
-        const data = await fetchDoctorChatLogs(props.prescript.id);  
-        chatLogs.value = data;
-      } catch (err) {
-        console.error(err)
-        return;
-      } 
-      prepareWs(url, chatLogs);
-      window.setTimeout(() => {
-        scrollDown();
-      }, 100)
-      loading.value = false;
-    }
-    onMounted(async () => {
-      const uuidData = await getUUID();
-      userId.value = await getUserId();
-      uuid.value = uuidData.uuid;
-      await setupWebsocket();
     });
-
-    watch(() => props.prescript, async () => {
-      
-      await setupWebsocket();
-
-    });
-    onBeforeUnmount(() => {
-      // alert('closing socket')
-      close();
+    watch(() => props.prescript, () => {
+      message.value = ''
     })
+    onUpdated(() => {
+      // message.value = '';
+      scrollDown()
+    })
+    // const setupWebsocket = async () => {
+    //   loading.value = true;
+    //   doctorMessageTemplates.value = await fetchDoctorMessageTemplates();
+    //   console.log(doctorMessageTemplates.value)
+    //   if (props.prescript == null) return;
+      
+    //   url = `${WS_BASE_URL}/chat/doctor/${props.prescript.customer.uuid}/?token=${token.value?.access}`;
+    //   // alert(url)
+    //   try {
+    //     const data = await fetchDoctorChatLogs(props.prescript.id);  
+    //     chatLogs.value = data;
+    //   } catch (err) {
+    //     console.error(err)
+    //     return;
+    //   } 
+    //   prepareWs(url, chatLogs);
+    //   window.setTimeout(() => {
+    //     scrollDown();
+    //   }, 100)
+    //   loading.value = false;
+    // }
+    // onMounted(async () => {
+    //   const uuidData = await getUUID();
+    //   userId.value = await getUserId();
+    //   uuid.value = uuidData.uuid;
+    //   await setupWebsocket();
+    // });
+
+    // watch(() => props.prescript, async () => {
+      
+    //   await setupWebsocket();
+
+    // });
+    // onBeforeUnmount(() => {
+    //   // alert('closing socket')
+    //   close();
+    // })
 
     const getDate = (dateStr: string) => {
       return moment(dateStr).format('yyyy/M/D')
@@ -375,7 +418,9 @@ export default defineComponent({
             <div>
               用途：${p.dose}
             </div>
-            
+            <div>
+              <u data="${p.id}">注意事項等、詳細情報はこちら</u>
+            </div>
           </div>
         `;
         html += elem + '<hr class="my-3">';
@@ -390,7 +435,12 @@ export default defineComponent({
       const data = await setPrescriptProducts(props.prescript.prescript_no, products);
       
       const messageStr = buildPrescribeMessage(products);
+      const template1 = doctorMessageTemplates.value.find((t: any) => t.message_flow == 3);
+      const template2 = doctorMessageTemplates.value.find((t: any) => t.message_flow == 4);
+
+      if (template1) sendMessage(template1.message)
       sendMessage(messageStr);
+      if (template2) sendMessage(template2.message)
       
     }
 
@@ -409,7 +459,7 @@ export default defineComponent({
       message,
       onSendMessage,
       onPage,
-      chatLogs,
+      // chatLogs,
       wsState,
       showMessageTemplates,
       doctorMessageTemplates,

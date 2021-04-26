@@ -2,10 +2,10 @@
 import useAxios from './Axios';
 
 
-export default function usePayjp (userType = 'customer') {
+export default function usePayjp () {
   const {
     client  
-  } = useAxios(userType);
+  } = useAxios();
   const getPublicKey = async () => {
     const {data} = await client.get('/card/pubkey/');
     return data;

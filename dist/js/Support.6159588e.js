@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["Support"],{4746:function(e,n,t){"use strict";t.r(n);var o=t("7a23");function r(e,n,t,r,c,p){var u=Object(o["resolveComponent"])("router-view");return Object(o["openBlock"])(),Object(o["createBlock"])(u)}var c=t("6c02"),p=Object(o["defineComponent"])({components:{},setup:function(){var e=Object(c["c"])();return{route:e}}});p.render=r;n["default"]=p}}]);
-//# sourceMappingURL=Support.6159588e.js.map

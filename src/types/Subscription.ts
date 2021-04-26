@@ -2,9 +2,9 @@ import { ref, computed } from 'vue';
 import { IQuestion, ISubscription } from './Interfaces';
 import useAxios from '@/types/Axios';
 
-export default function useSubscription(userType = 'customer') {
+export default function useSubscription() {
   const subscription = ref<ISubscription | null>(null);
-  const {client} = useAxios(userType);
+  const {client} = useAxios();
 
   const fetchSubscriptions = async (uuid: string) => {
     const {data} = await client.get(`/subscriptions/${uuid}`);

@@ -3,10 +3,10 @@ import useAxios from './Axios';
 
 
 
-export default function useHairRecord(userType = 'customer') {
+export default function useHairRecord() {
   const {
     client  
-  } = useAxios(userType);
+  } = useAxios();
   
   const fetchHairRecord = async () => {
     return [];

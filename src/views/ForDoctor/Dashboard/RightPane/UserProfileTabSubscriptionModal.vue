@@ -182,7 +182,7 @@ export default defineComponent({
   setup(props: any, context: SetupContext) {
     const {
       getSubscription
-    } = useSubscription('doctor');
+    } = useSubscription();
 
     const subscStatus = {
       0: '継続中',

@@ -15,14 +15,11 @@ const isAuthUrl = (url: string | undefined) => {
 };
 
 
-export default function useAxios(userType = 'customer') {
+export default function useAxios() {
   const route = useRoute();
-  const TOKEN_KEYS: { [key: string]: string } = {
-    customer: 'customer_token',
-    doctor: 'doctor_token',
-  }
+  const TOKEN_KEY = 'doctor_token'
   const getAccessToken = () => {
-    const value = window.localStorage.getItem(TOKEN_KEYS[userType]);
+    const value = window.localStorage.getItem(TOKEN_KEY);
     if (value == null) return null;
     try {
       const tokenJson = JSON.parse(value);
@@ -35,14 +32,13 @@ export default function useAxios(userType = 'customer') {
   const client = axios.create({
     baseURL: API_BASE
   });
-  const loginRouteName = userType == 'customer' ? 'Login' : 'DoctorLogin';
   client.interceptors.request.use(req => {
     // Important: request interceptors **must** return the request.
     if (isAuthUrl(req.url) || req.url === '/signup/') return req;
     const accessToken = getAccessToken();
     
     if (accessToken == null) {
-      router.push({ name: loginRouteName });
+      router.push({ name: 'DoctorLogin' });
       // window.location.href = '/'
       return req;
     }
@@ -59,11 +55,9 @@ export default function useAxios(userType = 'customer') {
       const { status } = error.response;
       // alert(error.config.url)
       if (!isAuthUrl(error.config.url) && status === 401) {
-        alert('goto login')
-        alert(loginRouteName)
         console.log(error.config)
 
-        router.push({ name: loginRouteName, query: { next: route.path }});
+        router.push({ name: 'DoctorLogin', query: { next: route.path }});
         // router.push({ name: 'Login' });
         // window.location.href = '/'
         throw error;

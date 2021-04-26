@@ -26,7 +26,7 @@
             </tr>
             <tr class="border">
               <th class=" bg-primary-light">性別</th>
-              <td class="">{{ genders[prescript.customer.gender] }}</td>
+            <td class="">{{ prescript.customer.gender != null ? genders[prescript.customer.gender] : 'ー' }}</td>
             </tr>
             <tr class="border">
               <th class=" bg-primary-light">生年月日</th>
@@ -91,12 +91,7 @@
             :question="a.question.question_body"  
           />
           <div class="w-full ">
-            <div
-              class="bg-gray-400 pb-1 "
-              v-if="a.descriptive_answer"
-            >
-              {{ a.descriptive_answer }}
-            </div>
+            
             <div
               v-if="a.answer_options.length"
             >
@@ -104,12 +99,18 @@
                 <li
                   v-for="(o, i) in a.answer_options"
                   :key="i"
-                  class="bg-primary-light py-1 px-2 rounded w-full mb-1"
+                  class="bg-primary-light py-1 px-2 rounded w-full mb-1 text-center"
                 >
                 
                   {{ a.question.qa_options.find(q => q.id == o.option).option }}
                 </li>
               </ul>
+            </div>
+            <div
+              class="bg-gray-200 py-1 px-2 text-left rounded text-white"
+              v-if="a.descriptive_answer"
+            >
+              {{ a.descriptive_answer }}
             </div>
             <div
               v-if="a.hair_record"
@@ -143,7 +144,7 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted, onUpdated, SetupContext, watch } from "vue";
 import ClientProfile from '../ClientProfile.vue';
-import Question from '@/views/ForClient/Diagnostic/Questionaires/Question.vue';
+import Question from './AnswerTabQuestion.vue';
 import useCustomer from '@/types/Customer'
 
 import { IAnswer, IAnswerOption, IPrescript } from "@/types/Interfaces";

@@ -93,8 +93,8 @@ import { defineComponent, ref, onMounted, SetupContext, computed } from "vue";
 import { IChatLog, IMessageTemplate, IOrder, IPrescript, ISignup, ISubscription } from '@/types/Interfaces';
 import useSubscription from "@/types/Subscription";
 import useChatLog from "@/types/ChatLog";
-import ChatDateLabel from '@/views/ForClient/Diagnostic/Doctors/Detail/Chat/DateLabel.vue'
-import ChatMessageCard from '@/views/ForClient/Diagnostic/Doctors/Detail/Chat/MessageCard.vue';
+import ChatDateLabel from '../MainPane/Chat/DateLabel.vue'
+import ChatMessageCard from '../MainPane/Chat/MessageCard.vue';
 
 import moment from 'moment'
 export default defineComponent({
@@ -114,7 +114,7 @@ export default defineComponent({
     const chatLogs = ref<IChatLog[]>([]);
     const {
       fetchDoctorChatLogs  
-    } = useChatLog('doctor');
+    } = useChatLog();
 
     
     const onClose = () => {

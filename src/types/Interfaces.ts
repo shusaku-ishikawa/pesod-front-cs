@@ -115,6 +115,7 @@ interface IPrescript{
   prescription_use_period: null;
   prescript_products?: IProduct[];
   status: number;  
+  connection?: WebSocket;
 }
 
 interface IRegistration{

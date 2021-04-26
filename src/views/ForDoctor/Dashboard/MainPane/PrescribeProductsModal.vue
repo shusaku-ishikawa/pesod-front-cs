@@ -12,6 +12,7 @@
           
           :product="p"
           @update:toPrescribe="updateToPrescribe(p, $event)"
+          @click="updateToPrescribe(p, !isToPrescribe(p))"
           :toPrescribe="isToPrescribe(p)"
         ></product-list-card> 
         </div>
@@ -57,7 +58,7 @@ export default defineComponent({
     const {
       products,
       fetchProducts
-    } = useProduct('doctor');
+    } = useProduct();
     
     const productsToPrescribe = ref<IProduct[]>([]);
 
