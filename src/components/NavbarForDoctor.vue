@@ -11,7 +11,8 @@
         <div>ようこそ {{ profile.first_name }} {{ profile.last_name }} 様</div>
         <div>  
           <svg
-            @click="showDrawer = !showDrawer"
+            @focus="showDrawer = true"
+            @blur="onBlur"
             class="h-6 w-6 ml-5 cursor-pointer"
             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
@@ -23,7 +24,7 @@
               <li
                 v-for="(m, i) in menu"
                 :key="i"
-                @click="router.push({ name: m.route })"
+                @click="showDrawer = true && router.push({ name: m.route })"
                 class="w-48 cursor-pointer bg-white text-gray-600 px-3 py-1 border-b"
               >
                 {{ m.text }}
@@ -61,11 +62,17 @@ export default defineComponent({
         text: 'ログアウト'
       },
     ]
+    const onBlur = () => {
+      window.setTimeout(() => {
+        showDrawer.value = false
+      }, 100)
+    }
     return {
       menu,
       router,
       profile,
       showDrawer,
+      onBlur,
       isLoggedIn,
     }
   }

@@ -1,5 +1,5 @@
 const express = require('express');
-var history = require('connect-history-api-fallback');
+const history = require('connect-history-api-fallback');
 
 const port = process.env.PORT || 8000;
 const app = express();

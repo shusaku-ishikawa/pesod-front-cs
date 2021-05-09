@@ -111,7 +111,8 @@ export default defineComponent({
       const data = await fetchAnswers(props.prescript.customer.uuid);
       console.log(data)
       loadingAnswers.value = false
-      answers.value = data;
+      answers.value = data.filter((a: any) => a.prescript == props.prescript.id);
+      console.log(props.prescript )
       // fetchLogs();
     }
     
