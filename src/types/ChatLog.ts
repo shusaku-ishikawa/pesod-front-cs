@@ -38,7 +38,7 @@ export default function useChatLog() {
       prescript: prescript,
       cursor: cursor
     }
-    const {data} = await client.patch('/chatlog/cursor/', payload)
+    const {data} = await client.patch('/chatcursor/', payload)
     console.log(data)
     return data
   }
