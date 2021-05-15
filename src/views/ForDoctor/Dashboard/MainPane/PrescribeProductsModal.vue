@@ -49,22 +49,23 @@ export default defineComponent({
     ProductListCard
   },
   props: {
+    products: Object as () => IProduct[]
   },
   emits: [
     'close',
     'prescribe'
   ],
   setup(_, context: SetupContext) {
-    const {
-      products,
-      fetchProducts
-    } = useProduct();
+    // const {
+    //   // products,
+    //   // fetchProducts
+    // } = useProduct();
     
     const productsToPrescribe = ref<IProduct[]>([]);
 
-    onMounted(async () => {
-      products.value = await fetchProducts();
-    })
+    // onMounted(async () => {
+    //   products.value = await fetchProducts();
+    // })
 
     const onPrescribe = () => {
       
@@ -90,7 +91,7 @@ export default defineComponent({
     };
 
     return {
-      products,
+      // products,
       productsToPrescribe,
       onClose,
       onPrescribe,

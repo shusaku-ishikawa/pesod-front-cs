@@ -1,5 +1,6 @@
 <template>
   <div
+    :id="chatLog.id"
     class="flex items-end px-1"
     :class="{ 'justify-end': isMyMessage }"
   >
@@ -10,6 +11,7 @@
       
     >
       <span
+        @click="onClickMessage"
         v-html="chatLog.message"
         :class="{ 'rounded-bl-none bg-gray-100': !isMyMessage, 'rounded-br-none': isMyMessage }"
         class="text-left sm:max-w-sm md:max-w-md break-words leading-5 px-4 py-4 rounded-lg inline-block text-gray-600 "
@@ -48,12 +50,22 @@ export default defineComponent({
       type: Boolean
     }
   },
-  setup(props: any, ctx: SetupContext) {
+  emits: [
+    'showProductDetail'
+  ],
+  setup(props: any, context: SetupContext) {
     
 
     
     
-    
+    const onClickMessage = (ev: Event) => {
+      const {target} = ev;
+      if (target == null) return;
+      const elem = target as HTMLElement;
+      const pId = elem.getAttribute('data');
+      if (pId == null) return;
+      context.emit('showProductDetail', pId)
+    }
     const HHMM = (dateStr: string) => {
       return moment(dateStr).format('H:mm')
     }
@@ -63,7 +75,8 @@ export default defineComponent({
     }
     return {
       HHMM,
-      htmlify
+      htmlify,
+      onClickMessage,
     };
   }
 })

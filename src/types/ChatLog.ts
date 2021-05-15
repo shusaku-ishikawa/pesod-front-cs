@@ -42,11 +42,18 @@ export default function useChatLog() {
     console.log(data)
     return data
   }
+  const getChatCursor = async (prescriptNo: string) => {
+    const {data} = await client.get(`/chatcursor/doctor/${prescriptNo}`);
+    console.log(data)
+
+    return data
+  }
   return {
     chatLogs,
     fetchDoctorChatLogs,
     fetchDoctorMessageTemplates,
     fetchCustomerMessageTemplates,
-    updateChatLogCursor
+    updateChatLogCursor,
+    getChatCursor
   }
 }

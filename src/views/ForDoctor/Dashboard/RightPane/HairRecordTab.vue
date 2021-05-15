@@ -21,22 +21,23 @@
     <div v-else>
     
       <div
-        v-for="(d, i) in dates"
+        v-for="(logSet, i) in logByDate"
         :key="i"
         class="px-3 mb-2 py-2 border-b border-gray-100"
       >
         <div class="text-left">
-          {{ d }}
+          {{ convertDate(logSet.date) }}
         </div>
         <div
-          class="mb-1"
-          v-for="(r, i) in getRecordsByDate(d)"
-          :key="i"
+          class="mb-1 grid grid-cols-2 gap-1"
         >
-          
-          <img v-if="r" :src="r.image" alt="">
-          <img v-if="r == null && i == 0" src="@/assets/img/monshin_photo_A.png" alt="">
-          <img v-if="r == null && i == 1" src="@/assets/img/monshin_photo_B.png" alt="">
+          <div>
+            <img :src="logSet.frontLog.image" alt="">
+          </div>
+          <div>
+              <img :src="logSet.topLog.image" alt="">
+            
+          </div>
           
         </div>
       </div>
@@ -50,7 +51,8 @@ import { computed, defineComponent, onMounted, SetupContext } from "vue";
 
 import { IAnswer, IAnswerOption, IHairRecord, IPrescript } from "@/types/Interfaces";
 import useHairRecord from '@/types/HairRecord';
-import {uniq} from 'lodash'
+import {uniq, cloneDeep} from 'lodash'
+import moment from "moment";
 export default defineComponent({
   components: {
   },
@@ -70,6 +72,26 @@ export default defineComponent({
       const dList = props.hairRecords.map((r: any) => r.shooting_date)
       return uniq(dList)
     })
+    const logByDate = computed(() => {
+      const dates = props.hairRecords.map((l: any) => l.shooting_date);
+      const datesList = [...new Set(dates)];
+      console.log(datesList)
+      const ret = datesList.map((d: any) => {
+        const data = props.hairRecords.filter((l: any) => l.shooting_date == d)
+        const front = data.find((d: any) => d.shooting_part == 0);
+        const top = data.find((d: any) => d.shooting_part == 1);
+        return {
+          date: d,
+          frontLog: cloneDeep(front),
+          topLog: cloneDeep(top), 
+        }
+      });
+      console.log(ret)
+      return ret;
+    })
+    const convertDate = (d: string) => {
+      return moment(d).format('YYYY年M月D日')
+    }
     const getRecordsByDate = (date: string) => {
       const rs = props.hairRecords.filter((r: any) => r.shooting_date == date)
       return [
@@ -78,8 +100,9 @@ export default defineComponent({
       ]
     }
     return {
+      convertDate,
       dates,
-      getRecordsByDate,
+      logByDate,
     };
   }
 })

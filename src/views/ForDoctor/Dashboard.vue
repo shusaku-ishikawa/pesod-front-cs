@@ -255,8 +255,6 @@ export default defineComponent({
       activePrescript.value.unread_flag = false;
       loadingChatLogs.value = true;
       activeChatLogs.value = await fetchDoctorChatLogs(activePrescript.value.id);
-      const lastLogId = activeChatLogs.value[activeChatLogs.value.length - 1].id;
-      const ret = await updateChatLogCursor(activePrescript.value.customer.id, activePrescript.value.id, lastLogId);
       
       loadingChatLogs.value = false;
     })

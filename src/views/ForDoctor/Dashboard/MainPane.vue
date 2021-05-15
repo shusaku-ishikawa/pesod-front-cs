@@ -69,7 +69,7 @@
       ref="messageArea" 
       class="flex-grow overflow-auto relative pt-5"
     >
-
+        
       <div
         v-if="loadingChatLogs"
         class="absolute w-full space-y-4"
@@ -95,9 +95,13 @@
       </div>
       <div
         v-else
+        ref="scrollContainer"
         class="absolute w-full space-y-4"
       >
-        
+        {{ originalCursor }}
+        <unread-label
+          v-if="originalCursor == 0"
+        ></unread-label>
         
         <chat-date-label
           v-if="chatLogs.length > 0"
@@ -107,15 +111,20 @@
           v-for="(log, i) in chatLogs"
           :key="i"
         >
-         
+          <unread-label
+            v-if="i > 0 && log.id > originalCursor && chatLogs[i - 1].id <= originalCursor"
+          ></unread-label>
+          
           <chat-date-label
             v-if="i > 1 && getDate(chatLogs[i].created_at) !== getDate(chatLogs[i - 1].created_at)">
             
             :dateStr="log.created_at"
           </chat-date-label>
+          
           <chat-message-card
           :chatLog="log"
           :isMyMessage="log.speaker === userId"
+          @showProductDetail="onShowProductModal"
           ></chat-message-card>
         </template>
       </div>
@@ -170,8 +179,20 @@
       >
         <prescribe-products-modal
           @close="showPrescribeProducts = false"
+          :products="products"
+        
           @prescribe="onPrescribe"
         />
+      </frame-modal>
+      <frame-modal
+        v-if="productDetailModal"
+        @close="productDetailModal = null"
+      
+      >
+        <product-detail-modal
+          :product="productDetailModal"
+          @close="productDetailModal = null"
+        ></product-detail-modal>
       </frame-modal>
     </div>
   </div>
@@ -201,12 +222,16 @@ import { IPrescript, IChatMessage, IMessageTemplate, IProduct, IChatLog } from '
 
 import moment from 'moment';
 import WsStateMarker from '@/components/WsStateMarker.vue';
+import ProductDetailModal from './MainPane/ProductDetailModal.vue';
 
 import ChatForm from './MainPane/Chat/Form.vue';
 import ChatMessageCard from './MainPane/Chat/MessageCard.vue';
 import ChatDateLabel from './MainPane/Chat/DateLabel.vue'
 import TemplateModal from './MainPane/TemplateModal.vue';
 import { template } from "lodash";
+// import WsStateMarker from '@/components/WsStateMarker.vue';
+import UnreadLabel from './MainPane/Chat/UnreadLabel.vue';
+import useProducts from "@/types/Product";
 
 export default defineComponent({
   components: {
@@ -215,7 +240,9 @@ export default defineComponent({
     prescribeProductsModal,
     WsStateMarker,
     ChatDateLabel,
-    TemplateModal
+    TemplateModal,
+    UnreadLabel,
+    ProductDetailModal
   },
   props: {
     
@@ -247,7 +274,9 @@ export default defineComponent({
     const {
       // chatLogs,
       fetchDoctorChatLogs,
-      fetchDoctorMessageTemplates
+      fetchDoctorMessageTemplates,
+      getChatCursor,
+      updateChatLogCursor
     } = useChatLog()
     
     const {
@@ -263,15 +292,38 @@ export default defineComponent({
       prepareWs
     } = useSocket();
 
+    const {
+      products,
+      fetchProducts
+    } = useProducts();
+
+
     let url: string;
     
     const uuid = ref<string>('');
     const userId = ref<string>('');
 
+    const originalCursor = ref<number>(0);
+    const scrollContainer = ref<HTMLElement | null>(null);
+
+    const getCurrentCursor = async () => {
+      const chatCursor = await getChatCursor(props.prescript.prescript_no);
+      originalCursor.value = chatCursor.cursor || 0;
+      
+    }
+    const doctorMessageTemplates = ref<IMessageTemplate[]>([]);
+    const showMessageTemplates = ref(false);
+    
      onMounted(async () => {
       userId.value = await getUserId();
       const uuidData = await getUUID();
+      // await getCurrentCursor()
       uuid.value = uuidData.uuid;
+      doctorMessageTemplates.value = await fetchDoctorMessageTemplates();
+      products.value = await fetchProducts();
+      // alert(products.value)
+      console.log(doctorMessageTemplates.value)
+    
     })
     
     const sendMessage = (messageStr: string) => {
@@ -297,6 +349,10 @@ export default defineComponent({
         context.emit('sendMessage', messageJson);
         message.value = '';
         console.log(messageJson)
+        setTimeout(() => {
+          scrollDown()
+          
+        }, 300)
       //   try {
       //     connection.value.send(JSON.stringify(messageJson));
       //     message.value = ''; // reset 
@@ -308,8 +364,6 @@ export default defineComponent({
       // }
     }
 
-    const doctorMessageTemplates = ref<IMessageTemplate[]>([]);
-    const showMessageTemplates = ref(false);
     
     const onSelectTemplate = (t: IMessageTemplate) => {
       // message.value = m;
@@ -320,24 +374,50 @@ export default defineComponent({
       
     };
 
-    // watch(() => props.chatLogs, () => {
+    watch(() => props.chatLogs, () => {
+      window.setTimeout(() => {
+        // alert('hoge')
+        scrollDown()
+      }, 200)
+    })
+    const showPrescribeProducts = ref(false);
+    
+    watch(() => props.prescript, async () => {
+      message.value = '';
+      await getCurrentCursor();
+      if (scrollContainer.value) {
+        const elemArray = Array.from(scrollContainer.value.children);
+        const lastReadElement = elemArray.find((c: any) => {
+          console.log(typeof c)
+          return c.getAttribute('id') == originalCursor.value
+        })  
+        if (lastReadElement && messageArea.value) {
+          const outerRect = messageArea.value.getBoundingClientRect()
+          const elemRect = lastReadElement.getBoundingClientRect()
+          if (messageArea.value == null) return;
+          console.log(outerRect.height)
+          messageArea.value.scrollBy({ top: elemRect.top - outerRect.height + elemRect.height - 40 })
+        }
+      }
+      if (props.chatLogs.length) {
+        const lastLogId = props.chatLogs[props.chatLogs.length - 1].id;
+        const ret = await updateChatLogCursor(props.prescript.customer.id, props.prescript.id, lastLogId);
+        
+      }
+      
+    }, { immediate: true })
+    
+    // watch(() => props.chatLogs.length, () => {
+    //   alert('scroll down')
     //   window.setTimeout(() => {
-    //     alert('hoge')
     //     scrollDown()
+
     //   }, 200)
     // })
-    const showPrescribeProducts = ref(false);
-    onMounted(async () => {
-      doctorMessageTemplates.value = await fetchDoctorMessageTemplates();
-      console.log(doctorMessageTemplates.value)
-    });
-    watch(() => props.prescript, () => {
-      message.value = ''
-    })
-    onUpdated(() => {
-      // message.value = '';
-      scrollDown()
-    })
+    // onUpdated(() => {
+    //   // message.value = '';
+    //   // scrollDown()
+    // })
     // const setupWebsocket = async () => {
     //   loading.value = true;
     //   doctorMessageTemplates.value = await fetchDoctorMessageTemplates();
@@ -388,7 +468,7 @@ export default defineComponent({
       }
     };
 
-    const buildPrescribeMessage = (products: IProduct[]) => {
+    const buildPrescribeMessage = (productList: IProduct[]) => {
       // let message = '<u>[[処方提案]]</u><br>';
       // products.map((p: IProduct) => {
       //   message = `${message}<strong>${p.name}</strong><br>${p.price.toLocaleString()}円<br>${p.usage}<br><br>`
@@ -396,8 +476,8 @@ export default defineComponent({
       
       // return message;
       let html = '';
-      console.log(products)
-      products.map((p: IProduct) => {
+      console.log(productList)
+      productList.map((p: IProduct) => {
         const elem = `
           <div>
             <div>
@@ -428,13 +508,13 @@ export default defineComponent({
       return html;
     };
 
-    const onPrescribe = async (products: IProduct[]) => {
+    const onPrescribe = async (productList: IProduct[]) => {
       showPrescribeProducts.value = false;
       // do prescription
       if (props.prescript == null) return;
-      const data = await setPrescriptProducts(props.prescript.prescript_no, products);
+      const data = await setPrescriptProducts(props.prescript.prescript_no, productList);
       
-      const messageStr = buildPrescribeMessage(products);
+      const messageStr = buildPrescribeMessage(productList);
       const template1 = doctorMessageTemplates.value.find((t: any) => t.message_flow == 3);
       const template2 = doctorMessageTemplates.value.find((t: any) => t.message_flow == 4);
 
@@ -449,12 +529,21 @@ export default defineComponent({
       context.emit('page', page);
     };
 
-   
-    
+    const productDetailModal = ref<IProduct | null>(null)
+    const onShowProductModal = (pId: string) => {
+      productDetailModal.value = products.value.find((p: IProduct) => p.id == pId) || null;
+      if (productDetailModal.value == null) {
+        alert('現在販売されていない商品です。')
+      }
+    }
     return {
+      products,
+
       uuid,
       userId,
       messageArea,
+      scrollContainer,
+      originalCursor,
       getDate,
       message,
       onSendMessage,
@@ -466,7 +555,9 @@ export default defineComponent({
       onSelectTemplate,
       showPrescribeProducts,
       onPrescribe,
-      loading 
+      loading,
+      productDetailModal,
+      onShowProductModal
     }
   }
 })
