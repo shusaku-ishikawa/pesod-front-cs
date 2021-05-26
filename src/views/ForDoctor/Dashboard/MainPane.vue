@@ -52,10 +52,11 @@
         <div class="ml-2 text-base">
           {{ prescript.customer.first_name }} {{ prescript.customer.last_name }} 様 診察ルーム
         </div>
-        <ws-state-marker
-          class="ml-2"
-          :wsState="wsState"
-        ></ws-state-marker>
+        <div class="ml-2">
+          <img class="h-6" v-if="prescript.status == 3" src="@/assets/img/doctor_now_long.png" alt="">
+          <img class="h-6" v-else src="@/assets/img/doctor_end_long.png" alt="">
+        
+        </div>
       </div>
       <svg
         @click="onPage('right')"
@@ -98,7 +99,6 @@
         ref="scrollContainer"
         class="absolute w-full space-y-4"
       >
-        {{ originalCursor }}
         <unread-label
           v-if="originalCursor == 0"
         ></unread-label>
@@ -116,7 +116,7 @@
           ></unread-label>
           
           <chat-date-label
-            v-if="i > 1 && getDate(chatLogs[i].created_at) !== getDate(chatLogs[i - 1].created_at)">
+            v-if="i > 1 && getDate(chatLogs[i].created_at) != getDate(chatLogs[i - 1].created_at)">
             
             :dateStr="log.created_at"
           </chat-date-label>
@@ -127,10 +127,13 @@
           @showProductDetail="onShowProductModal"
           ></chat-message-card>
         </template>
+        <div v-if="prescript.stattus == 0 || prescript.status == 4" class="py-10 bg-gray-100">
+          診察は終了です。
+        </div>
       </div>
       
     </div>
-    <div>
+    <div v-if="prescript.status == 3">
       <chat-form
         v-model="message"
         @send="onSendMessage"
@@ -238,7 +241,7 @@ export default defineComponent({
     ChatForm,
     ChatMessageCard,
     prescribeProductsModal,
-    WsStateMarker,
+    // WsStateMarker,
     ChatDateLabel,
     TemplateModal,
     UnreadLabel,
@@ -330,9 +333,10 @@ export default defineComponent({
       if (!props.prescript.connection) throw Error('No connection')
       if (props.prescript.connection.readyState != props.prescript.connection.OPEN) {
         // props.prescript.connection = getWsConnection(activePrescript.value)
+        // context.emit('connectionError', 'connection not open')
+        // throw new Error('connection not open');
         context.emit('connectionError', 'connection not open')
-        throw new Error('connection not open');
-
+        return;
       }
       
       // if (connection.value == null) return;
@@ -475,37 +479,40 @@ export default defineComponent({
       // })
       
       // return message;
-      let html = '';
+      // let html = '';
       console.log(productList)
-      productList.map((p: IProduct) => {
-        const elem = `
-          <div>
-            <div>
-              ${p.name}
-            </div>
-            <div>
-              ${p.categories}
-            </div>
-            <div>
-              メーカー：${p.maker}
-            </div>
-            <div>
-              <img
-                style="height: 100px"
-                src="${p.image}"
-              />
-            </div>
-            <div>
-              用途：${p.dose}
-            </div>
-            <div>
-              <u data="${p.id}">注意事項等、詳細情報はこちら</u>
-            </div>
-          </div>
-        `;
-        html += elem + '<hr class="my-3">';
+      const plist = productList.map((p: IProduct) => {
+        // const elem = `
+        //   <div>
+        //     <div>
+        //       ${p.name}
+        //     </div>
+        //     <div>
+        //       ${p.categories}
+        //     </div>
+        //     <div>
+        //       メーカー：${p.maker}
+        //     </div>
+        //     <div>
+        //       <img
+        //         style="height: 100px"
+        //         src="${p.image}"
+        //       />
+        //     </div>
+        //     <div>
+        //       用途：${p.dose}
+        //     </div>
+        //     <div>
+        //       <u data="${p.id}">注意事項等、詳細情報はこちら</u>
+        //     </div>
+        //   </div>
+        // `;
+        // elem + '<hr class="my-3">';
+        return p.id;  
       });
-      return html;
+      return JSON.stringify(plist);
+      
+      
     };
 
     const onPrescribe = async (productList: IProduct[]) => {
@@ -518,10 +525,21 @@ export default defineComponent({
       const template1 = doctorMessageTemplates.value.find((t: any) => t.message_flow == 3);
       const template2 = doctorMessageTemplates.value.find((t: any) => t.message_flow == 4);
 
-      if (template1) sendMessage(template1.message)
-      sendMessage(messageStr);
-      if (template2) sendMessage(template2.message)
+      if (template1) {
+        window.setTimeout(() => {
+          sendMessage(template1.message)  
+        }, 100);
+      }
+      window.setTimeout(() => {
+        sendMessage(messageStr);
+      }, 2000)
       
+      if (template2) {
+        window.setTimeout(() => {
+          sendMessage(template2.message)
+          
+        }, 4000)
+      }
     }
 
     const onPage = (page: string) => {

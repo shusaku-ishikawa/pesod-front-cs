@@ -22,14 +22,14 @@
       <div class="flex ">
         <button
           @click="onPrescribe"
-          class="border rounded "
+          class="border rounded text-xs"
           :disabled="!productsToPrescribe.length"
         >
           処方提案
         </button>
         <button
           @click="onClose"
-          class="bg-gray-200 text-white border ml-auto"
+          class="bg-gray-200 text-white border ml-auto text-xs"
         >
           閉じる
         </button>

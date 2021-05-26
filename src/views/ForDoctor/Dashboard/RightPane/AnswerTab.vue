@@ -99,7 +99,7 @@
                 <li
                   v-for="(o, i) in a.answer_options"
                   :key="i"
-                  class="bg-primary-light py-1 px-2 rounded w-full mb-1 text-center"
+                  class="bg-primary-light py-2 font-semibold px-2 rounded w-full mb-1 text-center"
                 >
                 
                   {{ a.question.qa_options.find(q => q.id == o.option).option }}

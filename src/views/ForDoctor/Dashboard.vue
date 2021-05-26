@@ -280,11 +280,14 @@ export default defineComponent({
     const onSendMessage = (event) => {
       
       activePrescript.value.connection.send(JSON.stringify(event));
+      console.log('after send')
     }
     const onPage = (event) => {
       activePage.value = event;
     }
     const onConnectionError = (error) => {
+      prepConnections()
+      console.log('prep connection')
       addNotification(error)
     }
     return {

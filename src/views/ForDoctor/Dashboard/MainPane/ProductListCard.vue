@@ -21,7 +21,7 @@
       <div class="mb-2">
         {{ product.name }}
       </div>
-      <table class="text-sm">
+      <table class="text-xs">
         <tbody>
           <tr>
             <th>製造会社</th>

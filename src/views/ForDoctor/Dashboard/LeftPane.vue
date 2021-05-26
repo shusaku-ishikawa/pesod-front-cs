@@ -49,70 +49,14 @@
         </div>
       </div>
       <div v-else class="absolute w-full">
-        <div
+        <prescript-card
           v-for="(p, i) in prescriptsToDisplay"
           :key="i"
-          class="relative py-4 flex items-center px-3 py-2 border-b border-gray-100  hover:bg-blue-100 text-sm w-full"
+          :prescript="p"
+          :isActive="activePrescript && activePrescript.id == p.id"
           @click="onSelectPrescript(p)"
-          :class="{ 'bg-primary-light': activePrescript && activePrescript.id === p.id, 'cursor-pointer': p.status == 3 }"
-        >
-          <div class="flex-shrink-0">
-            
-            <img
-              v-if="p.customer.icon_type == 0"
-              class="w-10"
-              src="@/assets/img/doctor/icon_man.png" alt=""
-            >
-            <img
-              v-if="p.customer.icon_type == 1"
-              class="w-10"
-              src="@/assets/img/doctor/icon_woman.png" alt=""
-            >
-            <img
-              v-if="p.customer.icon_type == 2"
-              class="w-10"
-              src="@/assets/img/doctor/icon_dog.png" alt=""
-            >
-            <img
-              v-if="p.customer.icon_type == 3"
-              class="w-10"
-              src="@/assets/img/doctor/icon_cat.png" alt=""
-            >
-            <img
-              v-if="p.customer.icon_type == 4"
-              class="w-10"
-              src="@/assets/img/doctor/icon_robot.png" alt=""
-            >
-            
-            
-          </div>
-          <div
-            class="ml-3 flex flex-col flex-grow text-left"
-          >
-            <div class="flex items-center justify-between">
-              <div class="font-medium text-sm ">
-                {{ p.customer.first_name }} {{ p.customer.last_name }}
-              </div>
-              
-              
-            </div>
-            <div>
-              ID: {{ p.customer.id }}
-            </div>
-            
-          </div>
-          <div v-if="p.unread_flag" class="absolute right-4 top-2 flex h-3 w-3">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-3 w-3 bg-purple-500"></span>
-          </div>
-          <!-- <div class="ml-2">
-            <svg
-              class="w-6"
-              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-            </svg>
-          </div> -->
-        </div>
+        ></prescript-card>
+          
         
       </div>
    </div>
@@ -122,9 +66,10 @@
 import { defineComponent, SetupContext, ref, onMounted, computed } from "vue";
 import usePrescript from '@/types/Prescript';
 import { IPrescript } from '@/types/Interfaces';
-
+import PrescriptCard from './LeftPane/PrescriptCard.vue';
 export default defineComponent({
   components: {
+    PrescriptCard
   },
   props: {
     loadingPrescripts: Boolean,
@@ -146,6 +91,7 @@ export default defineComponent({
     
     
     const onlyActive = ref(false)
+    
     
     
     const prescriptsToDisplay = computed(() => {
@@ -176,7 +122,7 @@ export default defineComponent({
       onlyActive,
       prescriptsToDisplay,
       onInputSearchWord,
-      onResetSearchWord
+      onResetSearchWord,
     };
   }
 })

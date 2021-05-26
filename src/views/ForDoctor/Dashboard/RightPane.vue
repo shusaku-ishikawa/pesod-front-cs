@@ -1,22 +1,24 @@
 <template>
   <div
-    class="h-full flex flex-col w-full sm:px-3 sm:py-5 "
+    class="h-full flex flex-col w-full pt-4 px-1 "
   >
-    <div>
-      <ul class='flex  cursor-pointer text-sm justify-center'>
+    <div class="">
+      <ul class='flex  cursor-pointer text-xs font-semibold justify-center'>
         <li
           
           v-for="(t, i) in tabs"
           :key="i"
           @click="tab = t.value"
+          style="width: 40px"
           :class="{ 'bg-primary text-white ': t.value === tab }"
-          class='flex-auto py-1 px-4 bg-white rounded-t-lg border'
+          class='relative flex-auto py-1 bg-white rounded-t border'
         >
           {{ t.text }}
+          <div v-if="t.value == tab" class="arrow-down"></div>
         </li>
       </ul>
     </div>
-    <div class="w-full relative flex-grow overflow-y-auto">
+    <div class=" w-full relative flex-grow overflow-y-auto">
       <answer-tab
         class="absolute"
         v-if="tab === 'answer'"
@@ -46,6 +48,20 @@
     
   </div>
 </template>
+<style lang="scss" scoped>
+  .arrow-down {
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #0AA2E8;
+
+    position: absolute;
+    top: 100%;
+    left: 45px;
+    // margin-left: -20px;
+  }
+</style>
 <script lang="ts">
 import { defineComponent, onMounted, SetupContext, ref, watch } from "vue";
 import AnswerTab from './RightPane/AnswerTab.vue';
