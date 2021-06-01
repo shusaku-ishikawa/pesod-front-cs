@@ -116,17 +116,30 @@
           ></unread-label>
           
           <chat-date-label
-            v-if="i > 1 && getDate(chatLogs[i].created_at) != getDate(chatLogs[i - 1].created_at)">
+            v-if="i > 1 && getDate(chatLogs[i].created_at) != getDate(chatLogs[i - 1].created_at)"
             
             :dateStr="log.created_at"
+          >
           </chat-date-label>
           
+          <chat-prescript-card
+            v-if="checkIfPrescription(log.message)"
+            :products="products"
+            :chatLog="log"
+            @showProductDetail="onShowProductModal"
+          ></chat-prescript-card>
           <chat-message-card
-          :chatLog="log"
-          :isMyMessage="log.speaker === userId"
-          @showProductDetail="onShowProductModal"
+            v-else
+            :chatLog="log"
+            :isMyMessage="log.speaker === userId"
           ></chat-message-card>
         </template>
+        <chat-message-card
+          class="mb-2"
+          v-if="prescript.prescript_products.length && prescript.status == 3" 
+          :chatLog="{ message: '以上の処方でよろしいでしょうか。<br>良い場合は「はい」変更を希望さ れる場合は、「いいえ」とお応え 下さい。' }"
+          :isMyMessage="true"
+        ></chat-message-card>
         <div v-if="prescript.stattus == 0 || prescript.status == 4" class="py-10 bg-gray-100">
           診察は終了です。
         </div>
@@ -216,7 +229,7 @@
 import { defineComponent, ref, onMounted, SetupContext, onBeforeUnmount, onBeforeMount, watch, onUpdated } from "vue";
 
 import prescribeProductsModal from './MainPane/PrescribeProductsModal.vue';
-
+import ChatPrescriptCard from './MainPane/Chat/PrescriptCard.vue';
 import useAuth from '@/types/Auth';
 import usePrescript from '@/types/Prescript';
 import useChatLog from '@/types/ChatLog';
@@ -240,6 +253,7 @@ export default defineComponent({
   components: {
     ChatForm,
     ChatMessageCard,
+    ChatPrescriptCard,
     prescribeProductsModal,
     // WsStateMarker,
     ChatDateLabel,
@@ -551,7 +565,15 @@ export default defineComponent({
     const onShowProductModal = (pId: string) => {
       productDetailModal.value = products.value.find((p: IProduct) => p.id == pId) || null;
       if (productDetailModal.value == null) {
-        alert('現在販売されていない商品です。')
+        alert('現在販売されていない商品です。' + pId)
+      }
+    }
+    const checkIfPrescription = (message: string) => {
+      try {
+        const r = JSON.parse(message);
+        return Array.isArray(r);
+      } catch (err) {
+        return false;
       }
     }
     return {
@@ -575,7 +597,8 @@ export default defineComponent({
       onPrescribe,
       loading,
       productDetailModal,
-      onShowProductModal
+      onShowProductModal,
+      checkIfPrescription
     }
   }
 })

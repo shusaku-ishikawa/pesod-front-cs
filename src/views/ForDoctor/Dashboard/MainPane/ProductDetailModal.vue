@@ -1,6 +1,6 @@
 <template>
   <div class="inline-block shadow-xl transform align-middle" >
-    <div class="my-5 rounded bg-white px-6 py-4 sm:pb-4">
+    <div style="max-width: 600px" class="my-5 rounded bg-white px-6 py-4 sm:pb-4">
       <div>
         <img
           :src="product.image"

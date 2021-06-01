@@ -7,23 +7,23 @@
           v-for="(t, i) in templates"
           :key="i"
           class="border rounded mb-1 py-2 px-4 text-left cursor-pointer hover:bg-blue-100"
-          @click="selectedTemplate = t"
+          @click="onSelect(t)"
           :class="{ 'bg-blue-100': selectedTemplate && selectedTemplate.id == t.id }"
           style="min-height: 5rem;"
+          v-html="htmlify(t.message)"
         >
-          {{ t.message }}
         </div>
         
       </div>
       <hr class="mb-3">
       <div class="flex ">
-        <button
+        <!-- <button
           @click="onSelect"
           class="border rounded "
           :disabled="selectedTemplate == null"
         >
           下書きに入力
-        </button>
+        </button> -->
         <button
           @click="onClose"
           class="ml-auto bg-gray-200 text-white"
@@ -58,13 +58,16 @@ export default defineComponent({
     const onClose = () => {
       context.emit('close')  
     };
-    const onSelect = () => {
-      if (selectedTemplate.value == null) return;
-      context.emit('select:template', selectedTemplate.value);
+    const onSelect = (t: any) => {
+      context.emit('select:template', t);
+    }
+    const htmlify = (m: string) => {
+      return m.replaceAll('\n', '<br>')
     }
     return {
       selectedTemplate,
       onClose,
+      htmlify,
       onSelect
     }
   }

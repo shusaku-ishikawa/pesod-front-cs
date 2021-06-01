@@ -60,8 +60,8 @@
         顧客メモ
       </div>
       <div class="border p-2 px-4 rounded-tr rounded-br rounded-bl text-center">
-        <textarea v-model="currentMemo" style="resize: none" class="mb-2 rounded border shadow w-3/4 mx-auto inline-block focus:outline-none p-2" placeholder="メモを入力" name="" id="" cols="30" rows="5"></textarea>
-        <button @click="onAddMemo" class="image">
+        <textarea v-model="currentMemo" style="resize: none" class="block mb-2 rounded border shadow w-3/4 mx-auto inline-block focus:outline-none p-2" placeholder="メモを入力" name="" id="" cols="30" rows="5"></textarea>
+        <button @click="onAddMemo" class="block mx-auto image">
           <img class="h-6" src="@/assets/img/doctor_touroku.png" alt="">
         </button>
       </div>
@@ -71,6 +71,8 @@
       :key="i"
       :memo="m"
       class="mb-2"
+      @update:memo="onUpdateMemo(i, $event)"
+      @delete:memo="onDeleteMemo(i)"
     ></user-profile-tab-memo>
     
 
@@ -105,14 +107,10 @@
   }
 </style>
 <script lang="ts">
-import { defineComponent, ref, onMounted, SetupContext } from "vue";
+import { defineComponent, ref, onMounted, SetupContext, watch } from "vue";
 
 import { IAnswer, IAnswerOption, IOrder, IPrescript } from "@/types/Interfaces";
 
-import { ISubscription } from '@/types/Interfaces'
-import OrderModal from './UserProfileTabOrderModal.vue'
-import SubscriptionModal from './UserProfileTabSubscriptionModal.vue';
-import PrescriptHistoryModal from './UserProfileTabPrescriptHistoryModal.vue';
 import useCustomer from "@/types/Customer";
 import useAuth from '@/types/Auth'
 import UserProfileTabMemo from './UserProfileTabMemo.vue'
@@ -128,24 +126,7 @@ export default defineComponent({
     prescript: {
       type: Object as () => IPrescript
     },
-    // subscriptions: {
-    //   type: Object as () => ISubscription[]
-    // },
-    // loadingSubscriptions: {
-    //   type: Boolean
-    // },
-    // loadingPrescripts: {
-    //   type: Boolean
-    // },
-    // prescripts: {
-    //   type: Object as () => IPrescript[]
-    // },
-    // orders: {
-    //   type: Object as () => IOrder[]
-    // },
-    // loadingOrders: {
-    //   type: Boolean
-    // }
+ 
   },
   setup(props: any, context: SetupContext) {
     const subscStatus = {
@@ -168,13 +149,18 @@ export default defineComponent({
     // const modalOrder = ref<IOrder | null>(null);
     // const modalSubscription = ref<ISubscription | null>(null)
     // const modalPrescript = ref<IPrescript | null>(null);
-    const memos = ref([]);
+    const memos = ref<any>([]);
     
     onMounted(async () => {
       console.log(props.prescript.customer)
       memos.value = await fetchCustomerMemo(props.prescript.customer.uuid)
     })
     const currentMemo = ref('');
+    
+    watch(() => props.prescript, async () => {
+      currentMemo.value = '';
+      memos.value = await fetchCustomerMemo(props.prescript.customer.uuid)
+    })
     const onAddMemo = async () => {
       if (currentMemo.value == '') return;
       console.log(profile.value)
@@ -187,11 +173,19 @@ export default defineComponent({
       currentMemo.value = ''
       memos.value = await fetchCustomerMemo(props.prescript.customer.uuid)
     }
+    const onUpdateMemo = (i: number, obj: any) => {
+      memos.value.splice(i, 1, obj);
+    }
+    const onDeleteMemo = (i: number) => {
+      memos.value.splice(i, 1);
+    }
     return {
       currentMemo,
       memos,
       subscStatus,
       onAddMemo,
+      onUpdateMemo,
+      onDeleteMemo,
       // modalOrder,
       // modalSubscription,
       // modalPrescript,

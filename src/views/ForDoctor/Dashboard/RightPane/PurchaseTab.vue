@@ -74,40 +74,21 @@
           </div>
         </div>
       </div>
-      <div v-else>
-        <div v-if="prescripts.length == 0" class=" px-2">診察履歴がありません</div>
       <div
-        @click="modalPrescript = p"
-        v-for="(p, i) in prescripts"
-        :key="i"
         
-        class="mb-1 cursor-pointer border hover:bg-blue-100 flex items-center p-2 px-4 rounded-tr rounded-br rounded-bl">
-        <table
-          class="border-collapsed w-full ">
-          <tbody
-          >
-            <tr
-              
-            >
-              <th>診察ID</th>
-              <td>{{ p.id }}</td>
-            </tr>
-            <tr
-
-            >
-              <th>診察日</th>
-              <td>{{ p.prescript_date }}</td>
-            </tr>
-            
-          </tbody>
-        
-        </table>
-        <div>
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-          </svg>
-        </div>
-      </div>
+        v-else
+      >
+        <div
+          v-if="prescripts.length == 0"
+          class="mb-1 border p-2 px-4 rounded-tr rounded-br rounded-bl"
+        >診察履歴がありません</div>
+        <purchase-tab-prescript-card
+          v-for="(p, i) in prescripts"
+          :key="i"
+          :prescript="p"
+          @click="modalPrescript = p"
+        ></purchase-tab-prescript-card>
+      
       </div>
       
     </div>
@@ -134,6 +115,7 @@
         v-else
       >
         <div
+          class="mb-1 border p-2 px-4 rounded-tr rounded-br rounded-bl"
           v-if="!subscriptions.length"
         >
           定期購入がありません
@@ -206,6 +188,7 @@
         v-else
       >
         <div
+          class="mb-1 border p-2 px-4 rounded-tr rounded-br rounded-bl"
           v-if="orders.length == 0"
         >
           注文がありません
@@ -307,15 +290,16 @@ import { defineComponent, ref, onMounted, SetupContext } from "vue";
 import { IAnswer, IAnswerOption, IOrder, IPrescript } from "@/types/Interfaces";
 
 import { ISubscription } from '@/types/Interfaces'
-import OrderModal from './UserProfileTabOrderModal.vue'
-import SubscriptionModal from './UserProfileTabSubscriptionModal.vue';
-import PrescriptHistoryModal from './UserProfileTabPrescriptHistoryModal.vue';
-
+import OrderModal from './PurchaseTabOrderModal.vue'
+import SubscriptionModal from './PurchaseTabSubscriptionModal.vue';
+import PrescriptHistoryModal from './PurchaseTabPrescriptHistoryModal.vue';
+import PurchaseTabPrescriptCard from './PurchaseTabPrescriptCard.vue';
 export default defineComponent({
   components: {
     OrderModal,
     SubscriptionModal,
-    PrescriptHistoryModal
+    PrescriptHistoryModal,
+    PurchaseTabPrescriptCard
   },
   props: {
     prescript: {

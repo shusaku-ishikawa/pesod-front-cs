@@ -19,14 +19,22 @@
       </button>
       
     </div>
-    <div class="mb-5">
+    <div class="mb-3 flex items-center">
+      <div class="flex-grow text-sm">
+        終了した診察も表示    
+      </div>
+      <div class="ml-2">
+        <toggle v-model="showInactive" />
+      </div>
+    </div>
+    <!-- <div class="mb-5">
       <button
         @click="onlyActive = !onlyActive"
         :class="{ 'bg-green-600 text-white': !onlyActive }"
         class="block w-full shadow bg-gray-200 text-black">
         {{ onlyActive ? '全て表示' : '要対応のみ表示' }}
       </button>
-    </div>
+    </div> -->
     <div class="flex-grow w-full relative overflow-y-auto">
       <div v-if="loadingPrescripts">
         <div
@@ -67,9 +75,12 @@ import { defineComponent, SetupContext, ref, onMounted, computed } from "vue";
 import usePrescript from '@/types/Prescript';
 import { IPrescript } from '@/types/Interfaces';
 import PrescriptCard from './LeftPane/PrescriptCard.vue';
+import Toggle from '@/components/Toggle.vue';
+
 export default defineComponent({
   components: {
-    PrescriptCard
+    PrescriptCard,
+    Toggle
   },
   props: {
     loadingPrescripts: Boolean,
@@ -90,12 +101,12 @@ export default defineComponent({
     
     
     
-    const onlyActive = ref(false)
+    const showInactive = ref(false)
     
     
     
     const prescriptsToDisplay = computed(() => {
-      if (onlyActive.value) {
+      if (!showInactive.value) {
         return props.prescripts.filter((p: any) => p.status == 3)
       } else {
         return props.prescripts.filter((p: any) => p.status > 2)
@@ -119,7 +130,7 @@ export default defineComponent({
 
     return {
       onSelectPrescript,
-      onlyActive,
+      showInactive,
       prescriptsToDisplay,
       onInputSearchWord,
       onResetSearchWord,

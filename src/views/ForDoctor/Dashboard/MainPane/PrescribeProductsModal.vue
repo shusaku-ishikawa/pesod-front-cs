@@ -4,7 +4,7 @@
       <div class="text-left">商品選択</div>
       <div class="mb-3 grid grid-cols-2 gap-1">
         <div
-          v-for="(p, i) in products"
+          v-for="(p, i) in products.filter(p => p.drug_class <= 4)"
           :key="i"
           class="col-span-1"
         >
@@ -80,7 +80,12 @@ export default defineComponent({
       return productsToPrescribe.value.find((p2p: IProduct) => p.id === p2p.id) != null;
     };
     const updateToPrescribe = (p: IProduct, value: boolean) => {
+      
       if (value) {
+        if (productsToPrescribe.value.length >= 2) {
+          alert("一度に処方できるのは２商品までです。")
+          return
+        }
         productsToPrescribe.value.push(p)
       } else {
         const index = productsToPrescribe.value.findIndex((p2p: IProduct) => p.id === p2p.id);

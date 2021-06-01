@@ -29,9 +29,9 @@
           {{ convertDate(logSet.date) }}
         </div>
         <div
-          class="mb-1 grid grid-cols-2 gap-1"
+          class=""
         >
-          <div>
+          <div class="mb-1">
             <img :src="logSet.frontLog.image" alt="">
           </div>
           <div>

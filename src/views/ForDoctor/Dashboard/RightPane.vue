@@ -9,7 +9,7 @@
           v-for="(t, i) in tabs"
           :key="i"
           @click="tab = t.value"
-          style="width: 40px"
+          style="width: 30px; font-size: 11px"
           :class="{ 'bg-primary text-white ': t.value === tab }"
           class='relative flex-auto py-1 bg-white rounded-t border'
         >
@@ -30,13 +30,19 @@
         class="absolute"
         v-if="tab === 'profile'"
         :prescript="prescript"
+      ></user-profile-tab>
+      <purchase-tab
+        class="absolute"
+        v-if="tab === 'purchase'"
+        :prescript="prescript"
         :subscriptions="subscriptions"
         :prescripts="prescripts"
         :orders="orders"
         :loadingSubscriptions="loadingSubscriptions"
         :loadingOrders="loadingOrders"
         :loadingPrescripts="loadingPrescripts"
-      ></user-profile-tab>
+      ></purchase-tab>
+      
       <hair-record-tab
         class="absolute "
         :prescript="prescript"
@@ -58,7 +64,7 @@
 
     position: absolute;
     top: 100%;
-    left: 45px;
+    left: calc(50% - 5px);
     // margin-left: -20px;
   }
 </style>
@@ -67,7 +73,7 @@ import { defineComponent, onMounted, SetupContext, ref, watch } from "vue";
 import AnswerTab from './RightPane/AnswerTab.vue';
 import UserProfileTab from './RightPane/UserProfileTab.vue';
 import HairRecordTab from './RightPane/HairRecordTab.vue';
-
+import PurchaseTab from './RightPane/PurchaseTab.vue';
 import useSubscription from '@/types/Subscription';
 import usePrescript from '@/types/Prescript';
 import useOrder from '@/types/Order';
@@ -80,6 +86,7 @@ export default defineComponent({
   components: {
     AnswerTab,
     UserProfileTab,
+    PurchaseTab,
     HairRecordTab
   },
   props: {
@@ -97,6 +104,11 @@ export default defineComponent({
         value: 'profile',
         text: '顧客情報'
       },
+      {
+        value: 'purchase',
+        text: '診察・購入履歴'
+      },
+      
       {
         value: 'hairRecord',
         text: '毛髪記録'

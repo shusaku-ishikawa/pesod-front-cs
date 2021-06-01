@@ -73,9 +73,12 @@ export default defineComponent({
     };
     
     const expand = ref(false);
-    
+    const htmlify = (m: string) => {
+      return m.replaceAll('\n', '<br>')
+    }
    
     return {
+      htmlify,
       expand,
       // message,
       onInputMessage,
