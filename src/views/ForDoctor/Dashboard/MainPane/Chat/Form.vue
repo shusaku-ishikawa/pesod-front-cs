@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full p-1">
+  <div class="w-full p-1 border-t">
     <form
       class="relative"
       @submit.prevent="() => {}"  
@@ -21,10 +21,10 @@
       <textarea 
         style="resize: none"
         placeholder="メッセージを入力"
-        class="text-sm focus:outline-none w-full border-t p-2 pr-6 overflow-y-scroll"
+        class="text-sm focus:outline-none w-full p-2 pr-6 overflow-y-scroll"
         cols="30"
         :rows="expand ? 20 : 2"
-        :value="modelValue"
+        :value="modelValue  "
         @input="onInputMessage"
       ></textarea>
       <div class="flex ">
@@ -76,8 +76,12 @@ export default defineComponent({
     const htmlify = (m: string) => {
       return m.replaceAll('\n', '<br>')
     }
+    // const unhtmlify = (val: string) => {
+      
+    // }
    
     return {
+      // unhtmlify,
       htmlify,
       expand,
       // message,

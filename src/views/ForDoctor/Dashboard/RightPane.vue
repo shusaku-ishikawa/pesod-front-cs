@@ -3,15 +3,15 @@
     class="h-full flex flex-col w-full pt-4 px-1 "
   >
     <div class="">
-      <ul class='flex  cursor-pointer text-xs font-semibold justify-center'>
+      <ul class='flex  cursor-pointer text-xs font-normal justify-center'>
         <li
           
           v-for="(t, i) in tabs"
           :key="i"
           @click="tab = t.value"
           style="width: 30px; font-size: 11px"
-          :class="{ 'bg-primary text-white ': t.value === tab }"
-          class='relative flex-auto py-1 bg-white rounded-t border'
+          :class="{ 'bg-primary font-semibold text-white ': t.value === tab }"
+          class='relative flex-auto py-2 bg-white rounded-t border'
         >
           {{ t.text }}
           <div v-if="t.value == tab" class="arrow-down"></div>
@@ -126,7 +126,6 @@ export default defineComponent({
       loadingHairRecords.value = true;
       hairRecords.value = await fetchUserHairRecords(props.prescript.customer.uuid);
       loadingHairRecords.value = false;
-      console.log(hairRecords.value)
     }
     const {
       answers,
@@ -137,10 +136,8 @@ export default defineComponent({
     const loadAnswerData = async () => {
       loadingAnswers.value = true;
       const data = await fetchAnswers(props.prescript.customer.uuid);
-      console.log(data)
       loadingAnswers.value = false
       answers.value = data.filter((a: any) => a.prescript == props.prescript.id);
-      console.log(props.prescript )
       // fetchLogs();
     }
     

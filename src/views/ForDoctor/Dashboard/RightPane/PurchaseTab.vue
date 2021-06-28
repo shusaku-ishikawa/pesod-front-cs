@@ -1,64 +1,10 @@
 <template>
   <div class="w-full sm:py-5 text-xs">
+   
     <div class="text-left mb-5">
-      <div class="inline-block border border-b-0 bg-primary-light py-1 px-5 w-36  rounded-tl-lg rounded-tr-full">
-        顧客情報詳細
-      </div>
-      <div class="border p-2 px-4 rounded-tr rounded-br rounded-bl">
-        <table class="border-collapsed w-full ">
-          <tbody class="border-b ">
-            <tr>
-              <th>顧客ID</th>
-              <td>{{ prescript.customer.id }}</td>
-            </tr>
-          </tbody>
-          <tbody class="border-b">
-            <tr>
-              <th>お名前</th>
-              <td class="text-left">{{ `${prescript.customer.first_name} ${prescript.customer.last_name}` }}</td>
-            </tr>
-            <tr>
-              <th>性別</th>
-              <td class="text-left">
-                {{ prescript.customer.gender != null ? genders[prescript.customer.gender] : 'ー' }}
-              </td>
-            </tr>
-            <tr>
-              <th>生年月日</th>
-              <td class="text-left">{{ prescript.customer.birthday }}</td>
-            </tr>
-            
-          </tbody>
-          <tbody class="">
-            <tr>
-              <th>住所</th>
-              <td>
-                <div>
-                  {{ prescript.customer.zip_code }}
-                </div>
-                <div>
-                  {{ prescript.customer.prefecture }}{{ prescript.customer.city }}{{ prescript.customer.address }}
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <th>Email</th>
-              <td>{{ prescript.customer.email }}</td>
-            </tr>
-            <tr>
-              <th>電話番号</th>
-              <td>{{ prescript.customer.phone_number }}</td>
-            </tr>
-            
-          </tbody>
-
-        </table>
-      </div>
-    </div>
-    <div class="text-left mb-5">
-      <div class="inline-block title-tag border border-b-0 bg-primary-light py-1 px-5 w-36  rounded-tl-lg rounded-tr-full">
+      <tab-header>
         診察履歴
-      </div>
+      </tab-header>
       <div
         v-if="loadingPrescripts"
         class="border shadow rounded-tr rouned-br rounded-bl p-2 w-full mx-auto">
@@ -86,16 +32,16 @@
           v-for="(p, i) in prescripts"
           :key="i"
           :prescript="p"
-          @click="modalPrescript = p"
+          @click="() => { if (p.status != 3) modalPrescript = p }"
         ></purchase-tab-prescript-card>
       
       </div>
       
     </div>
     <div class="text-left mb-5">
-      <div class="inline-block border border-b-0 bg-primary-light py-1 px-5 w-36  rounded-tl-lg rounded-tr-full">
+      <tab-header>
         定期購入
-      </div>
+      </tab-header>
       <div
         v-if="loadingSubscriptions"
         class="border shadow rounded-tr rouned-br rounded-bl p-2 w-full mx-auto">
@@ -113,6 +59,7 @@
       </div>
       <div
         v-else
+        class=""
       >
         <div
           class="mb-1 border p-2 px-4 rounded-tr rounded-br rounded-bl"
@@ -130,13 +77,13 @@
               <tr
 
               >
-                <th>定期ID</th>
+                <th>定期ID:</th>
                 <td>{{ s.id }}</td>
               </tr>
               <tr
 
               >
-                <th>定期ステータス</th>
+                <th>定期ステータス:</th>
                 <td>{{ subscStatus[s.subsc_status] }}</td>
               </tr>
               
@@ -144,30 +91,28 @@
             <tbody>
               <tr>
                 <th>
-                  次回お届け日
+                  次回お届け日:
                 </th>
                 <td>
                   {{ s.next_delivery_date }}
                 </td>
               </tr>
               <tr>
-                <th>お届け日配送間隔</th>
+                <th>お届け日配送間隔:</th>
                 <td>{{ s.delivery_interval }}日</td>
               </tr>
             </tbody>
           </table>
           <div class="pl-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-            </svg>
+            <arrow-right></arrow-right>
           </div>
         </div>
       </div>
     </div>
     <div class="text-left ">
-      <div class="inline-block border border-b-0 bg-primary-light py-1 px-5 w-36  rounded-tl-lg rounded-tr-full">
-        注文履歴
-      </div>
+      <tab-header>
+        注文履歴  
+      </tab-header>
       
       <div
         v-if="loadingOrders"
@@ -203,7 +148,7 @@
             <tr
 
             >
-              <th>注文ID</th>
+              <th>注文ID:</th>
               <td>{{ o.id }}</td>
             </tr>
            
@@ -212,22 +157,20 @@
           <tbody>
             <tr>
               <th>
-                購入金額
+                購入金額:
               </th>
               <td>
                 {{ o.total_amount.toLocaleString() }}円
               </td>
             </tr>
             <tr>
-              <th>定期購入</th>
+              <th>定期購入:</th>
               <td>{{ o.purchase_times }}回</td>
             </tr>
           </tbody>
         </table>
         <div class="pl-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-          </svg>
+          <arrow-right></arrow-right>
         </div>
       </div>
       </div>
@@ -294,12 +237,15 @@ import OrderModal from './PurchaseTabOrderModal.vue'
 import SubscriptionModal from './PurchaseTabSubscriptionModal.vue';
 import PrescriptHistoryModal from './PurchaseTabPrescriptHistoryModal.vue';
 import PurchaseTabPrescriptCard from './PurchaseTabPrescriptCard.vue';
+import TabHeader from '@/components/TabHeader.vue';
+
 export default defineComponent({
   components: {
     OrderModal,
     SubscriptionModal,
     PrescriptHistoryModal,
-    PurchaseTabPrescriptCard
+    PurchaseTabPrescriptCard,
+    TabHeader
   },
   props: {
     prescript: {

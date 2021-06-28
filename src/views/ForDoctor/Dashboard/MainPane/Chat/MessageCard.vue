@@ -16,11 +16,11 @@
         :class="{ 'rounded-bl-none bg-gray-100': !isMyMessage, 'rounded-br-none': isMyMessage }"
         class="text-left sm:max-w-sm md:max-w-md break-words leading-5 px-4 py-4 rounded-lg inline-block text-gray-600 "
         style="line-height: 22px"
-        :style="{ 'font-size': '12px', 'background-color': isMyMessage ? '#CCEAFF' : '' }"
+        :style="{ 'font-size': '12px', 'background-color': isMyMessage ? 'white' : '' }"
       >
         
       </span>
-      <div class="text-xs mx-2">
+      <div style="font-size:11px" class=" mx-2 text-gray-500">
         {{ HHMM(chatLog.created_at) }}
       </div>
     </div>

@@ -8,7 +8,7 @@
       class="flex items-end space-y-1 mx-2 flex-row-reverse"   
     >
       <div
-        style="background-color: #CCEAFF"
+        style="background-color: white"
         :class="{ 'rounded-br-none ': true }"
         class="text-left sm:max-w-sm md:max-w-md break-words leading-5 px-4 py-4 rounded-lg inline-block text-gray-600 "
       >
@@ -28,15 +28,16 @@
             <div class="flex-grow text-xs font-semibold">
               {{ p.name }}
             </div>
-             <div class="pl-2 flex-shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+             <div class="px-2 flex-shrink-0 ">
+                <!-- <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                </svg>
+                </svg> -->
+                <arrow-right></arrow-right>
               </div>
           </div>
         </div>
       </div>
-      <div style="font-size: 10px" class=" mx-2">
+      <div style="font-size: 11px" class="text-xs mx-2 text-gray-500">
         {{ HHMM(chatLog.created_at) }}
       </div>
     </div>

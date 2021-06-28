@@ -25,18 +25,15 @@ export default function useAuth () {
   
   const getUUID = async () => {
     const {data} = await client.get('/uuid/')
-    console.log(data)
     return data;
   }
   
   const sendSignupEmail = async (formData: any) => {
     const {data} = await client.post('/customer_pre_create/', formData);
-    console.log(data);
     return data;  
   };
   const activateAccount = async (token: string) => {
     const {data} = await client.get(`/customer_activator/${token}`);
-    console.log(data)
     return data;  
   };
   const registerProfile = async (registrationUrl: string, formData: IRegistration) => {
@@ -46,7 +43,6 @@ export default function useAuth () {
     delete formDataCopy.street;
     delete formDataCopy.building;
     const {data} = await client.put(registrationUrl, formDataCopy);
-    console.log(data)
     return data;
   }
   
@@ -78,13 +74,11 @@ export default function useAuth () {
   
   const getProfile = async (userId: number) => {
     const {data} = await client.get(`/auth/users/${userId}/`);
-    console.log(data)
     return data;
   };
   
   const storeProfile = (data: any) => {
     profile.value = data;
-    console.log('storing' + profile.value)
     window.localStorage.setItem(PROFILE_KEY, JSON.stringify(data))
   }
   const getTokenFromLS = () => {
@@ -95,7 +89,6 @@ export default function useAuth () {
   }
   const getProfileFromLS = () => {
     const data = window.localStorage.getItem('doctor_profile')
-    console.log(data)
     if (data == null) return null;
     return JSON.parse(data);
 

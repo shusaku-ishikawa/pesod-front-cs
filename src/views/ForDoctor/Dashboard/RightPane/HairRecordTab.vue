@@ -19,7 +19,9 @@
       </div>
     </div>
     <div v-else>
-    
+      <div v-if="logByDate.length == 0">
+        毛髪記録がありません。
+      </div>
       <div
         v-for="(logSet, i) in logByDate"
         :key="i"
@@ -29,13 +31,13 @@
           {{ convertDate(logSet.date) }}
         </div>
         <div
-          class=""
+          class="p-3"
         >
-          <div class="mb-1">
-            <img :src="logSet.frontLog.image" alt="">
+          <div class="mb-1 ">
+            <img class="w-full rounded-lg shadow" :src="logSet.frontLog.image" alt="">
           </div>
           <div>
-              <img :src="logSet.topLog.image" alt="">
+            <img class="w-full rounded-lg shadow" :src="logSet.topLog.image" alt="">
             
           </div>
           
@@ -75,7 +77,6 @@ export default defineComponent({
     const logByDate = computed(() => {
       const dates = props.hairRecords.map((l: any) => l.shooting_date);
       const datesList = [...new Set(dates)];
-      console.log(datesList)
       const ret = datesList.map((d: any) => {
         const data = props.hairRecords.filter((l: any) => l.shooting_date == d)
         const front = data.find((d: any) => d.shooting_part == 0);
@@ -86,7 +87,6 @@ export default defineComponent({
           topLog: cloneDeep(top), 
         }
       });
-      console.log(ret)
       return ret;
     })
     const convertDate = (d: string) => {

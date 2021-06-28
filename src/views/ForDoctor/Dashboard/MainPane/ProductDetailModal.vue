@@ -1,6 +1,6 @@
 <template>
-  <div class="inline-block shadow-xl transform align-middle" >
-    <div style="max-width: 600px" class="my-5 rounded bg-white px-6 py-4 sm:pb-4">
+  <div class="inline-block mt-14 shadow-xl transform align-middle" >
+    <div style="max-width: 700px" class="my-5 rounded bg-white px-6 py-4 sm:pb-4">
       <div>
         <img
           :src="product.image"
@@ -15,7 +15,7 @@
         >
           {{ product.name }}
         </div>
-        <table class="mx-auto" style="width: 70%; font-size: 14px; margin-bottom: 25px">
+        <table class="mx-auto" style="width: 300px; font-size: 14px; margin-bottom: 25px">
           <tbody>
             <tr>
               <th style="text-align-last: justify; text-justify: inter-ideograph;">医薬品分類</th>

@@ -66,11 +66,11 @@
       </svg>
     </div>
     <div
+      style="background-color: #E7FAFF"
     
       ref="messageArea" 
       class="flex-grow overflow-auto relative pt-5"
     >
-        
       <div
         v-if="loadingChatLogs"
         class="absolute w-full space-y-4"
@@ -80,7 +80,7 @@
           v-for="i in 4"
           :key="i"
           :class="{ 'ml-auto': i % 2, 'mr-auto': (i+1) % 2, 'w-3/5': true }"
-          class=" shadow rounded-tr rouned-br rounded-bl p-2 ">
+          class="  p-2 ">
           <div class="animate-pulse flex space-x-4">
               <div class="flex-1 space-y-4 py-1">
                 <div class="space-y-2">
@@ -97,7 +97,7 @@
       <div
         v-else
         ref="scrollContainer"
-        class="absolute w-full space-y-4"
+        class="absolute w-full space-y-4 pb-2"
       >
         <unread-label
           v-if="originalCursor == 0"
@@ -110,6 +110,7 @@
         <template
           v-for="(log, i) in chatLogs"
           :key="i"
+          
         >
           <unread-label
             v-if="i > 0 && log.id > originalCursor && chatLogs[i - 1].id <= originalCursor"
@@ -134,12 +135,7 @@
             :isMyMessage="log.speaker === userId"
           ></chat-message-card>
         </template>
-        <chat-message-card
-          class="mb-2"
-          v-if="prescript.prescript_products.length && prescript.status == 3" 
-          :chatLog="{ message: '以上の処方でよろしいでしょうか。<br>良い場合は「はい」変更を希望さ れる場合は、「いいえ」とお応え 下さい。' }"
-          :isMyMessage="true"
-        ></chat-message-card>
+       
         <div v-if="prescript.stattus == 0 || prescript.status == 4" class="py-10 bg-gray-100">
           診察は終了です。
         </div>
@@ -184,7 +180,7 @@
         @close="showMessageTemplates = false"
       >
         <template-modal
-          :templates="doctorMessageTemplates"
+          :templates="doctorMessageTemplates.filter(t => t.is_select)"
           @select:template="onSelectTemplate"
           @close="showMessageTemplates = false"
         ></template-modal>
@@ -266,14 +262,15 @@ export default defineComponent({
     prescript: {
       type: Object as () => IPrescript
     },
-    chatLogs: {
-      type: Object as () => IChatLog[]
-    },
-    loadingChatLogs: Boolean
+    // chatLogs: {
+    //   type: Object as () => IChatLog[]
+    // },
+    // loadingChatLogs: Boolean
   },
   emits: [
     'sendMessage',
-    'connectionError'
+    'connectionError',
+    'done:prescription',
   ],
   setup(props: any, context: SetupContext) {
     
@@ -287,9 +284,9 @@ export default defineComponent({
       setPrescriptProducts
     } = usePrescript();
 
-    const loading = ref(false);
+    const loadingChatLogs = ref(false);
     const {
-      // chatLogs,
+      chatLogs,
       fetchDoctorChatLogs,
       fetchDoctorMessageTemplates,
       getChatCursor,
@@ -314,6 +311,7 @@ export default defineComponent({
       fetchProducts
     } = useProducts();
 
+    // const chatLogReady = ref(false);
 
     let url: string;
     
@@ -323,10 +321,20 @@ export default defineComponent({
     const originalCursor = ref<number>(0);
     const scrollContainer = ref<HTMLElement | null>(null);
 
-    const getCurrentCursor = async () => {
-      const chatCursor = await getChatCursor(props.prescript.prescript_no);
-      originalCursor.value = chatCursor.cursor || 0;
+    // const getCurrentCursor = async () => {
+    //   const chatCursor = await getChatCursor(props.prescript.prescript_no);
+    //   originalCursor.value = chatCursor.cursor || 0;
       
+    // }
+    const onMessage = async (ev: any) => {
+      const newMessage = JSON.parse(ev.data);
+      chatLogs.value.push(newMessage);
+      await updateChatLogCursor(props.prescript.customer.id, props.prescript.prescript_no, newMessage.chat_id)
+      scrollDown();
+      if (newMessage.message.includes('ご承認有難うございます。') && newMessage.message.includes('診察は以上となります。')) {
+        context.emit('done:prescription')
+        // alert('done')
+      }
     }
     const doctorMessageTemplates = ref<IMessageTemplate[]>([]);
     const showMessageTemplates = ref(false);
@@ -338,142 +346,76 @@ export default defineComponent({
       uuid.value = uuidData.uuid;
       doctorMessageTemplates.value = await fetchDoctorMessageTemplates();
       products.value = await fetchProducts();
-      // alert(products.value)
-      console.log(doctorMessageTemplates.value)
+      context.emit('setOnMessage', onMessage)
     
     })
     
     const sendMessage = (messageStr: string) => {
       if (!props.prescript.connection) throw Error('No connection')
       if (props.prescript.connection.readyState != props.prescript.connection.OPEN) {
-        // props.prescript.connection = getWsConnection(activePrescript.value)
-        // context.emit('connectionError', 'connection not open')
-        // throw new Error('connection not open');
         context.emit('connectionError', 'connection not open')
         return;
       }
-      
-      // if (connection.value == null) return;
-      // if (connection.value.readyState != connection.value.OPEN) {
-      //   connect(url);
-      // }
-      // if (connection.value.readyState === connection.value.OPEN) {
-      //   // send message
-        // messageJson
         const messageJson: IChatMessage = {
           uuid: uuid.value,
           message: messageStr,
         };
         context.emit('sendMessage', messageJson);
         message.value = '';
-        console.log(messageJson)
         setTimeout(() => {
           scrollDown()
           
         }, 300)
-      //   try {
-      //     connection.value.send(JSON.stringify(messageJson));
-      //     message.value = ''; // reset 
-      //   } catch (err) {
-      //     console.error('errr')
-      //   }
-      // } else {
-      //   alert('接続に失敗しました。')
-      // }
+    
     }
 
     
     const onSelectTemplate = (t: IMessageTemplate) => {
-      // message.value = m;
-      // sendMessage(t.message);
-      console.log(t)
-      message.value = t.message;
       showMessageTemplates.value = false;
+      sendMessage(t.message);
       
     };
-
-    watch(() => props.chatLogs, () => {
-      window.setTimeout(() => {
-        // alert('hoge')
-        scrollDown()
-      }, 200)
-    })
-    const showPrescribeProducts = ref(false);
-    
-    watch(() => props.prescript, async () => {
-      message.value = '';
-      await getCurrentCursor();
+    const scrollToLastRead = () => {
       if (scrollContainer.value) {
+        console.log('scroll strt')
         const elemArray = Array.from(scrollContainer.value.children);
+        // alert(originalCursor.value)
         const lastReadElement = elemArray.find((c: any) => {
-          console.log(typeof c)
           return c.getAttribute('id') == originalCursor.value
         })  
         if (lastReadElement && messageArea.value) {
           const outerRect = messageArea.value.getBoundingClientRect()
           const elemRect = lastReadElement.getBoundingClientRect()
           if (messageArea.value == null) return;
-          console.log(outerRect.height)
-          messageArea.value.scrollBy({ top: elemRect.top - outerRect.height + elemRect.height - 40 })
+          window.setTimeout(() => {
+            const scroll = elemRect.top - outerRect.height + elemRect.height + 10
+            
+            messageArea.value?.scrollBy({ top: scroll })  
+          }, 100)
         }
       }
-      if (props.chatLogs.length) {
-        const lastLogId = props.chatLogs[props.chatLogs.length - 1].id;
-        const ret = await updateChatLogCursor(props.prescript.customer.id, props.prescript.id, lastLogId);
-        
+    }
+   
+    const showPrescribeProducts = ref(false);
+    
+    watch(() => props.prescript, async () => {
+      context.emit('setOnMessage', onMessage)
+    
+      message.value = '';
+      const cur = await getChatCursor(props.prescript.prescript_no);
+      originalCursor.value = cur.cursor;
+      loadingChatLogs.value = true
+      chatLogs.value = await fetchDoctorChatLogs(props.prescript.prescript_no);
+      loadingChatLogs.value = false;
+      if (chatLogs.value.length) {
+        const lastLogId = chatLogs.value[chatLogs.value.length - 1].id;
+        const ret = await updateChatLogCursor(props.prescript.customer.id, props.prescript.id, lastLogId || 0);
+        // scrollToLastRead();
       }
+      scrollToLastRead()
       
     }, { immediate: true })
-    
-    // watch(() => props.chatLogs.length, () => {
-    //   alert('scroll down')
-    //   window.setTimeout(() => {
-    //     scrollDown()
-
-    //   }, 200)
-    // })
-    // onUpdated(() => {
-    //   // message.value = '';
-    //   // scrollDown()
-    // })
-    // const setupWebsocket = async () => {
-    //   loading.value = true;
-    //   doctorMessageTemplates.value = await fetchDoctorMessageTemplates();
-    //   console.log(doctorMessageTemplates.value)
-    //   if (props.prescript == null) return;
-      
-    //   url = `${WS_BASE_URL}/chat/doctor/${props.prescript.customer.uuid}/?token=${token.value?.access}`;
-    //   // alert(url)
-    //   try {
-    //     const data = await fetchDoctorChatLogs(props.prescript.id);  
-    //     chatLogs.value = data;
-    //   } catch (err) {
-    //     console.error(err)
-    //     return;
-    //   } 
-    //   prepareWs(url, chatLogs);
-    //   window.setTimeout(() => {
-    //     scrollDown();
-    //   }, 100)
-    //   loading.value = false;
-    // }
-    // onMounted(async () => {
-    //   const uuidData = await getUUID();
-    //   userId.value = await getUserId();
-    //   uuid.value = uuidData.uuid;
-    //   await setupWebsocket();
-    // });
-
-    // watch(() => props.prescript, async () => {
-      
-    //   await setupWebsocket();
-
-    // });
-    // onBeforeUnmount(() => {
-    //   // alert('closing socket')
-    //   close();
-    // })
-
+   
     const getDate = (dateStr: string) => {
       return moment(dateStr).format('yyyy/M/D')
     }
@@ -487,41 +429,7 @@ export default defineComponent({
     };
 
     const buildPrescribeMessage = (productList: IProduct[]) => {
-      // let message = '<u>[[処方提案]]</u><br>';
-      // products.map((p: IProduct) => {
-      //   message = `${message}<strong>${p.name}</strong><br>${p.price.toLocaleString()}円<br>${p.usage}<br><br>`
-      // })
-      
-      // return message;
-      // let html = '';
-      console.log(productList)
       const plist = productList.map((p: IProduct) => {
-        // const elem = `
-        //   <div>
-        //     <div>
-        //       ${p.name}
-        //     </div>
-        //     <div>
-        //       ${p.categories}
-        //     </div>
-        //     <div>
-        //       メーカー：${p.maker}
-        //     </div>
-        //     <div>
-        //       <img
-        //         style="height: 100px"
-        //         src="${p.image}"
-        //       />
-        //     </div>
-        //     <div>
-        //       用途：${p.dose}
-        //     </div>
-        //     <div>
-        //       <u data="${p.id}">注意事項等、詳細情報はこちら</u>
-        //     </div>
-        //   </div>
-        // `;
-        // elem + '<hr class="my-3">';
         return p.id;  
       });
       return JSON.stringify(plist);
@@ -536,31 +444,38 @@ export default defineComponent({
       const data = await setPrescriptProducts(props.prescript.prescript_no, productList);
       
       const messageStr = buildPrescribeMessage(productList);
-      const template1 = doctorMessageTemplates.value.find((t: any) => t.message_flow == 3);
-      const template2 = doctorMessageTemplates.value.find((t: any) => t.message_flow == 4);
+      const template2 = doctorMessageTemplates.value.find((t: any) => t.message_flow == 2);
+      const template3 = doctorMessageTemplates.value.find((t: any) => t.message_flow == 3);
+      const template4 = doctorMessageTemplates.value.find((t: any) => t.message_flow == 4);
 
-      if (template1) {
+      if (template2) {
         window.setTimeout(() => {
-          sendMessage(template1.message)  
+          sendMessage(template2.message)  
         }, 100);
+      }
+      if (template3) {
+        window.setTimeout(() => {
+          sendMessage(template3.message)  
+        }, 500);
       }
       window.setTimeout(() => {
         sendMessage(messageStr);
-      }, 2000)
+      }, 1000)
       
-      if (template2) {
+      if (template4) {
         window.setTimeout(() => {
-          sendMessage(template2.message)
+          sendMessage(template4.message)
           
-        }, 4000)
+        }, 2000)
       }
+      window.setTimeout(() => {
+        // :chatLog="{ message: '' }"
+          
+        sendMessage("以上の処方でよろしいでしょうか。<br>良い場合は「はい」変更を希望さ れる場合は、「いいえ」とお応え 下さい。")
+      }, 3000)
     }
 
-    const onPage = (page: string) => {
-      // alert('page')
-      context.emit('page', page);
-    };
-
+    
     const productDetailModal = ref<IProduct | null>(null)
     const onShowProductModal = (pId: string) => {
       productDetailModal.value = products.value.find((p: IProduct) => p.id == pId) || null;
@@ -578,7 +493,6 @@ export default defineComponent({
     }
     return {
       products,
-
       uuid,
       userId,
       messageArea,
@@ -587,15 +501,14 @@ export default defineComponent({
       getDate,
       message,
       onSendMessage,
-      onPage,
-      // chatLogs,
       wsState,
       showMessageTemplates,
       doctorMessageTemplates,
       onSelectTemplate,
       showPrescribeProducts,
       onPrescribe,
-      loading,
+      loadingChatLogs,
+      chatLogs,
       productDetailModal,
       onShowProductModal,
       checkIfPrescription

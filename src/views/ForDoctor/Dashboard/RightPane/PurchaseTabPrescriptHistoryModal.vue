@@ -41,7 +41,14 @@
                 v-if="i > 1 && getDate(chatLogs[i].created_at) !== getDate(chatLogs[i - 1].created_at)">
                 :dateStr="log.created_at"
               </chat-date-label>
+              <chat-prescript-card
+                v-if="checkIfPrescription(log.message)"
+                :products="products"
+                :chatLog="log"
+                @showProductDetail="onShowProductModal"
+              ></chat-prescript-card>
               <chat-message-card
+              v-else
               :chatLog="log"
               :isMyMessage="log.speaker === userId"
               ></chat-message-card>
@@ -61,6 +68,16 @@
         </button>
       </div>
     </div>
+    <frame-modal
+      v-if="productDetailModal"
+      @close="productDetailModal = null"
+    
+    >
+      <product-detail-modal
+        :product="productDetailModal"
+        @close="productDetailModal = null"
+      ></product-detail-modal>
+    </frame-modal>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -90,17 +107,22 @@
 </style>
 <script lang="ts">
 import { defineComponent, ref, onMounted, SetupContext, computed } from "vue";
-import { IChatLog, IMessageTemplate, IOrder, IPrescript, ISignup, ISubscription } from '@/types/Interfaces';
+import { IChatLog, IProduct, IPrescript, ISignup, ISubscription } from '@/types/Interfaces';
 import useSubscription from "@/types/Subscription";
 import useChatLog from "@/types/ChatLog";
 import ChatDateLabel from '../MainPane/Chat/DateLabel.vue'
 import ChatMessageCard from '../MainPane/Chat/MessageCard.vue';
+import ChatPrescriptCard from '../MainPane/Chat/PrescriptCard.vue';
+import ProductDetailModal from '../MainPane/ProductDetailModal.vue';
 
 import moment from 'moment'
+import useProducts from "@/types/Product";
 export default defineComponent({
   components: {
     ChatDateLabel,
-    ChatMessageCard
+    ChatMessageCard,
+    ChatPrescriptCard,
+    ProductDetailModal
   },
   props: {
     prescript: {
@@ -115,6 +137,11 @@ export default defineComponent({
     const {
       fetchDoctorChatLogs  
     } = useChatLog();
+    
+    const {
+      products,
+      fetchProducts   
+    } = useProducts()
 
     
     const onClose = () => {
@@ -126,15 +153,35 @@ export default defineComponent({
     const loading = ref(false);
     onMounted(async () => {
       loading.value = true;
+      products.value = await fetchProducts();
       chatLogs.value = await fetchDoctorChatLogs(props.prescript.id);
       loading.value = false
     })
     const getDate = (dateStr: string) => {
       return moment(dateStr).format('yyyy/M/D')
     }
+    const checkIfPrescription = (message: string) => {
+      try {
+        const r = JSON.parse(message);
+        return Array.isArray(r);
+      } catch (err) {
+        return false;
+      }
+    }
+    const productDetailModal = ref<IProduct | null>(null)
+    const onShowProductModal = (pId: string) => {
+      productDetailModal.value = products.value.find((p: IProduct) => p.id == pId) || null;
+      if (productDetailModal.value == null) {
+        alert('現在販売されていない商品です。' + pId)
+      }
+    }
     return {
+      productDetailModal,
+      onShowProductModal,
+      checkIfPrescription,
       onClose,
       userId,
+      products,
       chatLogs,
       loading,
       getDate

@@ -116,6 +116,7 @@ interface IPrescript{
   prescript_products?: IProduct[];
   status: number;  
   connection?: WebSocket;
+  unread_flag?: boolean;
 }
 
 interface IRegistration{
@@ -206,6 +207,10 @@ interface IOrder{
   total_amount: number;
   order_date: string;
 }
+interface INotification{
+  level: number;
+  message: string;
+}
 export {
   IToken,
   IDoctor,
@@ -227,5 +232,6 @@ export {
   IDelivery,
   IDeliveryValidator,
   ISubscription,
-  IOrder
+  IOrder,
+  INotification
 }

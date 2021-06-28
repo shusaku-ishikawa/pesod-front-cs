@@ -1,6 +1,7 @@
 <template>
   <div
-    class="mb-1 cursor-pointer border hover:bg-blue-100 flex w-full items-center p-2 px-4 rounded-tr rounded-br rounded-bl"
+    :class="{ 'hover:bg-blue-100 cursor-pointer ': prescript.status != 3 }"
+    class="mb-1  border flex w-full items-center p-2 px-4 rounded-tr rounded-br rounded-bl"
   >
     <table
       class="border-collapsed w-full ">
@@ -9,13 +10,13 @@
         <tr
           
         >
-          <th class="whitespace-nowrap">診察ID</th>
+          <th class="whitespace-nowrap">診察ID:</th>
           <td class="px-2" style="text-overflow: ellipsis;">{{ prescript.id }}</td>
         </tr>
         <tr
 
         >
-          <th>診察日</th>
+          <th>診察日:</th>
           <td class="px-2">{{ prescript.prescript_date }}</td>
         </tr>
         
@@ -26,10 +27,8 @@
       class="mx-2"
       :status="prescript.status"
     ></prescript-card-status>
-    <div class="flex-shrink-0">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-      </svg>
+    <div class="flex-shrink-0 w-5 text-center">
+      <arrow-right class="mx-auto" v-if="prescript.status != 3"></arrow-right>
     </div>
   </div>
 </template>

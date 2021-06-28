@@ -32,7 +32,6 @@ export default function usePrescript () {
 
   const getPrescript = async () => {
     const {data} = await client.get('/prescript/');
-    console.log(data)
     return data;
   }
 
@@ -48,26 +47,21 @@ export default function usePrescript () {
 
   const fetchPrescripts = async (): Promise<IPrescript[]> => {
     const {data} = await client.get('/prescripts/')
-    console.log(data)
     return data;
   }
   const fetchUserPrescripts = async (uuid: string) => {
     const {data} = await client.get(`/prescripts/${uuid}`);
-    console.log(data)
     return data
   }
 
   const setPrescriptProducts = async (prescriptNo: string, products: IProduct[]) => {
     const prescriptProducts = products.map((p: IProduct) => ({ product: p.id }));
-    console.log(prescriptProducts)
     const {data} = await client.patch(`/prescribe/${prescriptNo}`, { products: prescriptProducts });
-    console.log(data)
     return data;
   }
 
   const acceptPrescriptProducts = async () => {
     const {data} = await client.patch('/prescript/exam_fix', {});
-    console.log(data);
     return data;
   };
 

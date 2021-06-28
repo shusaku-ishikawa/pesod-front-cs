@@ -14,6 +14,7 @@ import FrameModal from '@/components/FrameModal.vue';
 
 import PageTitle from '@/components/PageTitle.vue';
 import PageTitleBack from '@/components/PageTitleBack.vue';
+import ArrowRight from '@/components/ArrowRight.vue'
 
 const app = createApp(App)
 app.use(router)
@@ -25,6 +26,7 @@ app.component('TopLayout', TopLayout)
 app.component('FrameModal', FrameModal);
 app.component('PageTitle', PageTitle);
 app.component('PageTitleBack', PageTitleBack);
+app.component('ArrowRight', ArrowRight);
 app.mount('#app');
 
 

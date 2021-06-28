@@ -1,9 +1,9 @@
 <template>
-  <div class="h-10 sm:h-14 fixed top-0 left-0 z-50 shadow w-full bg-white text-black sm:bg-blue-400 sm:text-white">
+  <div class="h-10 sm:h-14 fixed top-0 left-0 z-50 shadow w-full bg-blue-300  text-white">
     
     <div class="relative h-full flex items-center px-10">
-      <div class="font-medium text-3xl">
-        <img src="@/assets/img/doctor/pesod_logo_doctor_s.png" alt="">
+      <div class="">
+        <img src="@/assets/img/Pesod_logo_doctor_s.png" alt="">
         <!-- <pix-cardio-logo /> -->
       </div>
       

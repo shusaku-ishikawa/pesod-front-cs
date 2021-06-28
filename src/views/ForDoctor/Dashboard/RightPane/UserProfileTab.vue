@@ -1,37 +1,38 @@
 <template>
   <div class="w-full sm:py-5 text-xs">
     <div class="text-left mb-5">
-      <div class="inline-block border border-b-0 bg-primary-light py-1 px-5 w-36  rounded-tl-lg rounded-tr-full">
+      <tab-header>
         顧客情報詳細
-      </div>
+      </tab-header>
+      
       <div class="border p-2 px-4 rounded-tr rounded-br rounded-bl">
         <table class="border-collapsed w-full ">
           <tbody class="border-b ">
             <tr>
-              <th class="pb-1">顧客ID</th>
+              <th class="pb-1">顧客ID:</th>
               <td class="px-4 pb-1">{{ prescript.customer.id }}</td>
             </tr>
           </tbody>
           <tbody class="border-b">
             <tr>
-              <th class="pt-1">お名前</th>
+              <th class="pt-1">お名前:</th>
               <td class="pt-1 text-left px-4">{{ `${prescript.customer.first_name} ${prescript.customer.last_name}` }}</td>
             </tr>
             <tr>
-              <th>性別</th>
+              <th>性別:</th>
               <td class="text-left px-4">
                 {{ prescript.customer.gender != null ? genders[prescript.customer.gender] : 'ー' }}
               </td>
             </tr>
             <tr>
-              <th class="pb-1">生年月日</th>
+              <th class="pb-1">生年月日:</th>
               <td class="text-left px-4 pb-1">{{ prescript.customer.birthday }}</td>
             </tr>
             
           </tbody>
           <tbody class="">
             <tr>
-              <th class="pt-1">住所</th>
+              <th class="pt-1">住所:</th>
               <td class="px-4 pt-1 pb-1">
                 <div>
                   {{ prescript.customer.zip_code }}
@@ -42,11 +43,11 @@
               </td>
             </tr>
             <tr>
-              <th>Email</th>
+              <th>Email:</th>
               <td class="px-4">{{ prescript.customer.email }}</td>
             </tr>
             <tr>
-              <th>電話番号</th>
+              <th>電話番号:</th>
               <td class="px-4">{{ prescript.customer.phone_number }}</td>
             </tr>
             
@@ -56,9 +57,10 @@
       </div>
     </div>
      <div class="text-left mb-5">
-      <div class="inline-block border border-b-0 bg-primary-light py-1 px-5 w-36  rounded-tl-lg rounded-tr-full">
+      <tab-header>
         顧客メモ
-      </div>
+      </tab-header>
+      
       <div class="border p-2 px-4 rounded-tr rounded-br rounded-bl text-center">
         <textarea v-model="currentMemo" style="resize: none" class="block mb-2 rounded border shadow w-3/4 mx-auto inline-block focus:outline-none p-2" placeholder="メモを入力" name="" id="" cols="30" rows="5"></textarea>
         <button @click="onAddMemo" class="block mx-auto image">
@@ -114,12 +116,14 @@ import { IAnswer, IAnswerOption, IOrder, IPrescript } from "@/types/Interfaces";
 import useCustomer from "@/types/Customer";
 import useAuth from '@/types/Auth'
 import UserProfileTabMemo from './UserProfileTabMemo.vue'
+import TabHeader from '@/components/TabHeader.vue'
 
 export default defineComponent({
   components: {
     // OrderModal,
     // SubscriptionModal,
     // PrescriptHistoryModal
+    TabHeader,
     UserProfileTabMemo
   },
   props: {
@@ -152,7 +156,6 @@ export default defineComponent({
     const memos = ref<any>([]);
     
     onMounted(async () => {
-      console.log(props.prescript.customer)
       memos.value = await fetchCustomerMemo(props.prescript.customer.uuid)
     })
     const currentMemo = ref('');
@@ -163,7 +166,6 @@ export default defineComponent({
     })
     const onAddMemo = async () => {
       if (currentMemo.value == '') return;
-      console.log(profile.value)
       const payload: any = {
         customer_id: props.prescript.customer.id,
         writer_id: profile.value?.id,

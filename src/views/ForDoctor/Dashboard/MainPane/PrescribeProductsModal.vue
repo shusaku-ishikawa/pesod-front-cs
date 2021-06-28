@@ -1,6 +1,6 @@
 <template>
-  <div class="inline-block shadow-xl transform align-middle" >
-    <div class="my-20 rounded bg-white px-6 py-4 sm:pb-4">
+  <div class="inline-block mt-14 shadow-xl transform align-middle" >
+    <div class=" rounded bg-white px-6 py-4 sm:pb-4">
       <div class="text-left">商品選択</div>
       <div class="mb-3 grid grid-cols-2 gap-1">
         <div

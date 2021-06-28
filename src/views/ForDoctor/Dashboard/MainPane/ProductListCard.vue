@@ -5,7 +5,6 @@
     <div>
       <p-checkbox
         :modelValue="toPrescribe"
-        @update:modelValue="onCheck($event)"
       >
       </p-checkbox>
     </div>
@@ -80,7 +79,6 @@ export default defineComponent({
     const router = useRouter();
     
     const onCheck = (e: boolean) => {
-      console.log(e)
       context.emit('update:toPrescribe', e);
 
     };

@@ -11,15 +11,12 @@ export default function useProducts() {
   } = useAxios();
   const fetchProducts = async (): Promise<IProduct[]> => {
     const { data } = await client.get('/products/');
-    console.log(data);
     return data;
     
   };
   
   const getProduct = async (id: string) => {
-    console.log(id)
     const {data} = await client.get(`/product/${id}`);
-    console.log(data)
     return data;
   }
   

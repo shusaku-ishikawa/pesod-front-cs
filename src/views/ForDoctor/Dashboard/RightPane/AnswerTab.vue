@@ -99,7 +99,8 @@
                 <li
                   v-for="(o, i) in a.answer_options"
                   :key="i"
-                  class="bg-primary-light py-2 font-semibold px-2 rounded w-full mb-1 text-center"
+                  :style="`background-color: ${getOptionColor(a.question.qa_options.find(q => q.id == o.option))}`"
+                  class=" py-2 font-semibold px-2 rounded w-full mb-1 text-center"
                 >
                 
                   {{ a.question.qa_options.find(q => q.id == o.option).option }}
@@ -177,6 +178,17 @@ export default defineComponent({
     // onUpdated(async () => {
     //   setAnswers();  
     // });
+    const getOptionColor = (option: any) => {
+      if (option == null) return 'gray';
+      if (option.risk == 0) {
+        return '#C4E2FF';
+      } else if (option.risk == 1) {
+        return '#F6E88F';
+      } else if (option.risk == 2) {
+        return '#FFB9BA'; 
+      }
+      return 'gray'
+    }
     
     
 
@@ -187,6 +199,7 @@ export default defineComponent({
     }
   
     return {
+      getOptionColor,
       genders,
     };
   }

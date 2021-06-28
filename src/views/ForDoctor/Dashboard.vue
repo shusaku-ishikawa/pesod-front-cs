@@ -28,14 +28,17 @@
       >
         <div class="absolute top-12 w-full" style="z-index: 1000">
           <div
-            v-for="(n, i) in notifications" :key="i" class="flex items-center text-sm mb-1 bg-red-600 text-white rounded shadow w-3/4 py-3 px-3 inline-block mx-auto"
+            v-for="(n, i) in notifications" :key="i"
+            class="flex items-center text-sm mb-1 text-white rounded shadow w-3/4 py-3 px-3 inline-block mx-auto"
+            :class="{ 'bg-red-600': n.level > 0, 'bg-green-600': n.level == 0 }"
           >
             <div class="flex-grow text-center">
-              {{ n }}
+              {{ n.message }}
               
             </div>
             <div class="ml-auto">
               <svg xmlns="http://www.w3.org/2000/svg"
+              @click="onDismissNotification(i)"
               class="cursor-pointer h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
               </svg>
@@ -52,11 +55,11 @@
         <main-pane
           v-else
           :prescript="activePrescript"
-          :chatLogs="activeChatLogs"
           :loadingChatLogs="loadingChatLogs"
           @sendMessage="onSendMessage"
           @connectionError="onConnectionError"
-          @page="onPage"
+          @setOnMessage="onSetOnMessage"
+          @done:prescription="onActivePrescriptDone"
         ></main-pane>
       </pane>
       <pane
@@ -107,10 +110,10 @@ import usePrescript from '@/types/Prescript';
 import useAuth from '@/types/Auth';
 import useChatLog from '@/types/ChatLog';
 import useSocket from '@/types/Socket'
-import { IPrescript, IChatMessage } from "@/types/Interfaces";
+import { IPrescript, INotification, IChatMessage } from "@/types/Interfaces";
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
-
+import { cloneDeep } from "lodash";
 export default defineComponent({
   components: {
     NavbarForDoctor,
@@ -128,6 +131,8 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
 
+    
+
     const {
       token,
       profile,
@@ -141,20 +146,15 @@ export default defineComponent({
     
     // const prescripts = ref([]);
     const activePrescript = ref(null);
-    const activeChatLogs = ref([])
-    const loadingChatLogs = ref(false);
     const loadingPrescripts = ref(false);
     
     
     // alert(JSON.stringify(prescript.value))
-    const notifications = ref([
+    const notifications = ref ([
       
     ]);
-    const addNotification = n => {
+    const addNotification = (n) => {
       notifications.value.push(n)
-      window.setTimeout(() => {
-        notifications.value = notifications.value.filter(d => d != n)
-      }, 2000);
     }
 
     const {
@@ -170,7 +170,6 @@ export default defineComponent({
       wsState,
       wsStateStr,
       message,
-      prepareWs
     } = useSocket();
 
     const searchWord = ref('');
@@ -180,6 +179,81 @@ export default defineComponent({
         return p.customer.first_name.includes(searchWord.value) || p.customer.last_name.includes(searchWord.value)
       })
     })
+    const onMessageForInactive = (prescript) => {
+      return async (ev) => {
+        
+        const newMessage = JSON.parse(ev.data)
+        const targetIndex = prescripts.value.findIndex(p => p.id == prescript.id)
+        const target = prescripts.value[targetIndex];
+        if (target == null) {
+          throw Error('no matching prescript')
+        }
+        const cp = cloneDeep(target)
+
+        if (newMessage.message.includes('ご承認有難うございます。') && newMessage.message.includes('診察は以上となります。')) {
+          const d = await updateChatLogCursor(prescript.customer.id, prescript.prescript_no, newMessage.chat_id)
+          cp.status = 4
+          cp.unread_flag = false;
+          addNotification({
+            level: 0,
+            message: `${prescript.customer.first_name} ${prescript.customer.last_name}様が処方を承認しました。`
+          })
+          // alert('done')
+        } else {
+          cp.unread_flag = true;  
+        }
+
+          
+        prescripts.value.splice(targetIndex, 1, cp)
+        
+        
+        // if (activePrescript.value && prescript.id == activePrescript.value.id) {
+        //   if (newMessage.message.includes('ご承認有難うございます。') && newMessage.message.includes('診察は以上となります。')) {
+        //     const d = await updateChatLogCursor(prescript.customer.id, prescript.prescript_no, newMessage.chat_id)
+        //     const cp = cloneDeep(activePrescript.value);
+        //     cp.status = 4
+        //     cp.unread_flag = false;
+        //     addNotification({
+        //       level: 0,
+        //       message: `${prescript.customer.first_name} ${prescript.customer.last_name}様が処方を承認しました。`
+        //     })
+        //    // alert('done')
+        //   }
+        //   //  else {
+        //   //   cp.unread_flag = true;  
+        //   // }
+
+        // } else {
+        //   // console.log('received mesage ');
+          
+        //   console.log(prescript.customer.first_name + 'receive message' + ev.data)
+        //   // activePrescript.value.unread_flag = true;
+        //   const targetIndex = prescripts.value.findIndex(p => p.id == prescript.id)
+        //   const target = prescripts.value[targetIndex];
+        //   if (target == null) return;
+          
+        //   const cp = cloneDeep(target)
+
+        //   if (newMessage.message.includes('ご承認有難うございます。') && newMessage.message.includes('診察は以上となります。')) {
+        //     const d = await updateChatLogCursor(prescript.customer.id, prescript.prescript_no, newMessage.chat_id)
+        //     cp.status = 4
+        //     cp.unread_flag = false;
+        //     addNotification({
+        //       level: 0,
+        //       message: `${prescript.customer.first_name} ${prescript.customer.last_name}様が処方を承認しました。`
+        //     })
+        //    // alert('done')
+        //   } else {
+        //     cp.unread_flag = true;  
+        //   }
+
+          
+        //   prescripts.value.splice(targetIndex, 1, cp)
+        
+          //prescripts.value.find(p => p.id == prescript.id).unread_flag = true
+        
+      }
+    }
     // const connections = ref([]);
     const getWsConnection = (prescript) => {
       const connection = ref(null);
@@ -192,76 +266,43 @@ export default defineComponent({
         console.log('open' + prescript.customer.first_name)
         
       };
-
-      connection.value.onmessage = (ev) => {
-        const newMessage = JSON.parse(ev.data)
-        if (prescript.id == activePrescript.value.id) {
-          activeChatLogs.value.push(newMessage)
-        } else {
-          // console.log('received mesage ');
-          console.log(prescript.customer.first_name + 'receive message' + ev.data)
-          // activePrescript.value.unread_flag = true;
-          prescripts.value.find(p => p.id == prescript.id).unread_flag = true
-        }
-        // console.log('message ' + ev.data);
-        // const messageJson = JSON.parse(ev.data);
-        
-        // const newMessage = {
-        //   id: 1,
-        //   ...messageJson
-        // };
-        // chatLogRef.value.push(newMessage);
-        // window.setTimeout(() => {
-        //   scrollDown()
-        // }, 100);
-        // // scrollDown();
-        // if (onMessageCallback != null) {
-        //   onMessageCallback(messageJson)
-        // }
-      };
+      
+      connection.value.onmessage = onMessageForInactive(prescript)
       connection.value.onclose = (ev) => {
-        console.log(ev)
-        addNotification(`Prescript #${prescript.id} Connection closed: error code: ${ev.code}`)
-        console.log('on close')
-        // if (connection.value == null) return;
-        // wsState.value = connection.value.CLOSED;
+        const notification = {
+          level: 1,
+          message: `Prescript #${prescript.id} Connection closed: error code: ${ev.code}`
+        }
+        addNotification(notification)
       };
       connection.value.onerror = (ev) => {
-        // alert('on error')
-        console.log(ev)
-        connection.value.close();
-        
-        // router.push({ name: 'DoctorLogin' })
-        // console.log(ev)
-        // if (connection.value == null) return;
-        
+        connection.value.close();  
       };
       return connection;
-      // alert(url)
-      // prepareWs(url, chatLogs);
-      // window.setTimeout(() => {
-      //   scrollDown();
-      // }, 100)
-      // loading.value = false;
     }
 
     watch(() => activePrescript.value, async (_, oldVal) => {
-      // if (oldVal && oldVal.connection) oldVal.connection.close();
-      // activePrescript.value.connection = getWsConnection(activePrescript.valeu)
-      if (activePrescript.value.connection.readyState != 1) {
-        activePrescript.value.connection.close();
-        activePrescript.value.connection = getWsConnection(activePrescript.value) // new WebSocket()
-      }
-      activePrescript.value.unread_flag = false;
-      loadingChatLogs.value = true;
-      activeChatLogs.value = await fetchDoctorChatLogs(activePrescript.value.id);
       
-      loadingChatLogs.value = false;
+      if (oldVal) {
+        const previous = prescripts.value.find(p => p.id == oldVal.id)
+        if (previous) {
+          previous.connection.onclose = null
+          previous.connection && previous.connection.close()
+          
+          previous.connection = await getWsConnection(previous);
+        }
+      }
+      
+      activePrescript.value.unread_flag = false;
     })
     const prepConnections = () => {
       prescripts.value.map(p => {
-        const conn = getWsConnection(p);
-        p.connection = conn;
+        if (p.status == 3) {
+          const conn = getWsConnection(p);
+          p.connection = conn;
+          
+        }
+        
       })
       console.log(prescripts)
     }
@@ -287,8 +328,32 @@ export default defineComponent({
     }
     const onConnectionError = (error) => {
       prepConnections()
-      console.log('prep connection')
-      addNotification(error)
+      
+      addNotification({
+        level: 1,
+        message: error
+      })
+    }
+    const onSetOnMessage = (f) => {
+      activePrescript.value.connection.onmessage = f
+    }
+    const onActivePrescriptDone = () => {
+      if (activePrescript.value == null) return
+      const cp = cloneDeep(activePrescript.value)
+      cp.status = 4
+      const index = prescripts.value.findIndex(p => p.id == activePrescript.value.id);
+      if (index >= 0) {
+        prescripts.value.splice(index, 1, cp);
+
+      }
+      notifications.value.push({
+        level: 0,
+        message: `${activePrescript.value.customer.first_name} ${activePrescript.value.customer.last_name}様が処方を承認しました。`
+      })
+      activePrescript.value = null
+    }
+    const onDismissNotification = (index) => {
+      notifications.value.splice(index, 1);
     }
     return {
       onPage,
@@ -298,12 +363,13 @@ export default defineComponent({
       prescripts,
       onSendMessage,
       activePrescript,
-      loadingChatLogs,
-      activeChatLogs,
       loadingPrescripts,
       displayPrescripts,
       notifications,
-      onConnectionError
+      onConnectionError,
+      onSetOnMessage,
+      onActivePrescriptDone,
+      onDismissNotification
     };
   }
 })

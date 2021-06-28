@@ -3,8 +3,8 @@
     class="text-xs rounded flex-shrink-0"
     :class="{ 'bg-blue-100': status == 3, 'bg-gray-100': status == 0 || status == 4 }"
   >
-    <img v-if="status != 3" class="w-10" src="@/assets/img/doctor_end_short.png" alt="">
-    <img v-else class="w-10" src="@/assets/img/doctor_now_short.png" alt="">
+    <img v-if="status != 3" class="" src="@/assets/img/doctor_end_short.png" alt="">
+    <img v-else class="" src="@/assets/img/doctor_now_short.png" alt="">
   
   </div>
 </template>

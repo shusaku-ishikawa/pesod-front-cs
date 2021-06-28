@@ -43,7 +43,7 @@ input:checked ~ .toggle-circle {
   transform: translateX(100%);
 }
 input:checked ~ .toggle-path {
-  background-color:#81E6D9;
+  background-color:#0AA2E8;
 }
 </style>
 <script lang="ts">

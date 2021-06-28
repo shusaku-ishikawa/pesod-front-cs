@@ -4,11 +4,11 @@
       <table class="flex-grow">
         <tbody>
           <tr>
-            <th>更新日</th>
+            <th class="font-normal">更新日:</th>
             <td class="text-left pl-2">{{ memo.created_at }}</td>
           </tr>
           <tr>
-            <th>入力者</th>
+            <th class="font-normal">入力者:</th>
             <td class="text-left pl-2">{{ memo.writer.full_name }}</td>
           </tr>
 
@@ -56,10 +56,12 @@
 import useCustomer from "@/types/Customer";
 import { watch, ref, defineComponent, SetupContext, onMounted, onUpdated } from "@vue/runtime-core";
 import { clone, cloneDeep } from "lodash";
-
 export default defineComponent({
   props: {
     memo: Object
+  },
+  components: {
+    // TabHeader
   },
   emits: [
     'delete:memo',
@@ -76,7 +78,6 @@ export default defineComponent({
     onMounted(() => {
       modify.value = false;
       memoLocal.value = cloneDeep(props.memo)
-      console.log('mounted')
     })
     watch(() => props.memo, () => {
       modify.value = false;
@@ -87,9 +88,7 @@ export default defineComponent({
         id: props.memo.id,
         memo: memoLocal.value.memo
       }
-      console.log(memoLocal.value)
       const ret = await updateCustomerMemo(props.memo.id, payload)
-      console.log(ret)
       context.emit('update:memo', ret)
       modify.value = false
     }

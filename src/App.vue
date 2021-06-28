@@ -43,8 +43,6 @@ export default defineComponent({
     
     onMounted(() => {
       
-      console.log(getTokenFromLS())
-      console.log(getProfileFromLS())
       token.value = getTokenFromLS()
       
       profile.value = getProfileFromLS();

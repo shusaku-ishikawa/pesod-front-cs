@@ -16,7 +16,8 @@ module.exports = {
         },
         blue: {
           100: '#C4E2FF',
-          200: '#0AA2E8'
+          200: '#0AA2E8',
+          300: '#0AA2E8'
         }
       },
       transformOrigin: {
