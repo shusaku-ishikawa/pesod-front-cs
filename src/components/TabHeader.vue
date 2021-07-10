@@ -5,7 +5,7 @@
 </template>
 <style scoped>
   .my-parts {
-    width: 150px;;
+    width: 200px;;
     display: inline-block;
     font-size: 12px;
     padding: 3px 1.6em .4em .8em;

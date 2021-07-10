@@ -47,7 +47,7 @@ export default defineComponent({
       
       profile.value = getProfileFromLS();
       if (token.value == null || profile.value == null) {
-        router.push({ name: 'DoctorLogin' })
+        router.push({ name: 'Login' })
       }
     })
 

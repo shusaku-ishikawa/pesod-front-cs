@@ -52,16 +52,35 @@ interface IAnswerOption{
   option: string;
 }
 
-interface ICustomer{
+interface ICustomUser{
   uuid: string;
   id?: number;
   first_name: string;
   last_name: string;
+  full_name: string;
   zip_code: string;
   prefecture: string;
   city: string;
   address: string;
   phone_number: string;
+}
+
+interface ICustomer extends ICustomUser{
+  icon_type: string;
+}
+interface IDoctor extends ICustomUser{
+  
+  clinic_name: string | null;
+  description: string | null;
+  examination_fee: number;
+  image: string | null;
+}
+
+interface ICs extends ICustomUser{
+  image: string;
+}
+interface ICounselor extends ICustomUser{
+  image: string;
 }
 interface IChatLog{
   id?: number;
@@ -70,6 +89,7 @@ interface IChatLog{
   owner: number;
   speaker: number;
   message: string;
+  consultation_task?: number;
 }
 interface IMessageTemplate{
   template_type: string;
@@ -80,22 +100,6 @@ interface IChatMessage{
   message: string;  
 }
 
-interface IDoctor{
-  id?: number;
-  address: string | null;
-  city: string | null;
-  clinic_name: string | null;
-  description: string | null;
-  examination_fee: number;
-  first_kana: string | null;
-  first_name: string | null;
-  last_kana: string | null;
-  last_name: string | null;
-  phone_number: string | null;
-  prefecture: string | null;
-  zip_code: string | null;
-  image: string | null;
-}
 
 interface ILog{
   id: number;
@@ -211,9 +215,26 @@ interface INotification{
   level: number;
   message: string;
 }
+
+interface ITask{
+  id?: number;
+  consulter_id: number;
+  consulter?: ICustomer;
+  assignee_id: number | null;
+  assignee?: ICs;
+  created_at?: string;
+  escalation_task?: string;
+  status?: number;
+  unread_flag?: boolean;
+  connection: WebSocket | null;
+  consultation_type?: number;
+  original_task: ITask | null;
+}
 export {
   IToken,
   IDoctor,
+  ICs,
+  ITask,
   ILogin,
   ISignup,
   IQuestion,
@@ -233,5 +254,6 @@ export {
   IDeliveryValidator,
   ISubscription,
   IOrder,
+  ICounselor,
   INotification
 }

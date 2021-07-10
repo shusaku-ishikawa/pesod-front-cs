@@ -17,6 +17,7 @@ export default function useAnswer() {
   const {
     client  
   } = useAxios();
+  
   const fetchAnswers = async (uuid?: string): Promise<IAnswer[]> => {
     const url = uuid == null ? '/answers/' : `/answers/?uuid=${uuid}`;
     const { data } = await client.get(url);

@@ -11,13 +11,13 @@ const API_BASE = `${SERVER_NAME}/api`;
 
 const isAuthUrl = (url: string | undefined) => {
   if (!url) return false;
-  return url.includes('/auth/jwt');  
+  return url.includes('/token/create');  
 };
 
 
 export default function useAxios() {
   const route = useRoute();
-  const TOKEN_KEY = 'doctor_token'
+  const TOKEN_KEY = 'cs_token'
   const getAccessToken = () => {
     const value = window.localStorage.getItem(TOKEN_KEY);
     if (value == null) return null;
@@ -38,7 +38,7 @@ export default function useAxios() {
     const accessToken = getAccessToken();
     
     if (accessToken == null) {
-      router.push({ name: 'DoctorLogin' });
+      router.push({ name: 'Login' });
       // window.location.href = '/'
       return req;
     }
@@ -57,7 +57,7 @@ export default function useAxios() {
       if (!isAuthUrl(error.config.url) && status === 401) {
         console.log(error.config)
 
-        router.push({ name: 'DoctorLogin', query: { next: route.path }});
+        router.push({ name: 'Login', query: { next: route.path }});
         // router.push({ name: 'Login' });
         // window.location.href = '/'
         throw error;

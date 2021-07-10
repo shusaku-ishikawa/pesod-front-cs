@@ -8,16 +8,9 @@ const token = ref<IToken | null>(null)
 const profile = ref<ICustomer | null>(null)
   
 export default function useAuth () {
-  const TOKEN_KEY = 'doctor_token'
-  const PROFILE_KEY = 'doctor_profile'
-  // const TOKEN_KEYS: { [key: string]: string } = {
-  //   customer: 'customer_token',
-  //   doctor: 'doctor_token'
-  // }
-  // const PROFILE_KEYS: { [key: string]: string } = {
-  //   customer: 'customer_profile',
-  //   doctor: 'doctor_profile'
-  // }
+  const TOKEN_KEY = 'cs_token'
+  const PROFILE_KEY = 'cs_profile'
+  
   const {
     client
   } = useAxios();
@@ -28,30 +21,10 @@ export default function useAuth () {
     return data;
   }
   
-  const sendSignupEmail = async (formData: any) => {
-    const {data} = await client.post('/customer_pre_create/', formData);
-    return data;  
-  };
-  const activateAccount = async (token: string) => {
-    const {data} = await client.get(`/customer_activator/${token}`);
-    return data;  
-  };
-  const registerProfile = async (registrationUrl: string, formData: IRegistration) => {
-    const formDataCopy: any = cloneDeep(formData);
-    
-    formDataCopy.address = `${formDataCopy.street}${formDataCopy.building}`;
-    delete formDataCopy.street;
-    delete formDataCopy.building;
-    const {data} = await client.put(registrationUrl, formDataCopy);
-    return data;
-  }
-  
-  
-
   
   const createToken = async (postData: ILogin) => {
-    const {data} = await client.post('/auth/jwt/create/', postData);
-    // console.log(data)
+    const {data} = await client.post('/token/create/cs', postData);
+    console.log(data)
     return data;
     // window.localStorage.setItem('token', JSON.stringify(data));    
   };
@@ -88,7 +61,7 @@ export default function useAuth () {
     return JSON.parse(d);
   }
   const getProfileFromLS = () => {
-    const data = window.localStorage.getItem('doctor_profile')
+    const data = window.localStorage.getItem(PROFILE_KEY)
     if (data == null) return null;
     return JSON.parse(data);
 
@@ -99,15 +72,8 @@ export default function useAuth () {
   }
   
   
-  const signup = async (postData: ISignup) => {
-    const { data } = await client.post(
-      `/signup/`, postData
-    );
-  };
+  
   return {
-    sendSignupEmail,
-    activateAccount,
-    registerProfile,
     createToken,
     storeToken,
     token,
@@ -119,7 +85,6 @@ export default function useAuth () {
     getProfileFromLS,
     removeProfile,
     storeProfile,
-    signup,
     getUUID
   }
 }

@@ -2,9 +2,9 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 
 // import clientRoutes from './forClient';
-import doctorRoutes from './forDoctor';
+import csRoutes from './forCs';
 
-const routes = [...doctorRoutes];
+const routes = [...csRoutes];
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
