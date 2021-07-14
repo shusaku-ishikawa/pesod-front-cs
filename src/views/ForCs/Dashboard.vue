@@ -99,7 +99,13 @@
               class="absolute w-full space-y-4 "
               :class="{ 'pb-2': activeTask.status == 1 }"
             >
-              <OriginalTaskCard :task="activeTask.original_task" v-if="activeTask.original_task" />
+              <OriginalTaskCard
+                :task="activeTask.original_task"
+                v-if="activeTask.original_task"
+                class="cursor-pointer "
+                @click="showOriginalTask = true"
+              
+              />
               
               <ChatDateLabel
                 v-if="chatLogs.length > 0"
@@ -156,7 +162,6 @@
               </template> 
             </ChatForm>
             
-           
             <!-- <FrameModal
               v-if="productDetailModal"
               @close="productDetailModal = null"
@@ -227,6 +232,15 @@
         @escalated="onEscalated"
       />
     </FrameModal>
+    <FrameModal
+      v-if="showOriginalTask"
+      @close="showOriginalTask = false"
+    >
+      <TaskHistoryTaskHistoryModal
+        :task="activeTask.original_task"
+        @close="showOriginalTask = false"
+      />
+    </FrameModal>
   </div>
 </template>
 <style scoped lang="scss">
@@ -280,6 +294,7 @@ import 'splitpanes/dist/splitpanes.css'
 import { getFormattedDate } from '@/mixins/dateUtils'
 
 import OriginalTaskCard from '@/views/ForCs/Dashboard/MainPane/OriginalTaskCard.vue'
+import TaskHistoryTaskHistoryModal from '@/views/ForCs/Dashboard/RightPane/TaskHistoryTabTaskHistoryModal.vue'
 
 import { assign, cloneDeep } from "lodash";
 export default defineComponent({
@@ -299,6 +314,7 @@ export default defineComponent({
     ErrorModal,
     TemplateModal,
     OriginalTaskCard,
+    TaskHistoryTaskHistoryModal
   },
   
   setup(props: any, context: SetupContext) {
@@ -384,6 +400,7 @@ export default defineComponent({
       if (messageArea.value == null) return;
       messageArea.value.scrollTop = messageArea.value.scrollHeight;
     };
+    const showOriginalTask = ref(false);
     const scrollToLastRead = () => {
       if (scrollContainer.value) {
         console.log('scroll strt')
@@ -611,7 +628,8 @@ export default defineComponent({
       addNotification({
         level: 0,
         message: `${nextAssignee.full_name}へエスカレーションしました`
-      })
+      });
+      showAssigneeModal.value = false;
     }    
     onMounted(async () => {
       // userId.value = await getUserId();
@@ -650,6 +668,7 @@ export default defineComponent({
       loadingTasks,
       
       // chat
+      showOriginalTask,
       connectFailures,
       getFormattedDate,
       uuid,

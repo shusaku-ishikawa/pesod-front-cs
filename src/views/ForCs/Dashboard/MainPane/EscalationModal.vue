@@ -20,6 +20,7 @@
       <div class="flex ">
         <button
           @click="onChangeAssignee"
+          :disabled="!nextAssigneeId"
           class="bg-white border text-xs text-black "
         >
           変更を確定する
@@ -99,7 +100,15 @@ export default defineComponent({
         const d = await escalateTask(props.task, nextAssigneeId.value, 1);
         context.emit('escalated', cloneDeep(nextAssignee))    
       } catch (e) {
-        alert('エスカレーションに失敗しました。')
+        const response = e.response;
+        if (response) {
+          const { status, data } = response;
+          if (Array.isArray(data)) {
+            alert(data[0]);
+          } else {
+            alert(JSON.stringify(data))
+          }
+        }
       }
       
     }

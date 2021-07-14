@@ -20,6 +20,10 @@ export default function useChatLog() {
     const {data} = await client.get(`/chatlog/cs/${uuid}`)
     return data;  
   };
+  const fetchCounselorChatLogs = async (uuid: string): Promise<IChatLog[]> => {
+    const {data} = await client.get(`/chatlog/counselor/${uuid}`)
+    return data;  
+  };
   // const fetchChatLogByPage = async (prescriptId: string, page: number) => {
   //   const data = await fetchDoctorChatLogs(prescriptId, page);
   //   console.log(data)
@@ -59,6 +63,7 @@ export default function useChatLog() {
     chatLogs,
     fetchDoctorChatLogs,
     fetchCsChatLogs,
+    fetchCounselorChatLogs,
     fetchCsMessageTemplates,
     fetchCustomerMessageTemplates,
     updateChatLogCursor,

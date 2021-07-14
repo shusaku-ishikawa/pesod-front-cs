@@ -57,7 +57,8 @@
                 <ChatMessageCard
                   v-if="!checkIfPrescription(log.message) && log.message != '<<escalated>>'"
                   :chatLog="log"
-                  :isMyMessage="log.speaker === userId"
+                  :isMyMessage="log.speaker != task.consulter.id"
+                
                 />
               </template>
               <div class="py-10 bg-gray-100">
@@ -147,7 +148,8 @@ export default defineComponent({
   setup(props: any, context: SetupContext) {
     const {
       chatLogs,
-      fetchCsChatLogs   
+      fetchCsChatLogs,
+      fetchCounselorChatLogs
     } = useChatLog();
 
     const {
@@ -162,13 +164,14 @@ export default defineComponent({
     
     const loading = ref(false);
     onMounted(async () => {
+      const chatLogMethod = props.task.consultation_type == 0 ? fetchCsChatLogs : fetchCounselorChatLogs;
       loading.value = true;
       const [
         productsData,
         chatLogsData
       ] = await Promise.all([
         fetchProducts(),
-        fetchCsChatLogs(props.task.consulter.uuid),
+        chatLogMethod(props.task.consulter.uuid),
       ])
       products.value = productsData; 
       chatLogs.value = chatLogsData.filter((c: IChatLog) => c.consultation_task == props.task.id);
